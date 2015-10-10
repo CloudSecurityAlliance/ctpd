@@ -1,0 +1,26 @@
+Compiling and running ctpd
+==========================
+
+ctpd is written in go (http://golang.org/).
+
+Prerequisite
+------------
+
+To compile ctpd you'll need to:
+
+* install go - see https://golang.org/doc/install
+
+* install mongodb (https://www.mongodb.org/), i.e. on Ubuntu:
+
+    sudo apt-get install mongodb
+
+* install mgo, the "rich mongo driver for go" (see https://labix.org/mgo)
+
+    go get gopkg.in/mgo.v2
+
+
+Compiling and running
+---------------------
+
+To run ctpd directly, you can type "go run ctpd.go".
+

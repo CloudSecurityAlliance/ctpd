@@ -1,0 +1,391 @@
+%{
+package jsmm
+
+import (
+	"fmt"
+	"strings"
+	"unicode"
+	"unicode/utf8"
+    "strconv"
+)
+
+%}
+
+%union{
+    stringValue    string
+    integerValue   int64
+    floatValue     float64
+    expression     Expression
+    call           *callExpr
+}
+
+%token tokenString tokenIdentifier tokenInteger tokenFloat tokenTrue tokenFalse 
+%token tokenEqu tokenNeq /* tokenGt tokenLt tokenGte tokenLte */
+%token tokenAnd tokenOr tokenEOF tokenError
+
+%type <expression> expr final slice 
+%type <integerValue> tokenInteger
+%type <stringValue> tokenString tokenIdentifier
+%type <floatValue> tokenFloat
+%type <call> fc fcall
+
+%left '+' '-'
+%left '/' '*' '%'
+%left '['
+
+%%
+
+final: expr tokenEOF { if l,ok:=yylex.(*lexer); ok { l.ast=$1 }; return 1 }
+     | tokenEOF      { return 1 }
+     ;
+
+expr: expr '+' expr             { $$=&binaryExpr{'+',$1,$3} }
+    | expr '-' expr             { $$=&binaryExpr{'-',$1,$3} }
+    | expr '/' expr             { $$=&binaryExpr{'/',$1,$3} }
+    | expr '*' expr             { $$=&binaryExpr{'*',$1,$3} }
+    | expr '%' expr             { $$=&binaryExpr{'%',$1,$3} }
+    | '(' expr ')'              { $$=$2 }
+    | tokenInteger              { $$=&integerExpr{$1} }
+    | tokenFloat                { $$=&floatExpr{$1} }
+    | tokenString               { $$=&stringExpr{$1} }
+    | tokenTrue                 { $$=&booleanExpr{true} }
+    | tokenFalse                { $$=&booleanExpr{false} }
+    | fcall                     { $$=$1 }
+    | tokenIdentifier           { $$=&identifierExpr{$1} }
+    | slice                     { $$=$1 }
+    ;
+
+fcall: tokenIdentifier '(' ')'  { $$=newCallExpr($1) }
+     | fc ')'                   { $$=$1 }
+     ;
+
+fc: tokenIdentifier '(' expr    { $$=newCallExpr($1).addParam($3) }
+  | fc ',' expr                 { $$=$1.addParam($3) }
+  ;
+
+slice: expr '[' ':' ']'           { $$=&sliceExpr{$1,&integerExpr{0},&integerExpr{-1}} }
+     | expr '[' expr ':' ']'      { $$=&sliceExpr{$1,$3,&integerExpr{-1}} }
+     | expr '[' ':' expr ']'      { $$=&sliceExpr{$1,&integerExpr{0},$4} }
+     | expr '[' expr ':' expr ']' { $$=&sliceExpr{$1,$3,$5} }
+     ;
+
+%%
+
+type Expression interface {
+    String() string
+    //Validate() bool
+}
+
+type integerExpr struct {
+    value int64
+}
+func (e *integerExpr)String() string {
+    return fmt.Sprintf("%d",e.value)
+}
+
+type stringExpr struct {
+    value string
+}
+func (e *stringExpr)String() string {
+    return fmt.Sprintf("\"%s\"",e.value)
+}
+
+type floatExpr struct {
+    value float64
+}
+func (e *floatExpr)String() string {
+    return fmt.Sprintf("%g",e.value)
+}
+
+type booleanExpr struct {
+    value bool
+}
+func (e *booleanExpr)String() string {
+    if e.value {
+        return "<true>"
+    }
+    return "<false>"
+}
+
+type identifierExpr struct {
+    value string
+}
+func (e *identifierExpr)String() string {
+    return e.value
+}
+
+type sliceExpr struct {
+    source  Expression
+    start   Expression
+    stop    Expression
+}
+func (e *sliceExpr)String() string {
+    return fmt.Sprintf("([:] %s %s %s)",e.source.String(),e.start.String(),e.stop.String())
+}   
+
+type callExpr struct {
+    funcName string
+    params []Expression
+}
+func (e *callExpr)String() string {
+    s := "(" + e.funcName
+    for _,v := range e.params {
+        s+=" " + v.String()
+    }
+    s+=")"
+    return s
+}
+func newCallExpr(fname string) *callExpr {
+    return &callExpr{fname,make([]Expression,0,2)}
+}
+func (e *callExpr)addParam(p Expression) *callExpr {
+    e.params = append(e.params,p)
+    return e
+}
+
+type binaryExpr struct {
+    Op int
+    X  Expression
+    Y  Expression
+}
+func (e *binaryExpr)String() string {
+    return fmt.Sprintf("(%c %s %s)",e.Op,e.X.String(),e.Y.String())
+}
+
+const eof = 0
+
+type token struct {
+	ident int
+	value string
+}
+
+func (t token) String() string {
+	return fmt.Sprintf("<%d[%d]:%s>", t.ident, len(t.value), string(t.value))
+}
+
+type stateFn func(*lexer) stateFn
+
+type lexer struct {
+	input  string
+	start  int
+	pos    int
+	width  int
+	tokens chan token
+	state  stateFn
+    ast    Expression
+}
+
+func (l *lexer) next() (result rune) {
+	if l.pos >= len(l.input) {
+		l.width = 0
+		return 0
+	}
+	result, l.width = utf8.DecodeRuneInString(l.input[l.pos:])
+	l.pos += l.width
+    //fmt.Printf("[+%d:%c]",l.width,result)
+	return result
+}
+
+func (l *lexer) peek() rune {
+	r := l.next()
+	l.backup()
+	return r
+}
+
+func (l *lexer) backup() {
+    //fmt.Printf("[-%d]",l.width)
+	l.pos -= l.width
+	l.width = 0
+}
+
+func (l *lexer) ignore() {
+	l.start = l.pos
+}
+
+func (l *lexer) emit(t int) {
+    fmt.Printf("Send %d\n",t)
+	l.tokens <- token{t, l.input[l.start:l.pos]}
+	l.start = l.pos
+}
+
+func (l *lexer) accept(valid string) bool {
+	if strings.IndexRune(valid, l.next()) >= 0 {
+		return true
+	}
+	l.backup()
+	return false
+}
+
+func (l *lexer) acceptRun(valid string) {
+	for strings.IndexRune(valid, l.next()) >= 0 {
+	}
+	l.backup()
+}
+
+func (l *lexer) errorf(format string, args ...interface{}) stateFn {
+	l.tokens <- token{
+		tokenError,
+		fmt.Sprintf(format, args...),
+	}
+	return nil
+}
+
+func lexString(l *lexer) stateFn {
+	for {
+		switch r := l.next(); r {
+		case eof:
+			return l.errorf("Unterminated string")
+		case '\\':
+			if l.next() != '"' {
+				l.backup()
+			}
+		case '"':
+			l.backup()
+			l.emit(tokenString)
+			l.next()
+			l.ignore()
+			return lexDefault
+		}
+	}
+	return lexDefault
+}
+
+func lexNumber(l *lexer) stateFn {
+	emitToken := tokenInteger
+
+	digits := "0123456789"
+
+	if l.accept("0") && l.accept("xX") {
+		digits = "0123456789abcdefABCDEF"
+	}
+
+	l.acceptRun(digits)
+
+	if l.peek() == '.' {
+        l.next()
+		emitToken = tokenFloat
+		l.acceptRun(digits)
+		if l.accept("eE") {
+			l.accept("+-")
+			l.acceptRun("0123456789")
+		}
+	}
+	if unicode.IsLetter(l.peek()) {
+		return l.errorf("Unexpected character in number: %c", l.peek())
+	}
+	l.emit(emitToken)
+	return lexDefault
+}
+
+func lexIdentifier(l* lexer) stateFn {
+    if !unicode.IsLetter(l.next()) {
+        return l.errorf("Unexpected character in symbol")
+    } 
+    for {
+        r := l.next()
+        if !unicode.IsLetter(r) && !unicode.IsNumber(r) {
+            l.backup()
+            switch {
+            case l.input[l.start:l.pos] == "true":
+                l.emit(tokenTrue)
+            case l.input[l.start:l.pos]=="false":
+                l.emit(tokenFalse)
+            default:
+                l.emit(tokenIdentifier)
+            }
+            break
+        }
+    }
+    return lexDefault
+}
+
+func lexDefault(l *lexer) stateFn {
+	for {
+		switch r := l.next(); {
+		case unicode.IsSpace(r):
+			l.ignore()
+        case unicode.IsLetter(r):
+            l.backup()
+            return lexIdentifier
+		case r == '"':
+			l.ignore()
+			return lexString
+		case r <= '9' && r >= '0':
+			l.backup()
+			return lexNumber
+        case r== '=' && l.peek()=='=':
+            l.emit(tokenEqu)
+        case r== '!' && l.peek()=='=':
+            l.emit(tokenNeq)
+        case strings.IndexRune("+-*/%[](),:",r)>=0:
+            l.emit(int(r))
+        case r== '&' && l.peek()=='&':
+            l.emit(tokenAnd)
+        case r== '|' && l.peek()=='|':
+            l.emit(tokenOr)
+		case r == eof:
+			l.emit(tokenEOF)
+            return nil 
+		}
+	}
+}
+
+func newLexer(input string) *lexer {
+    l := &lexer{input, 0, 0, 0, make(chan token, 2), lexDefault,nil}
+    go l.run()
+    return l
+}
+
+func (l *lexer) run() {
+    for l.state!=nil {
+        l.state = l.state(l)
+    }
+}
+
+/*
+func (l *lexer) nextToken() token {
+	for {
+		select {
+		case token := <-l.tokens:
+            fmt.Printf("Recv %d\n",token.ident)
+			return token
+		default:
+            //fmt.Printf("%+v",l.state)
+			l.state = l.state(l)
+		}
+	}
+	panic("not reached")
+}*/
+
+func (l *lexer)Lex(lval *yySymType) int {
+    //tk := l.nextToken()
+    tk := <-l.tokens
+    fmt.Printf("Recv %d\n",tk.ident)
+    fmt.Println(tk)
+    switch tk.ident {
+    case tokenInteger:
+        v, err := strconv.ParseInt(tk.value,0,64)
+        if err!=nil {
+            return 0
+        }
+        lval.integerValue = v
+    case tokenFloat:
+        v, err := strconv.ParseFloat(tk.value,64)
+        if err!=nil {
+            return 0
+        }
+        lval.floatValue = v
+    default:
+        lval.stringValue = tk.value
+    }
+    return tk.ident
+}
+func (l *lexer)Error(e string) {
+    fmt.Println("ERROR: " + e)
+}
+
+func main() {
+    l := newLexer(`1 + "rrr"`)
+    yyParse(l)
+    fmt.Println(l.ast) 
+}

@@ -1,0 +1,23 @@
+# 
+# this is an example of a configuration file that can be used for ctpd
+#
+
+# basepath is the relative url where the API is exposed.
+#
+basepath="/api/1.0/"
+
+
+# listen defines the host:port where the server listens
+# if host is ommited, all interfaces are used.
+#
+listen=":8080"
+#listen=":443"
+
+
+#client is an optional 
+# client = "/path/to/source/code/ctpd/client"
+
+#tls_use = yes
+#tls_key_file = "/path/to/file"
+#tls_cert_file = "/path/to/file"
+
