@@ -14,11 +14,13 @@ stage and is mainly intended for testing and research purposes.
 
 The __ctpd__ server provided in this repository:
 
-* Implements most the CTP API defined in the _CTP Data model and API
-specification, v2.13_ defined by Cloud Security Alliance.
+* Implements most the CTP API defined in the [CTP Data model and API
+specification, v2.13](http://htmlpreview.github.io/?https://github.com/cloudsecurityalliance/ctpd/blob/master/client/CTP-Data-Model-And-API.html)
+[(pdf)](https://github.com/cloudsecurityalliance/ctpd/blob/master/client/CTP-Data-Model-And-API.pdf)
+defined by Cloud Security Alliance.
 
-* Implements a 'back office' API that allows to update the database managed
-by ctpd. __This extra API is not part of the official CTP specification__.
+* Implements a ['back office' API](http://htmlpreview.github.io/?https://github.com/cloudsecurityalliance/ctpd/blob/master/client/CTP-Admin-API.html) 
+that allows to update the database managed by ctpd. __This extra API is not part of the official CTP specification__.
 
 Trying ctpd
 -----------
@@ -79,7 +81,8 @@ of the services they use in the cloud, promoting transparency and trust.
 
 The Cloud Security Alliance has defined a "CTP data model and API", which
 specifies how monitoring information should be presented to cloud customers.
-For more details, see [missing link]().
+For more details, see [the data model and API](http://htmlpreview.github.io/?https://github.com/cloudsecurityalliance/ctpd/blob/master/client/CTP-Data-Model-And-API.html)
+[(pdf)](https://github.com/cloudsecurityalliance/ctpd/blob/master/client/CTP-Data-Model-And-API.pdf).
 
 The actual implementation of the API is left to the choice of the service
 provider, and the source code provided here is just an example of such an
