@@ -20,19 +20,26 @@ import (
 	"log"
 	"net/http"
 	"os"
+    "path"
 	"github.com/cloudsecurityalliance/ctpd/server"
 	"github.com/cloudsecurityalliance/ctpd/server/ctp"
 )
 
 const CTPD_VERSION = 0.1
 
-var configFileFlag string
-var versionFlag bool
-var helpFlag bool
+var (
+    configFileFlag string
+    versionFlag bool
+    colorFlag bool
+    clientFlag string
+    helpFlag bool
+)
 
 func init() {
 	flag.StringVar(&configFileFlag, "config", "/path/to/file", "Specify an alternative configuration file to use.")
 	flag.BoolVar(&versionFlag, "version", false, "Print version information.")
+	flag.BoolVar(&colorFlag, "color-logs", false, "Print logs with color on terminal.")
+	flag.StringVar(&clientFlag, "client", "", "Set path to optional lightweight embedded javasciprt client. If empty, client is dissabled.")
 	flag.BoolVar(&helpFlag, "help", false, "Print help.")
 }
 
@@ -52,7 +59,7 @@ func main() {
 	}
 
 	if helpFlag {
-		fmt.Fprintf(os.Stderr, "Usage: %s [flags]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s [flags]\n", path.Base(os.Args[0]))
 		flag.PrintDefaults()
 		return
 	}
@@ -64,9 +71,17 @@ func main() {
 	}
 
 	if !ok {
-        log.Printf("No configuration file was loaded, using defaults.")
+        ctp.Log(nil,ctp.INFO,"No configuration file was loaded, using defaults.")
         conf = ctp.ConfigurationDefaults
 	}
+
+    if colorFlag {
+        conf["color-logs"]="true"
+    }
+
+    if clientFlag!="" {
+        conf["client"]=clientFlag
+    }
 
 	if conf["client"] != "" {
 		http.Handle("/", http.FileServer(http.Dir(conf["client"])))
@@ -80,10 +95,10 @@ func main() {
 		if conf["tls_key_file"] == "" || conf["tls_cert_file"] == "" {
 			log.Fatal("Missing tls_key_file or tls_cert_file in configuration.")
 		}
-		log.Printf("Starting ctpd with TLS enabled at %s", conf["listen"])
+		ctp.Log(nil,ctp.INFO,"Starting ctpd with TLS enabled at %s", conf["listen"])
 		log.Fatal(http.ListenAndServeTLS(conf["listen"], conf["tls_cert_file"], conf["tls_key_file"], nil))
 	} else {
-		log.Printf("Starting ctpd at %s", conf["listen"])
+		ctp.Log(nil,ctp.INFO,"Starting ctpd at %s", conf["listen"])
 		log.Fatal(http.ListenAndServe(conf["listen"], nil))
 	}
 }

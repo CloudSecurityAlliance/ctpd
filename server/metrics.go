@@ -55,10 +55,6 @@ func (metric *Metric) Load(context *ctp.ApiContext) *ctp.HttpError {
 func (metric *Metric) Create(context *ctp.ApiContext) *ctp.HttpError {
 	metric.BuildLinks(context)
 
-	if metric.AccessTags == nil {
-		metric.AccessTags = ctp.NewTags("access:user")
-	}
-
 	if !ctp.CreateResource(context, "metrics", metric) {
 		return ctp.NewHttpError(http.StatusInternalServerError, "Could not save object")
 	}

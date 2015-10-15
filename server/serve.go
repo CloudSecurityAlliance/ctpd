@@ -15,9 +15,8 @@
 package server
 
 import (
-	"log"
-	"net/http"
 	"github.com/cloudsecurityalliance/ctpd/server/ctp"
+	"net/http"
 )
 
 var ctpUrlMap = map[string]ctp.HandlerFunc{
@@ -54,14 +53,14 @@ var ctpUrlMap = map[string]ctp.HandlerFunc{
 	"PUT:/measurements/$?tags":        HandlePUTTags,
 	"GET:/metrics/$?tags":             HandleGETTags,
 	"PUT:/metrics/$?tags":             HandlePUTTags,
-	"GET:/access/$?tags":              HandleGETTags,
-	"PUT:/access/$?tags":              HandlePUTTags,
-	"GET:/triggers/$?tags":            ctp.HandleNotImplemented,
-	"PUT:/triggers/$?tags":            ctp.HandleNotImplemented,
+	"GET:/accounts/$?tags":          HandleGETTags,
+	"PUT:/accounts/$?tags":          HandlePUTTags,
+	"GET:/triggers/$?tags":            HandleGETTags,
+	"PUT:/triggers/$?tags":            HandlePUTTags,
 	"GET:/dependencies/$?tags":        ctp.HandleNotImplemented,
 	"PUT:/dependencies/$?tags":        ctp.HandleNotImplemented,
-	"GET:/logs/$?tags":                ctp.HandleNotImplemented,
-	"PUT:/logs/$?tags":                ctp.HandleNotImplemented,
+	"GET:/logs/$?tags":                HandleGETTags,
+	"PUT:/logs/$?tags":                HandlePUTTags,
 	"PUT:/measurements/$?result":      HandlePUTMeasurement,
 	"PUT:/measurements/$?objective":   HandlePUTMeasurement,
 	"POST:/serviceViews":              HandlePOSTServiceView,
@@ -77,11 +76,11 @@ var ctpUrlMap = map[string]ctp.HandlerFunc{
 	"DELETE:/metrics/$":               HandleDELETEMetric,
 	"DELETE:/dependencies/$":          ctp.HandleNotImplemented,
 	"DELETE:/logs/$":                  ctp.HandleNotImplemented,
-	"GET:/access/$":                   HandleGETAccess,
-	"POST:/access":                    HandlePOSTAccess,
-	"GET:/access":                     HandleGETCollection,
-	"PUT:/access/$":                   ctp.HandleNotImplemented,
-	"DELETE:/access/$":                HandleDELETEAccess,
+	"GET:/accounts/$":               HandleGETAccount,
+	"POST:/accounts":                HandlePOSTAccount,
+	"GET:/accounts":                 HandleGETCollection,
+	"PUT:/accounts/$":               ctp.HandleNotImplemented,
+	"DELETE:/accounts/$":            HandleDELETEAccount,
 }
 
 type CtpApiHandlerMux struct {
@@ -103,10 +102,10 @@ func (mux *CtpApiHandlerMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer context.Close()
 
 	if handlerfunc, ok := ctpUrlMap[context.Signature]; ok {
-		ctp.Log(context, "Serving request '%s' with signature '%s'", r.RequestURI, context.Signature)
+		ctp.Log(context, ctp.INFO, "Serving request '%s' with signature '%s'", r.RequestURI, context.Signature)
 		handlerfunc(w, r, context)
 	} else {
-		log.Printf("<*> Not found: %s\n", context.Signature)
+		ctp.Log(nil, ctp.WARNING, "Not found: %s\n", context.Signature)
 		http.NotFound(w, r)
 	}
 }

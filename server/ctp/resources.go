@@ -15,9 +15,9 @@
 package ctp
 
 import (
+	"encoding/base64"
+	"gopkg.in/mgo.v2/bson"
 	"net/http"
-    "encoding/base64"
-    "gopkg.in/mgo.v2/bson"
 )
 
 func HandleNotImplemented(w http.ResponseWriter, r *http.Request, context *ApiContext) {
@@ -75,12 +75,12 @@ func NewGETHandler(a Tags) *GETHandler {
 
 func (handler *GETHandler) Handle(w http.ResponseWriter, r *http.Request, context *ApiContext, res ResourceLoader) {
 	if !context.AuthenticateClient(w, r) {
-		Log(context, "Missing access tags")
+		Log(context, WARNING, "Missing access tags")
 		return
 	}
 
 	if !context.VerifyAccessTags(w, handler.AccessTags) {
-		Log(context, "Mismatched access tags for API signature")
+		Log(context, WARNING, "Mismatched access tags for API signature")
 		return
 	}
 
@@ -112,12 +112,12 @@ func (handler *POSTHandler) Handle(w http.ResponseWriter, r *http.Request, conte
 	var parent Resource
 
 	if !context.AuthenticateClient(w, r) {
-		Log(context, "Missing access tags")
+		Log(context, WARNING, "Missing access tags")
 		return
 	}
 
 	if !context.VerifyAccessTags(w, handler.AccessTags) {
-		Log(context, "Mismatched access tags for API signature")
+		Log(context, WARNING, "Mismatched access tags for API signature")
 		return
 	}
 
@@ -143,10 +143,18 @@ func (handler *POSTHandler) Handle(w http.ResponseWriter, r *http.Request, conte
 	}
 	res.Super().Id = NewBase64Id()
 
+    // For level 3 urls, we inherit tags from parent unless tags are specified in the request
+    // for level 1 urls, we set defaults if necessary
 	if level == 3 {
 		res.Super().Parent = parent.Id
-		res.Super().AccessTags = parent.AccessTags
-	} /* else: By doing nothing we keep accessTags provided in the JSON resource */
+        if res.Super().AccessTags == nil {
+            res.Super().AccessTags = parent.AccessTags
+        }
+    } else { 
+        if res.Super().AccessTags == nil && context.Params[0] == "metrics" {
+            res.Super().AccessTags = NewTags("access:user")
+        }
+    }
 
 	if err := res.Create(context); err != nil {
 		RenderErrorResponse(w, context, err)
@@ -169,22 +177,22 @@ func NewPUTHandler(a Tags) *PUTHandler {
 
 func (handler *PUTHandler) Handle(w http.ResponseWriter, r *http.Request, context *ApiContext, resource ResourceUpdater, update ResourceUpdater) {
 	if !context.AuthenticateClient(w, r) {
-		Log(context, "Missing access tags")
+		Log(context, WARNING, "Missing access tags")
 		return
 	}
 
 	if !context.VerifyAccessTags(w, handler.AccessTags) {
-		Log(context, "Mismatched access tags for API signature")
+		Log(context, WARNING, "Mismatched access tags for API signature")
 		return
 	}
 
 	if !LoadResource(context, context.Params[0], Base64Id(context.Params[1]), resource) {
-		RenderErrorResponse(w, context, NewHttpError(http.StatusNotFound, "Not found"))
+        RenderErrorResponse(w, context, NewHttpErrorf(http.StatusNotFound, "%s was not found",r.RequestURI))
 		return
 	}
 
 	if !context.VerifyAccessTags(w, resource.Super().AccessTags) {
-		Log(context, "Mismatched access tags for resource")
+		Log(context, WARNING, "Mismatched access tags for resource")
 		return
 	}
 
@@ -192,11 +200,6 @@ func (handler *PUTHandler) Handle(w http.ResponseWriter, r *http.Request, contex
 		RenderErrorResponse(w, context, NewHttpError(http.StatusBadRequest, "Failed to parse resource"))
 		return
 	}
-	/* res.Super().Id = current.Super().Id
-		res.Super().Parent = current.Super().Parent
-	    if !handler.ShowTags {
-	        res.Super().AccessTags = current.Super().AccessTags
-	    }*/
 
 	if err := resource.Update(context, update); err != nil {
 		RenderErrorResponse(w, context, err)
@@ -219,22 +222,22 @@ func NewDELETEHandler(a Tags) *DELETEHandler {
 
 func (handler *DELETEHandler) Handle(w http.ResponseWriter, r *http.Request, context *ApiContext, resource ResourceDeleter) {
 	if !context.AuthenticateClient(w, r) {
-		Log(context, "Missing access tags")
+		Log(context, WARNING, "Missing access tags")
 		return
 	}
 
 	if !context.VerifyAccessTags(w, handler.AccessTags) {
-		Log(context, "Mismatched access tags for API signature")
+		Log(context, WARNING, "Mismatched access tags for API signature")
 		return
 	}
 
 	if !LoadResource(context, context.Params[0], Base64Id(context.Params[1]), resource) {
-		RenderErrorResponse(w, context, NewHttpError(http.StatusNotFound, "Not found"))
+        RenderErrorResponse(w, context, NewHttpErrorf(http.StatusNotFound, "%s was not found",r.RequestURI))
 		return
 	}
 
 	if !context.VerifyAccessTags(w, resource.Super().AccessTags) {
-		Log(context, "Mismatched access tags for resource")
+		Log(context, WARNING, "Mismatched access tags for resource")
 		return
 	}
 

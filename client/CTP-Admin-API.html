@@ -1,452 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="Asciidoctor 0.1.4">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.2">
-<meta name="author" content="Cloud Security Alliance">
-<title>The CTP back office API, rev. 0.1</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400">
+<title>The CTP prototype back office API, rev. 0.2</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
-/* Remove the comments around the @import statement below when using this as a custom stylesheet */
-/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400";*/
-article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
-audio,canvas,video{display:inline-block}
-audio:not([controls]){display:none;height:0}
-[hidden],template{display:none}
-script{display:none!important}
-html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body{margin:0}
-a{background:transparent}
-a:focus{outline:thin dotted}
-a:active,a:hover{outline:0}
-h1{font-size:2em;margin:.67em 0}
-abbr[title]{border-bottom:1px dotted}
-b,strong{font-weight:bold}
-dfn{font-style:italic}
-hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
-mark{background:#ff0;color:#000}
-code,kbd,pre,samp{font-family:monospace;font-size:1em}
-pre{white-space:pre-wrap}
-q{quotes:"\201C" "\201D" "\2018" "\2019"}
-small{font-size:80%}
-sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
-sup{top:-.5em}
-sub{bottom:-.25em}
-img{border:0}
-svg:not(:root){overflow:hidden}
-figure{margin:0}
-fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
-legend{border:0;padding:0}
-button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
-button,input{line-height:normal}
-button,select{text-transform:none}
-button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
-button[disabled],html input[disabled]{cursor:default}
-input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
-input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
-input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
-button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
-textarea{overflow:auto;vertical-align:top}
-table{border-collapse:collapse;border-spacing:0}
-*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
-html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
-a:hover{cursor:pointer}
-img,object,embed{max-width:100%;height:auto}
-object,embed{height:100%}
-img{-ms-interpolation-mode:bicubic}
-#map_canvas img,#map_canvas embed,#map_canvas object,.map_canvas img,.map_canvas embed,.map_canvas object{max-width:none!important}
-.left{float:left!important}
-.right{float:right!important}
-.text-left{text-align:left!important}
-.text-right{text-align:right!important}
-.text-center{text-align:center!important}
-.text-justify{text-align:justify!important}
-.hide{display:none}
-.antialiased,body{-webkit-font-smoothing:antialiased}
-img{display:inline-block;vertical-align:middle}
-textarea{height:auto;min-height:50px}
-select{width:100%}
-p.lead,.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{font-size:1.21875em;line-height:1.6}
-.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
-div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
-a{color:#2156a5;text-decoration:underline;line-height:inherit}
-a:hover,a:focus{color:#1d4b8f}
-a img{border:none}
-p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
-p aside{font-size:.875em;line-height:1.35;font-style:italic}
-h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
-h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
-h1{font-size:2.125em}
-h2{font-size:1.6875em}
-h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
-h4,h5{font-size:1.125em}
-h6{font-size:1em}
-hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
-em,i{font-style:italic;line-height:inherit}
-strong,b{font-weight:bold;line-height:inherit}
-small{font-size:60%;line-height:inherit}
-code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
-ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
-ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
-ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
-ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
-ul.square{list-style-type:square}
-ul.circle{list-style-type:circle}
-ul.disc{list-style-type:disc}
-ul.no-bullet{list-style:none}
-ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
-dl dt{margin-bottom:.3125em;font-weight:bold}
-dl dd{margin-bottom:1.25em}
-abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
-abbr{text-transform:none}
-blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
-blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
-blockquote cite:before{content:"\2014 \0020"}
-blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
-blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
-@media only screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
-h1{font-size:2.75em}
-h2{font-size:2.3125em}
-h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
-h4{font-size:1.4375em}}table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
-table thead,table tfoot{background:#f7f8f7;font-weight:bold}
-table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
-table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
-table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
-table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
-h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
-h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
-.clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
-.clearfix:after,.float-group:after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
-pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
-.keyseq{color:rgba(51,51,51,.8)}
-kbd{display:inline-block;color:rgba(0,0,0,.8);font-size:.75em;line-height:1.4;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:-.15em .15em 0 .15em;padding:.2em .6em .2em .5em;vertical-align:middle;white-space:nowrap}
-.keyseq kbd:first-child{margin-left:0}
-.keyseq kbd:last-child{margin-right:0}
-.menuseq,.menu{color:rgba(0,0,0,.8)}
-b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
-b.button:before{content:"[";padding:0 3px 0 2px}
-b.button:after{content:"]";padding:0 2px 0 3px}
-p a>code:hover{color:rgba(0,0,0,.9)}
-#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
-#header:before,#header:after,#content:before,#content:after,#footnotes:before,#footnotes:after,#footer:before,#footer:after{content:" ";display:table}
-#header:after,#content:after,#footnotes:after,#footer:after{clear:both}
-#content{margin-top:1.25em}
-#content:before{content:none}
-#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
-#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
-#header .details{border-bottom:1px solid #ddddd8;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
-#header .details span:first-child{margin-left:-.125em}
-#header .details span.email a{color:rgba(0,0,0,.85)}
-#header .details br{display:none}
-#header .details br+span:before{content:"\00a0\2013\00a0"}
-#header .details br+span.author:before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
-#header .details br+span#revremark:before{content:"\00a0|\00a0"}
-#header #revnumber{text-transform:capitalize}
-#header #revnumber:after{content:"\00a0"}
-#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
-#toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
-#toc>ul{margin-left:.125em}
-#toc ul.sectlevel0>li>a{font-style:italic}
-#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
-#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
-#toc a{text-decoration:none}
-#toc a:active{text-decoration:underline}
-#toctitle{color:#7a2518;font-size:1.2em}
-@media only screen and (min-width:768px){#toctitle{font-size:1.375em}
-body.toc2{padding-left:15em;padding-right:0}
-#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
-#toc.toc2 #toctitle{margin-top:0;font-size:1.2em}
-#toc.toc2>ul{font-size:.9em;margin-bottom:0}
-#toc.toc2 ul ul{margin-left:0;padding-left:1em}
-#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
-body.toc2.toc-right{padding-left:0;padding-right:15em}
-body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}@media only screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
-#toc.toc2{width:20em}
-#toc.toc2 #toctitle{font-size:1.375em}
-#toc.toc2>ul{font-size:.95em}
-#toc.toc2 ul ul{padding-left:1.25em}
-body.toc2.toc-right{padding-left:0;padding-right:20em}}#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
-#content #toc>:first-child{margin-top:0}
-#content #toc>:last-child{margin-bottom:0}
-#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
-#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
-.sect1{padding-bottom:.625em}
-@media only screen and (min-width:768px){.sect1{padding-bottom:1.25em}}.sect1+.sect1{border-top:1px solid #efefed}
-#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
-#content h1>a.anchor:before,h2>a.anchor:before,h3>a.anchor:before,#toctitle>a.anchor:before,.sidebarblock>.content>.title>a.anchor:before,h4>a.anchor:before,h5>a.anchor:before,h6>a.anchor:before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
-#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
-#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
-#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
-.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
-.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
-table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
-.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{color:rgba(0,0,0,.85)}
-table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
-.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
-.admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:none}
-.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
-.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
-.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
-.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
-.exampleblock>.content>:first-child{margin-top:0}
-.exampleblock>.content>:last-child{margin-bottom:0}
-.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
-.sidebarblock>:first-child{margin-top:0}
-.sidebarblock>:last-child{margin-bottom:0}
-.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
-.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
-.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
-.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
-.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
-.literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
-@media only screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}@media only screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
-.listingblock pre.highlightjs{padding:0}
-.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
-.listingblock pre.prettyprint{border-width:0}
-.listingblock>.content{position:relative}
-.listingblock code[data-lang]:before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
-.listingblock:hover code[data-lang]:before{display:block}
-.listingblock.terminal pre .command:before{content:attr(data-prompt);padding-right:.5em;color:#999}
-.listingblock.terminal pre .command:not([data-prompt]):before{content:"$"}
-table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
-table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0}
-table.pyhltable td.code{padding-left:.75em;padding-right:0}
-pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #ddddd8}
-pre.pygments .lineno{display:inline-block;margin-right:.25em}
-table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
-.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
-.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
-.quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
-.quoteblock blockquote{margin:0;padding:0;border:0}
-.quoteblock blockquote:before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
-.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
-.quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
-.quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
-.quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
-.quoteblock .quoteblock blockquote:before{display:none}
-.verseblock{margin:0 1em 1.25em 1em}
-.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
-.verseblock pre strong{font-weight:400}
-.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
-.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
-.quoteblock .attribution br,.verseblock .attribution br{display:none}
-.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.05em;color:rgba(0,0,0,.6)}
-.quoteblock.abstract{margin:0 0 1.25em 0;display:block}
-.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{text-align:left;word-spacing:0}
-.quoteblock.abstract blockquote:before,.quoteblock.abstract blockquote p:first-of-type:before{display:none}
-table.tableblock{max-width:100%;border-collapse:separate}
-table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
-table.spread{width:100%}
-table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
-table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
-table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
-table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
-table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
-table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
-table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
-table.frame-all{border-width:1px}
-table.frame-sides{border-width:0 1px}
-table.frame-topbot{border-width:1px 0}
-th.halign-left,td.halign-left{text-align:left}
-th.halign-right,td.halign-right{text-align:right}
-th.halign-center,td.halign-center{text-align:center}
-th.valign-top,td.valign-top{vertical-align:top}
-th.valign-bottom,td.valign-bottom{vertical-align:bottom}
-th.valign-middle,td.valign-middle{vertical-align:middle}
-table thead th,table tfoot th{font-weight:bold}
-tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
-tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
-p.tableblock>code:only-child{background:none;padding:0}
-p.tableblock{font-size:1em}
-td>div.verse{white-space:pre}
-ol{margin-left:1.75em}
-ul li ol{margin-left:1.5em}
-dl dd{margin-left:1.125em}
-dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
-ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
-ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
-ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
-ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
-ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
-ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
-ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
-ul.inline>li>*{display:block}
-.unstyled dl dt{font-weight:400;font-style:normal}
-ol.arabic{list-style-type:decimal}
-ol.decimal{list-style-type:decimal-leading-zero}
-ol.loweralpha{list-style-type:lower-alpha}
-ol.upperalpha{list-style-type:upper-alpha}
-ol.lowerroman{list-style-type:lower-roman}
-ol.upperroman{list-style-type:upper-roman}
-ol.lowergreek{list-style-type:lower-greek}
-.hdlist>table,.colist>table{border:0;background:none}
-.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
-td.hdlist1{padding-right:.75em;font-weight:bold}
-td.hdlist1,td.hdlist2{vertical-align:top}
-.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
-.colist>table tr>td:last-of-type{padding:.25em 0}
-.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
-.imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
-.imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
-.imageblock>.title{margin-bottom:0}
-.imageblock.thumb,.imageblock.th{border-width:6px}
-.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
-.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
-.image.left{margin-right:.625em}
-.image.right{margin-left:.625em}
-a.image{text-decoration:none}
-span.footnote,span.footnoteref{vertical-align:super;font-size:.875em}
-span.footnote a,span.footnoteref a{text-decoration:none}
-span.footnote a:active,span.footnoteref a:active{text-decoration:underline}
-#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
-#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em 0;border-width:1px 0 0 0}
-#footnotes .footnote{padding:0 .375em;line-height:1.3;font-size:.875em;margin-left:1.2em;text-indent:-1.2em;margin-bottom:.2em}
-#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none}
-#footnotes .footnote:last-of-type{margin-bottom:0}
-#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
-.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
-.gist .file-data>table td.line-data{width:99%}
-div.unbreakable{page-break-inside:avoid}
-.big{font-size:larger}
-.small{font-size:smaller}
-.underline{text-decoration:underline}
-.overline{text-decoration:overline}
-.line-through{text-decoration:line-through}
-.aqua{color:#00bfbf}
-.aqua-background{background-color:#00fafa}
-.black{color:#000}
-.black-background{background-color:#000}
-.blue{color:#0000bf}
-.blue-background{background-color:#0000fa}
-.fuchsia{color:#bf00bf}
-.fuchsia-background{background-color:#fa00fa}
-.gray{color:#606060}
-.gray-background{background-color:#7d7d7d}
-.green{color:#006000}
-.green-background{background-color:#007d00}
-.lime{color:#00bf00}
-.lime-background{background-color:#00fa00}
-.maroon{color:#600000}
-.maroon-background{background-color:#7d0000}
-.navy{color:#000060}
-.navy-background{background-color:#00007d}
-.olive{color:#606000}
-.olive-background{background-color:#7d7d00}
-.purple{color:#600060}
-.purple-background{background-color:#7d007d}
-.red{color:#bf0000}
-.red-background{background-color:#fa0000}
-.silver{color:#909090}
-.silver-background{background-color:#bcbcbc}
-.teal{color:#006060}
-.teal-background{background-color:#007d7d}
-.white{color:#bfbfbf}
-.white-background{background-color:#fafafa}
-.yellow{color:#bfbf00}
-.yellow-background{background-color:#fafa00}
-span.icon>.fa{cursor:default}
-.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
-.admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
-.admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
-.admonitionblock td.icon .icon-warning:before{content:"\f071";color:#bf6900}
-.admonitionblock td.icon .icon-caution:before{content:"\f06d";color:#bf3400}
-.admonitionblock td.icon .icon-important:before{content:"\f06a";color:#bf0000}
-.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
-.conum[data-value] *{color:#fff!important}
-.conum[data-value]+b{display:none}
-.conum[data-value]:after{content:attr(data-value)}
-pre .conum[data-value]{position:relative;top:-.125em}
-b.conum *{color:inherit!important}
-.conum:not([data-value]):empty{display:none}
-h1,h2{letter-spacing:-.01em}
-dt,th.tableblock,td.content{text-rendering:optimizeLegibility}
-p,td.content{letter-spacing:-.01em}
-p strong,td.content strong{letter-spacing:-.005em}
-p,blockquote,dt,td.content{font-size:1.0625rem}
-p{margin-bottom:1.25rem}
-.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
-.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
-.print-only{display:none!important}
-@media print{@page{margin:1.25cm .75cm}
-*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
-a{color:inherit!important;text-decoration:underline!important}
-a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
-a[href^="http:"]:not(.bare):after,a[href^="https:"]:not(.bare):after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
-abbr[title]:after{content:" (" attr(title) ")"}
-pre,blockquote,tr,img{page-break-inside:avoid}
-thead{display:table-header-group}
-img{max-width:100%!important}
-p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
-h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
-#toc,.sidebarblock,.exampleblock>.content{background:none!important}
-#toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
-.sect1{padding-bottom:0!important}
-.sect1+.sect1{border:0!important}
-#header>h1:first-child{margin-top:1.25rem}
-body.book #header{text-align:center}
-body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em 0}
-body.book #header .details{border:0!important;display:block;padding:0!important}
-body.book #header .details span:first-child{margin-left:0!important}
-body.book #header .details br{display:block}
-body.book #header .details br+span:before{content:none!important}
-body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
-body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
-.listingblock code[data-lang]:before{display:block}
-#footer{background:none!important;padding:0 .9375em}
-#footer-text{color:rgba(0,0,0,.6)!important;font-size:.9em}
-.hide-on-print{display:none!important}
-.print-only{display:block!important}
-.hide-for-print{display:none!important}
-.show-for-print{display:inherit!important}}
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
+audio, canvas, video { display: inline-block; }
+audio:not([controls]) { display: none; height: 0; }
+[hidden] { display: none; }
+html { background: #fff; color: #000; font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+a:focus { outline: thin dotted; }
+a:active, a:hover { outline: 0; }
+h1 { font-size: 2em; margin: 0.67em 0; }
+abbr[title] { border-bottom: 1px dotted; }
+b, strong { font-weight: bold; }
+dfn { font-style: italic; }
+hr { -moz-box-sizing: content-box; box-sizing: content-box; height: 0; }
+mark { background: #ff0; color: #000; }
+code, kbd, pre, samp { font-family: monospace, serif; font-size: 1em; }
+pre { white-space: pre-wrap; }
+q { quotes: "\201C" "\201D" "\2018" "\2019"; }
+small { font-size: 80%; }
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+img { border: 0; }
+svg:not(:root) { overflow: hidden; }
+figure { margin: 0; }
+fieldset { border: 1px solid #c0c0c0; margin: 0 2px; padding: 0.35em 0.625em 0.75em; }
+legend { border: 0; padding: 0; }
+button, input, select, textarea { font-family: inherit; font-size: 100%; margin: 0; }
+button, input { line-height: normal; }
+button, select { text-transform: none; }
+button, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; }
+button[disabled], html input[disabled] { cursor: default; }
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+textarea { overflow: auto; vertical-align: top; }
+table { border-collapse: collapse; border-spacing: 0; }
+*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+html, body { font-size: 100%; }
+body { background: white; color: #222222; padding: 0; margin: 0; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; line-height: 1; position: relative; cursor: auto; }
+a:hover { cursor: pointer; }
+a:focus { outline: none; }
+img, object, embed { max-width: 100%; height: auto; }
+object, embed { height: 100%; }
+img { -ms-interpolation-mode: bicubic; }
+#map_canvas img, #map_canvas embed, #map_canvas object, .map_canvas img, .map_canvas embed, .map_canvas object { max-width: none !important; }
+.left { float: left !important; }
+.right { float: right !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+.text-center { text-align: center !important; }
+.text-justify { text-align: justify !important; }
+.hide { display: none; }
+.antialiased, body { -webkit-font-smoothing: antialiased; }
+img { display: inline-block; vertical-align: middle; }
+textarea { height: auto; min-height: 50px; }
+select { width: 100%; }
+p.lead, .paragraph.lead > p, #preamble > .sectionbody > .paragraph:first-of-type p { font-size: 1.21875em; line-height: 1.6; }
+.subheader, #content #toctitle, .admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title, .tableblock > caption { line-height: 1.4; color: #7a2518; font-weight: 300; margin-top: 0.2em; margin-bottom: 0.5em; }
+div, dl, dt, dd, ul, ol, li, h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6, pre, form, p, blockquote, th, td { margin: 0; padding: 0; direction: ltr; }
+a { color: #005498; text-decoration: underline; line-height: inherit; }
+a:hover, a:focus { color: #00467f; }
+a img { border: none; }
+p { font-family: inherit; font-weight: normal; font-size: 1em; line-height: 1.6; margin-bottom: 1.25em; text-rendering: optimizeLegibility; }
+p aside { font-size: 0.875em; line-height: 1.35; font-style: italic; }
+h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { font-family: Georgia, "URW Bookman L", Helvetica, Arial, sans-serif; font-weight: normal; font-style: normal; color: #ba3925; text-rendering: optimizeLegibility; margin-top: 1em; margin-bottom: 0.5em; line-height: 1.2125em; }
+h1 small, h2 small, h3 small, #toctitle small, .sidebarblock > .content > .title small, h4 small, h5 small, h6 small { font-size: 60%; color: #e99b8f; line-height: 0; }
+h1 { font-size: 2.125em; }
+h2 { font-size: 1.6875em; }
+h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.375em; }
+h4 { font-size: 1.125em; }
+h5 { font-size: 1.125em; }
+h6 { font-size: 1em; }
+hr { border: solid #dddddd; border-width: 1px 0 0; clear: both; margin: 1.25em 0 1.1875em; height: 0; }
+em, i { font-style: italic; line-height: inherit; }
+strong, b { font-weight: bold; line-height: inherit; }
+small { font-size: 60%; line-height: inherit; }
+code { font-family: Consolas, "Liberation Mono", Courier, monospace; font-weight: normal; color: #6d180b; }
+ul, ol, dl { font-size: 1em; line-height: 1.6; margin-bottom: 1.25em; list-style-position: outside; font-family: inherit; }
+ul, ol { margin-left: 1.5em; }
+ul li ul, ul li ol { margin-left: 1.25em; margin-bottom: 0; font-size: 1em; }
+ul.square li ul, ul.circle li ul, ul.disc li ul { list-style: inherit; }
+ul.square { list-style-type: square; }
+ul.circle { list-style-type: circle; }
+ul.disc { list-style-type: disc; }
+ul.no-bullet { list-style: none; }
+ol li ul, ol li ol { margin-left: 1.25em; margin-bottom: 0; }
+dl dt { margin-bottom: 0.3125em; font-weight: bold; }
+dl dd { margin-bottom: 1.25em; }
+abbr, acronym { text-transform: uppercase; font-size: 90%; color: #222222; border-bottom: 1px dotted #dddddd; cursor: help; }
+abbr { text-transform: none; }
+blockquote { margin: 0 0 1.25em; padding: 0.5625em 1.25em 0 1.1875em; border-left: 1px solid #dddddd; }
+blockquote cite { display: block; font-size: inherit; color: #555555; }
+blockquote cite:before { content: "\2014 \0020"; }
+blockquote cite a, blockquote cite a:visited { color: #555555; }
+blockquote, blockquote p { line-height: 1.6; color: #6f6f6f; }
+.vcard { display: inline-block; margin: 0 0 1.25em 0; border: 1px solid #dddddd; padding: 0.625em 0.75em; }
+.vcard li { margin: 0; display: block; }
+.vcard .fn { font-weight: bold; font-size: 0.9375em; }
+.vevent .summary { font-weight: bold; }
+.vevent abbr { cursor: auto; text-decoration: none; font-weight: bold; border: none; padding: 0 0.0625em; }
+@media only screen and (min-width: 768px) { h1, h2, h3, #toctitle, .sidebarblock > .content > .title, h4, h5, h6 { line-height: 1.4; }
+  h1 { font-size: 2.75em; }
+  h2 { font-size: 2.3125em; }
+  h3, #toctitle, .sidebarblock > .content > .title { font-size: 1.6875em; }
+  h4 { font-size: 1.4375em; } }
+.print-only { display: none !important; }
+@media print { * { background: transparent !important; color: #000 !important; box-shadow: none !important; text-shadow: none !important; }
+  a, a:visited { text-decoration: underline; }
+  a[href]:after { content: " (" attr(href) ")"; }
+  abbr[title]:after { content: " (" attr(title) ")"; }
+  .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+  pre, blockquote { border: 1px solid #999; page-break-inside: avoid; }
+  thead { display: table-header-group; }
+  tr, img { page-break-inside: avoid; }
+  img { max-width: 100% !important; }
+  @page { margin: 0.5cm; }
+  p, h2, h3, #toctitle, .sidebarblock > .content > .title { orphans: 3; widows: 3; }
+  h2, h3, #toctitle, .sidebarblock > .content > .title { page-break-after: avoid; }
+  .hide-on-print { display: none !important; }
+  .print-only { display: block !important; }
+  .hide-for-print { display: none !important; }
+  .show-for-print { display: inherit !important; } }
+table { background: white; margin-bottom: 1.25em; border: solid 1px #dddddd; }
+table thead, table tfoot { background: whitesmoke; font-weight: bold; }
+table thead tr th, table thead tr td, table tfoot tr th, table tfoot tr td { padding: 0.5em 0.625em 0.625em; font-size: inherit; color: #222222; text-align: left; }
+table tr th, table tr td { padding: 0.5625em 0.625em; font-size: inherit; color: #222222; }
+table tr.even, table tr.alt, table tr:nth-of-type(even) { background: #f9f9f9; }
+table thead tr th, table tfoot tr th, table tbody tr td, table tr td, table tfoot tr td { display: table-cell; line-height: 1.6; }
+.clearfix:before, .clearfix:after, .float-group:before, .float-group:after { content: " "; display: table; }
+.clearfix:after, .float-group:after { clear: both; }
+*:not(pre) > code { font-size: 0.9375em; padding: 1px 3px 0; white-space: nowrap; background-color: #f2f2f2; border: 1px solid #cccccc; -webkit-border-radius: 4px; border-radius: 4px; text-shadow: none; }
+pre, pre > code { line-height: 1.4; color: inherit; font-family: Consolas, "Liberation Mono", Courier, monospace; font-weight: normal; }
+kbd.keyseq { color: #555555; }
+kbd:not(.keyseq) { display: inline-block; color: #222222; font-size: 0.75em; line-height: 1.4; background-color: #F7F7F7; border: 1px solid #ccc; -webkit-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; margin: -0.15em 0.15em 0 0.15em; padding: 0.2em 0.6em 0.2em 0.5em; vertical-align: middle; white-space: nowrap; }
+kbd kbd:first-child { margin-left: 0; }
+kbd kbd:last-child { margin-right: 0; }
+.menuseq, .menu { color: #090909; }
+p a > code:hover { color: #561309; }
+#header, #content, #footnotes, #footer { width: 100%; margin-left: auto; margin-right: auto; margin-top: 0; margin-bottom: 0; max-width: 62.5em; *zoom: 1; position: relative; padding-left: 0.9375em; padding-right: 0.9375em; }
+#header:before, #header:after, #content:before, #content:after, #footnotes:before, #footnotes:after, #footer:before, #footer:after { content: " "; display: table; }
+#header:after, #content:after, #footnotes:after, #footer:after { clear: both; }
+#header { margin-bottom: 2.5em; }
+#header > h1 { color: black; font-weight: normal; border-bottom: 1px solid #dddddd; margin-bottom: -28px; padding-bottom: 32px; }
+#header span { color: #6f6f6f; }
+#header #revnumber { text-transform: capitalize; }
+#header br { display: none; }
+#header br + span { padding-left: 3px; }
+#header br + span:before { content: "\2013 \0020"; }
+#header br + span.author { padding-left: 0; }
+#header br + span.author:before { content: ", "; }
+#toc { border-bottom: 3px double #ebebeb; padding-bottom: 1.25em; }
+#toc > ul { margin-left: 0.25em; }
+#toc ul.sectlevel0 > li > a { font-style: italic; }
+#toc ul.sectlevel0 ul.sectlevel1 { margin-left: 0; margin-top: 0.5em; margin-bottom: 0.5em; }
+#toc ul { list-style-type: none; }
+#toctitle { color: #7a2518; }
+@media only screen and (min-width: 1280px) { body.toc2 { padding-left: 20em; }
+  #toc.toc2 { position: fixed; width: 20em; left: 0; top: 0; border-right: 1px solid #ebebeb; border-bottom: 0; z-index: 1000; padding: 1em; height: 100%; overflow: auto; }
+  #toc.toc2 #toctitle { margin-top: 0; }
+  #toc.toc2 > ul { font-size: .95em; }
+  #toc.toc2 ul ul { margin-left: 0; padding-left: 1.25em; }
+  #toc.toc2 ul.sectlevel0 ul.sectlevel1 { padding-left: 0; margin-top: 0.5em; margin-bottom: 0.5em; }
+  body.toc2.toc-right { padding-left: 0; padding-right: 20em; }
+  body.toc2.toc-right #toc.toc2 { border-right: 0; border-left: 1px solid #ebebeb; left: auto; right: 0; } }
+#content #toc { border-style: solid; border-width: 1px; border-color: #d9d9d9; margin-bottom: 1.25em; padding: 1.25em; background: #f2f2f2; border-width: 0; -webkit-border-radius: 4px; border-radius: 4px; }
+#content #toc > :first-child { margin-top: 0; }
+#content #toc > :last-child { margin-bottom: 0; }
+#content #toc a { text-decoration: none; }
+#content #toctitle { font-weight: bold; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-size: 1em; padding-left: 0.125em; }
+#footer { max-width: 100%; background-color: #222222; padding: 1.25em; }
+#footer-text { color: #dddddd; line-height: 1.44; }
+.sect1 { padding-bottom: 1.25em; }
+.sect1 + .sect1 { border-top: 3px double #ebebeb; }
+#content h1 > a.anchor, h2 > a.anchor, h3 > a.anchor, #toctitle > a.anchor, .sidebarblock > .content > .title > a.anchor, h4 > a.anchor, h5 > a.anchor, h6 > a.anchor { position: absolute; width: 1em; margin-left: -1em; display: block; text-decoration: none; visibility: hidden; text-align: center; font-weight: normal; }
+#content h1 > a.anchor:before, h2 > a.anchor:before, h3 > a.anchor:before, #toctitle > a.anchor:before, .sidebarblock > .content > .title > a.anchor:before, h4 > a.anchor:before, h5 > a.anchor:before, h6 > a.anchor:before { content: '\00A7'; font-size: .85em; vertical-align: text-top; display: block; margin-top: 0.05em; }
+#content h1:hover > a.anchor, #content h1 > a.anchor:hover, h2:hover > a.anchor, h2 > a.anchor:hover, h3:hover > a.anchor, #toctitle:hover > a.anchor, .sidebarblock > .content > .title:hover > a.anchor, h3 > a.anchor:hover, #toctitle > a.anchor:hover, .sidebarblock > .content > .title > a.anchor:hover, h4:hover > a.anchor, h4 > a.anchor:hover, h5:hover > a.anchor, h5 > a.anchor:hover, h6:hover > a.anchor, h6 > a.anchor:hover { visibility: visible; }
+#content h1 > a.link, h2 > a.link, h3 > a.link, #toctitle > a.link, .sidebarblock > .content > .title > a.link, h4 > a.link, h5 > a.link, h6 > a.link { color: #ba3925; text-decoration: none; }
+#content h1 > a.link:hover, h2 > a.link:hover, h3 > a.link:hover, #toctitle > a.link:hover, .sidebarblock > .content > .title > a.link:hover, h4 > a.link:hover, h5 > a.link:hover, h6 > a.link:hover { color: #a53221; }
+.imageblock, .literalblock, .listingblock, .verseblock, .videoblock { margin-bottom: 1.25em; }
+.admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { text-align: left; font-weight: bold; }
+.tableblock > caption { text-align: left; font-weight: bold; white-space: nowrap; overflow: visible; max-width: 0; }
+table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p { font-size: inherit; }
+.admonitionblock > table { border: 0; background: none; width: 100%; }
+.admonitionblock > table td.icon { text-align: center; width: 80px; }
+.admonitionblock > table td.icon img { max-width: none; }
+.admonitionblock > table td.icon .title { font-weight: bold; text-transform: uppercase; }
+.admonitionblock > table td.content { padding-left: 1.125em; padding-right: 1.25em; border-left: 1px solid #dddddd; color: #6f6f6f; }
+.admonitionblock > table td.content > :last-child > :last-child { margin-bottom: 0; }
+.exampleblock > .content { border-style: solid; border-width: 1px; border-color: #e6e6e6; margin-bottom: 1.25em; padding: 1.25em; background: white; -webkit-border-radius: 4px; border-radius: 4px; }
+.exampleblock > .content > :first-child { margin-top: 0; }
+.exampleblock > .content > :last-child { margin-bottom: 0; }
+.exampleblock > .content h1, .exampleblock > .content h2, .exampleblock > .content h3, .exampleblock > .content #toctitle, .sidebarblock.exampleblock > .content > .title, .exampleblock > .content h4, .exampleblock > .content h5, .exampleblock > .content h6, .exampleblock > .content p { color: #333333; }
+.exampleblock > .content h1, .exampleblock > .content h2, .exampleblock > .content h3, .exampleblock > .content #toctitle, .sidebarblock.exampleblock > .content > .title, .exampleblock > .content h4, .exampleblock > .content h5, .exampleblock > .content h6 { line-height: 1; margin-bottom: 0.625em; }
+.exampleblock > .content h1.subheader, .exampleblock > .content h2.subheader, .exampleblock > .content h3.subheader, .exampleblock > .content .subheader#toctitle, .sidebarblock.exampleblock > .content > .subheader.title, .exampleblock > .content h4.subheader, .exampleblock > .content h5.subheader, .exampleblock > .content h6.subheader { line-height: 1.4; }
+.exampleblock.result > .content { -webkit-box-shadow: 0 1px 8px #d9d9d9; box-shadow: 0 1px 8px #d9d9d9; }
+.sidebarblock { border-style: solid; border-width: 1px; border-color: #d9d9d9; margin-bottom: 1.25em; padding: 1.25em; background: #f2f2f2; -webkit-border-radius: 4px; border-radius: 4px; }
+.sidebarblock > :first-child { margin-top: 0; }
+.sidebarblock > :last-child { margin-bottom: 0; }
+.sidebarblock h1, .sidebarblock h2, .sidebarblock h3, .sidebarblock #toctitle, .sidebarblock > .content > .title, .sidebarblock h4, .sidebarblock h5, .sidebarblock h6, .sidebarblock p { color: #333333; }
+.sidebarblock h1, .sidebarblock h2, .sidebarblock h3, .sidebarblock #toctitle, .sidebarblock > .content > .title, .sidebarblock h4, .sidebarblock h5, .sidebarblock h6 { line-height: 1; margin-bottom: 0.625em; }
+.sidebarblock h1.subheader, .sidebarblock h2.subheader, .sidebarblock h3.subheader, .sidebarblock .subheader#toctitle, .sidebarblock > .content > .subheader.title, .sidebarblock h4.subheader, .sidebarblock h5.subheader, .sidebarblock h6.subheader { line-height: 1.4; }
+.sidebarblock > .content > .title { color: #7a2518; margin-top: 0; line-height: 1.6; }
+.exampleblock > .content > :last-child > :last-child, .exampleblock > .content .olist > ol > li:last-child > :last-child, .exampleblock > .content .ulist > ul > li:last-child > :last-child, .exampleblock > .content .qlist > ol > li:last-child > :last-child, .sidebarblock > .content > :last-child > :last-child, .sidebarblock > .content .olist > ol > li:last-child > :last-child, .sidebarblock > .content .ulist > ul > li:last-child > :last-child, .sidebarblock > .content .qlist > ol > li:last-child > :last-child { margin-bottom: 0; }
+.literalblock > .content pre, .listingblock > .content pre { background: none; border-width: 1px 0; border-style: dotted; border-color: #bfbfbf; -webkit-border-radius: 4px; border-radius: 4px; padding: 0.75em 0.75em 0.5em 0.75em; word-wrap: break-word; }
+.literalblock > .content pre.nowrap, .listingblock > .content pre.nowrap { overflow-x: auto; white-space: pre; word-wrap: normal; }
+.literalblock > .content pre > code, .listingblock > .content pre > code { display: block; }
+@media only screen { .literalblock > .content pre, .listingblock > .content pre { font-size: 0.8em; } }
+@media only screen and (min-width: 768px) { .literalblock > .content pre, .listingblock > .content pre { font-size: 0.9em; } }
+@media only screen and (min-width: 1280px) { .literalblock > .content pre, .listingblock > .content pre { font-size: 1em; } }
+.listingblock > .content { position: relative; }
+.listingblock:hover code[class*=" language-"]:before { text-transform: uppercase; font-size: 0.9em; color: #999; position: absolute; top: 0.375em; right: 0.375em; }
+.listingblock:hover code.asciidoc:before { content: "asciidoc"; }
+.listingblock:hover code.clojure:before { content: "clojure"; }
+.listingblock:hover code.css:before { content: "css"; }
+.listingblock:hover code.groovy:before { content: "groovy"; }
+.listingblock:hover code.html:before { content: "html"; }
+.listingblock:hover code.java:before { content: "java"; }
+.listingblock:hover code.javascript:before { content: "javascript"; }
+.listingblock:hover code.python:before { content: "python"; }
+.listingblock:hover code.ruby:before { content: "ruby"; }
+.listingblock:hover code.scss:before { content: "scss"; }
+.listingblock:hover code.xml:before { content: "xml"; }
+.listingblock:hover code.yaml:before { content: "yaml"; }
+.listingblock.terminal pre .command:before { content: attr(data-prompt); padding-right: 0.5em; color: #999; }
+.listingblock.terminal pre .command:not([data-prompt]):before { content: '$'; }
+table.pyhltable { border: 0; margin-bottom: 0; }
+table.pyhltable td { vertical-align: top; padding-top: 0; padding-bottom: 0; }
+table.pyhltable td.code { padding-left: .75em; padding-right: 0; }
+.highlight.pygments .lineno, table.pyhltable td:not(.code) { color: #999; padding-left: 0; padding-right: .5em; border-right: 1px solid #dddddd; }
+.highlight.pygments .lineno { display: inline-block; margin-right: .25em; }
+table.pyhltable .linenodiv { background-color: transparent !important; padding-right: 0 !important; }
+.quoteblock { margin: 0 0 1.25em; padding: 0.5625em 1.25em 0 1.1875em; border-left: 1px solid #dddddd; }
+.quoteblock blockquote { margin: 0 0 1.25em 0; padding: 0 0 0.5625em 0; border: 0; }
+.quoteblock blockquote > .paragraph:last-child p { margin-bottom: 0; }
+.quoteblock .attribution { margin-top: -.25em; padding-bottom: 0.5625em; font-size: inherit; color: #555555; }
+.quoteblock .attribution br { display: none; }
+.quoteblock .attribution cite { display: block; margin-bottom: 0.625em; }
+table thead th, table tfoot th { font-weight: bold; }
+table.tableblock.grid-all { border-collapse: separate; border-spacing: 1px; -webkit-border-radius: 4px; border-radius: 4px; border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd; }
+table.tableblock.frame-topbot, table.tableblock.frame-none { border-left: 0; border-right: 0; }
+table.tableblock.frame-sides, table.tableblock.frame-none { border-top: 0; border-bottom: 0; }
+table.tableblock td .paragraph:last-child p, table.tableblock td > p:last-child { margin-bottom: 0; }
+th.tableblock.halign-left, td.tableblock.halign-left { text-align: left; }
+th.tableblock.halign-right, td.tableblock.halign-right { text-align: right; }
+th.tableblock.halign-center, td.tableblock.halign-center { text-align: center; }
+th.tableblock.valign-top, td.tableblock.valign-top { vertical-align: top; }
+th.tableblock.valign-bottom, td.tableblock.valign-bottom { vertical-align: bottom; }
+th.tableblock.valign-middle, td.tableblock.valign-middle { vertical-align: middle; }
+p.tableblock.header { color: #222222; font-weight: bold; }
+td > div.verse { white-space: pre; }
+ol { margin-left: 1.75em; }
+ul li ol { margin-left: 1.5em; }
+dl dd { margin-left: 1.125em; }
+dl dd:last-child, dl dd:last-child > :last-child { margin-bottom: 0; }
+ol > li p, ul > li p, ul dd, ol dd, .olist .olist, .ulist .ulist, .ulist .olist, .olist .ulist { margin-bottom: 0.625em; }
+ul.unstyled, ol.unnumbered, ul.checklist, ul.none { list-style-type: none; }
+ul.unstyled, ol.unnumbered, ul.checklist { margin-left: 0.625em; }
+ul.checklist li > p:first-child > i[class^="icon-check"]:first-child, ul.checklist li > p:first-child > input[type="checkbox"]:first-child { margin-right: 0.25em; }
+ul.checklist li > p:first-child > input[type="checkbox"]:first-child { position: relative; top: 1px; }
+ul.inline { margin: 0 auto 0.625em auto; margin-left: -1.375em; margin-right: 0; padding: 0; list-style: none; overflow: hidden; }
+ul.inline > li { list-style: none; float: left; margin-left: 1.375em; display: block; }
+ul.inline > li > * { display: block; }
+.unstyled dl dt { font-weight: normal; font-style: normal; }
+ol.arabic { list-style-type: decimal; }
+ol.decimal { list-style-type: decimal-leading-zero; }
+ol.loweralpha { list-style-type: lower-alpha; }
+ol.upperalpha { list-style-type: upper-alpha; }
+ol.lowerroman { list-style-type: lower-roman; }
+ol.upperroman { list-style-type: upper-roman; }
+ol.lowergreek { list-style-type: lower-greek; }
+.hdlist > table, .colist > table { border: 0; background: none; }
+.hdlist > table > tbody > tr, .colist > table > tbody > tr { background: none; }
+td.hdlist1 { padding-right: .8em; font-weight: bold; }
+td.hdlist1, td.hdlist2 { vertical-align: top; }
+.literalblock + .colist, .listingblock + .colist { margin-top: -0.5em; }
+.colist > table tr > td:first-of-type { padding: 0 .8em; line-height: 1; }
+.colist > table tr > td:last-of-type { padding: 0.25em 0; }
+.qanda > ol > li > p > em:only-child { color: #00467f; }
+.thumb, .th { line-height: 0; display: inline-block; border: solid 4px white; -webkit-box-shadow: 0 0 0 1px #dddddd; box-shadow: 0 0 0 1px #dddddd; }
+.imageblock.left, .imageblock[style*="float: left"] { margin: 0.25em 0.625em 1.25em 0; }
+.imageblock.right, .imageblock[style*="float: right"] { margin: 0.25em 0 1.25em 0.625em; }
+.imageblock > .title { margin-bottom: 0; }
+.imageblock.thumb, .imageblock.th { border-width: 6px; }
+.imageblock.thumb > .title, .imageblock.th > .title { padding: 0 0.125em; }
+.image.left, .image.right { margin-top: 0.25em; margin-bottom: 0.25em; display: inline-block; line-height: 0; }
+.image.left { margin-right: 0.625em; }
+.image.right { margin-left: 0.625em; }
+a.image { text-decoration: none; }
+span.footnote, span.footnoteref { vertical-align: super; font-size: 0.875em; }
+span.footnote a, span.footnoteref a { text-decoration: none; }
+#footnotes { padding-top: 0.75em; padding-bottom: 0.75em; margin-bottom: 0.625em; }
+#footnotes hr { width: 20%; min-width: 6.25em; margin: -.25em 0 .75em 0; border-width: 1px 0 0 0; }
+#footnotes .footnote { padding: 0 0.375em; line-height: 1.3; font-size: 0.875em; margin-left: 1.2em; text-indent: -1.2em; margin-bottom: .2em; }
+#footnotes .footnote a:first-of-type { font-weight: bold; text-decoration: none; }
+#footnotes .footnote:last-of-type { margin-bottom: 0; }
+#content #footnotes { margin-top: -0.625em; margin-bottom: 0; padding: 0.75em 0; }
+.gist .file-data > table { border: none; background: #fff; width: 100%; margin-bottom: 0; }
+.gist .file-data > table td.line-data { width: 99%; }
+div.unbreakable { page-break-inside: avoid; }
+.big { font-size: larger; }
+.small { font-size: smaller; }
+.underline { text-decoration: underline; }
+.overline { text-decoration: overline; }
+.line-through { text-decoration: line-through; }
+.aqua { color: #00bfbf; }
+.aqua-background { background-color: #00fafa; }
+.black { color: black; }
+.black-background { background-color: black; }
+.blue { color: #0000bf; }
+.blue-background { background-color: #0000fa; }
+.fuchsia { color: #bf00bf; }
+.fuchsia-background { background-color: #fa00fa; }
+.gray { color: #606060; }
+.gray-background { background-color: #7d7d7d; }
+.green { color: #006000; }
+.green-background { background-color: #007d00; }
+.lime { color: #00bf00; }
+.lime-background { background-color: #00fa00; }
+.maroon { color: #600000; }
+.maroon-background { background-color: #7d0000; }
+.navy { color: #000060; }
+.navy-background { background-color: #00007d; }
+.olive { color: #606000; }
+.olive-background { background-color: #7d7d00; }
+.purple { color: #600060; }
+.purple-background { background-color: #7d007d; }
+.red { color: #bf0000; }
+.red-background { background-color: #fa0000; }
+.silver { color: #909090; }
+.silver-background { background-color: #bcbcbc; }
+.teal { color: #006060; }
+.teal-background { background-color: #007d7d; }
+.white { color: #bfbfbf; }
+.white-background { background-color: #fafafa; }
+.yellow { color: #bfbf00; }
+.yellow-background { background-color: #fafa00; }
+span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
+.admonitionblock td.icon [class^="icon-"]:before { font-size: 2.5em; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); cursor: default; }
+.admonitionblock td.icon .icon-note:before { content: "\f05a"; color: #005498; color: #003f72; }
+.admonitionblock td.icon .icon-tip:before { content: "\f0eb"; text-shadow: 1px 1px 2px rgba(155, 155, 0, 0.8); color: #111; }
+.admonitionblock td.icon .icon-warning:before { content: "\f071"; color: #bf6900; }
+.admonitionblock td.icon .icon-caution:before { content: "\f06d"; color: #bf3400; }
+.admonitionblock td.icon .icon-important:before { content: "\f06a"; color: #bf0000; }
+.conum { display: inline-block; color: white !important; background-color: #222222; -webkit-border-radius: 100px; border-radius: 100px; text-align: center; width: 20px; height: 20px; font-size: 12px; font-weight: bold; line-height: 20px; font-family: Arial, sans-serif; font-style: normal; position: relative; top: -2px; letter-spacing: -1px; }
+.conum * { color: white !important; }
+.conum + b { display: none; }
+.conum:after { content: attr(data-value); }
+.conum:not([data-value]):empty { display: none; }
+.literalblock > .content > pre, .listingblock > .content > pre { -webkit-border-radius: 0; border-radius: 0; }
+
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/styles/default.min.css">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/7.3/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
 </head>
-<body class="article">
+<body class="article toc2 toc-left">
 <div id="header">
-<h1>The CTP back office API, rev. 0.1</h1>
-<div class="details">
+<h1>The CTP prototype back office API, rev. 0.2</h1>
 <span id="author" class="author">Cloud Security Alliance</span><br>
-<span id="revnumber">version 0.1,</span>
-<span id="revdate">June 2015</span>
-</div>
-</div>
-<div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Contact Author</strong>: Dr. Alain Pannetrat &lt;<a href="mailto:apannetrat@cloudsecurityalliance.org">apannetrat@cloudsecurityalliance.org</a>&gt;</p>
-</div>
-<div id="toc" class="toc">
-<div id="toctitle" class="title">Table of Contents</div>
+<span id="revnumber">version 0.2,</span>
+<span id="revdate">October 2015</span>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_introduction">1. Introduction</a>
+<li><a href="#_introduction">1. Introduction</a></li>
+<li>
 <ul class="sectlevel2">
-<li><a href="#_notations">1.1. Notations</a>
+<li><a href="#_notations">1.1. Notations</a></li>
+<li>
 <ul class="sectlevel3">
 <li><a href="#_identifiers">1.1.1. Identifiers</a></li>
 <li><a href="#api-query-signatures">1.1.2. API query signatures</a></li>
 </ul>
 </li>
-<li><a href="#_structure_of_this_document">1.2. Structure of this document</a></li>
+<li><a href="#_high_level_view_of_the_back_office_api">1.2. High-level view of the back office API</a></li>
+<li><a href="#_structure_of_this_document">1.3. Structure of this document</a></li>
 </ul>
 </li>
-<li><a href="#_access_control">2. Access control</a>
+<li><a href="#access-control">2. Access control</a></li>
+<li>
 <ul class="sectlevel2">
 <li><a href="#authentication">2.1. Authentication</a></li>
-<li><a href="#authorisation">2.2. Authorisation</a>
+<li><a href="#authorisation">2.2. Authorisation</a></li>
+<li>
 <ul class="sectlevel3">
 <li><a href="#_principles">2.2.1. Principles</a></li>
 <li><a href="#query-signatures">2.2.2. Tags of API query signatures</a></li>
@@ -455,84 +401,202 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#_resources">3. Resources</a>
+<li><a href="#_resources">3. Resources</a></li>
+<li>
 <ul class="sectlevel2">
 <li><a href="#tag-res">3.1. Tag resources</a></li>
-<li><a href="#token-res">3.2. Token resources</a></li>
+<li><a href="#account-res">3.2. account resources</a></li>
 </ul>
 </li>
-<li><a href="#api-calls">4. API calls</a>
+<li><a href="#api-calls">4. API calls</a></li>
+<li>
 <ul class="sectlevel2">
-<li><a href="#get-views-tags">4.1. GET /views/{id}?tags</a></li>
-<li><a href="#put-views-tags">4.2. PUT /views/{id}?tags</a></li>
-<li><a href="#_get_serviceunits_id_tags">4.3. GET /serviceUnits/{id}?tags</a></li>
-<li><a href="#_put_serviceunits_id_tags">4.4. PUT /serviceUnits/{id}?tags</a></li>
-<li><a href="#_get_assets_id_tags">4.5. GET /assets/{id}?tags</a></li>
-<li><a href="#_put_assets_id_tags">4.6. PUT /assets/{id}?tags</a></li>
-<li><a href="#_get_attributes_id_tags">4.7. GET /attributes/{id}?tags</a></li>
-<li><a href="#_put_attributes_id_tags">4.8. PUT /attributes/{id}?tags</a></li>
-<li><a href="#_get_measurements_id_tags">4.9. GET /measurements/{id}?tags</a></li>
-<li><a href="#_put_measurements_id_tags">4.10. PUT /measurements/{id}?tags</a></li>
-<li><a href="#_get_metrics_id_tags">4.11. GET /metrics/{id}?tags</a></li>
-<li><a href="#_put_metrics_id_tags">4.12. PUT /metrics/{id}?tags</a></li>
-<li><a href="#_get_triggers_id_tags">4.13. GET /triggers/{id}?tags</a></li>
-<li><a href="#_put_triggers_id_tags">4.14. PUT /triggers/{id}?tags</a></li>
-<li><a href="#_get_dependencies_id_tags">4.15. GET /dependencies/{id}?tags</a></li>
-<li><a href="#_put_dependencies_id_tags">4.16. PUT /dependencies/{id}?tags</a></li>
-<li><a href="#_get_logs_id_tags">4.17. GET /logs/{id}?tags</a></li>
-<li><a href="#_put_logs_id_tags">4.18. PUT /logs/{id}?tags</a></li>
+<li><a href="#get-serviceviews-tags">4.1. GET /serviceViews/{id}?tags</a></li>
+<li><a href="#put-serviceviews-tags">4.2. PUT /views/{id}?tags</a></li>
+<li><a href="#_get_assets_id_tags">4.3. GET /assets/{id}?tags</a></li>
+<li><a href="#_put_assets_id_tags">4.4. PUT /assets/{id}?tags</a></li>
+<li><a href="#_get_attributes_id_tags">4.5. GET /attributes/{id}?tags</a></li>
+<li><a href="#_put_attributes_id_tags">4.6. PUT /attributes/{id}?tags</a></li>
+<li><a href="#_get_measurements_id_tags">4.7. GET /measurements/{id}?tags</a></li>
+<li><a href="#_put_measurements_id_tags">4.8. PUT /measurements/{id}?tags</a></li>
+<li><a href="#_get_metrics_id_tags">4.9. GET /metrics/{id}?tags</a></li>
+<li><a href="#_put_metrics_id_tags">4.10. PUT /metrics/{id}?tags</a></li>
+<li><a href="#_get_triggers_id_tags">4.11. GET /triggers/{id}?tags</a></li>
+<li><a href="#_put_triggers_id_tags">4.12. PUT /triggers/{id}?tags</a></li>
+<li><a href="#_get_dependencies_id_tags">4.13. GET /dependencies/{id}?tags</a></li>
+<li><a href="#_put_dependencies_id_tags">4.14. PUT /dependencies/{id}?tags</a></li>
+<li><a href="#_get_logs_id_tags">4.15. GET /logs/{id}?tags</a></li>
+<li><a href="#_put_logs_id_tags">4.16. PUT /logs/{id}?tags</a></li>
+<li><a href="#_get_accounts_id_tags">4.17. GET /accounts/{id}?tags</a></li>
+<li><a href="#_put_accounts_id_tags">4.18. PUT /accounts/{id}?tags</a></li>
 <li><a href="#_get_logs">4.19. GET /logs</a></li>
 <li><a href="#_put_measurements_id_result">4.20. PUT /measurements/{id}?result</a></li>
 <li><a href="#_put_measurements_id_objective">4.21. PUT /measurements/{id}?objective</a></li>
-<li><a href="#post-views">4.22. POST /views</a></li>
-<li><a href="#_post_views_id_serviceunits">4.23. POST /views/{id}/serviceUnits</a></li>
-<li><a href="#_post_serviceunits_id_assets">4.24. POST /serviceUnits/{id}/assets</a></li>
-<li><a href="#_post_assets_id_attributes">4.25. POST /assets/{id}/attributes</a></li>
-<li><a href="#_post_attributes_id_measurements">4.26. POST /attributes/{id}/measurements</a></li>
-<li><a href="#_post_metrics">4.27. POST /metrics</a></li>
-<li><a href="#_post_dependencies">4.28. POST /dependencies</a></li>
-<li><a href="#_delete_views_id">4.29. DELETE /views/{id}</a></li>
-<li><a href="#_delete_serviceunits_id">4.30. DELETE /serviceUnits/{id}</a></li>
-<li><a href="#_delete_assets_id">4.31. DELETE /assets/{id}</a></li>
-<li><a href="#_delete_attributes_id">4.32. DELETE /attributes/{id}</a></li>
-<li><a href="#_delete_measurements_id">4.33. DELETE /measurements/{id}</a></li>
-<li><a href="#_delete_metrics_id">4.34. DELETE /metrics/{id}</a></li>
-<li><a href="#_delete_dependencies_id">4.35. DELETE /dependencies/{id}</a></li>
-<li><a href="#_delete_logs_id">4.36. DELETE /logs/{id}</a></li>
-<li><a href="#_get_tokens_id">4.37. GET /tokens/{id}</a></li>
-<li><a href="#_post_tokens">4.38. POST /tokens</a></li>
-<li><a href="#_get_tokens">4.39. GET /tokens</a></li>
-<li><a href="#_put_tokens_id">4.40. PUT /tokens/{id}</a></li>
-<li><a href="#_delete_tokens_id">4.41. DELETE /tokens/{id}</a></li>
+<li><a href="#post-serviceviews">4.22. POST /serviceViews</a></li>
+<li><a href="#_post_serviceviews_id_assets">4.23. POST /serviceViews/{id}/assets</a></li>
+<li><a href="#_post_assets_id_attributes">4.24. POST /assets/{id}/attributes</a></li>
+<li><a href="#_post_attributes_id_measurements">4.25. POST /attributes/{id}/measurements</a></li>
+<li><a href="#_post_metrics">4.26. POST /metrics</a></li>
+<li><a href="#_post_dependencies">4.27. POST /dependencies</a></li>
+<li><a href="#_delete_views_id">4.28. DELETE /views/{id}</a></li>
+<li><a href="#_delete_serviceviews_id">4.29. DELETE /serviceViews/{id}</a></li>
+<li><a href="#_delete_assets_id">4.30. DELETE /assets/{id}</a></li>
+<li><a href="#_delete_attributes_id">4.31. DELETE /attributes/{id}</a></li>
+<li><a href="#_delete_measurements_id">4.32. DELETE /measurements/{id}</a></li>
+<li><a href="#_delete_metrics_id">4.33. DELETE /metrics/{id}</a></li>
+<li><a href="#_delete_dependencies_id">4.34. DELETE /dependencies/{id}</a></li>
+<li><a href="#_delete_logs_id">4.35. DELETE /logs/{id}</a></li>
+<li><a href="#_get_account_id">4.36. GET /account/{id}</a></li>
+<li><a href="#_post_account">4.37. POST /account</a></li>
+<li><a href="#_get_tokens">4.38. GET /tokens</a></li>
+<li><a href="#_put_tokens_id">4.39. PUT /tokens/{id}</a></li>
+<li><a href="#_delete_tokens_id">4.40. DELETE /tokens/{id}</a></li>
 </ul>
 </li>
 <li><a href="#_references">5. References</a></li>
 </ul>
 </div>
 </div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Contact Author</strong>: Dr. Alain Pannetrat &lt;<a href="mailto:apannetrat@cloudsecurityalliance.org">apannetrat@cloudsecurityalliance.org</a>&gt;</p>
+</div>
+<div class="toc2">
+<div class="title">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_introduction">1. Introduction</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#_notations">1.1. Notations</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_identifiers">1.1.1. Identifiers</a></li>
+<li><a href="#api-query-signatures">1.1.2. API query signatures</a></li>
+</ul>
+</li>
+<li><a href="#_high_level_view_of_the_back_office_api">1.2. High-level view of the back office API</a></li>
+<li><a href="#_structure_of_this_document">1.3. Structure of this document</a></li>
+</ul>
+</li>
+<li><a href="#access-control">2. Access control</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#authentication">2.1. Authentication</a></li>
+<li><a href="#authorisation">2.2. Authorisation</a></li>
+<li>
+<ul class="sectlevel3">
+<li><a href="#_principles">2.2.1. Principles</a></li>
+<li><a href="#query-signatures">2.2.2. Tags of API query signatures</a></li>
+<li><a href="#_tags_of_resources">2.2.3. Tags of resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_resources">3. Resources</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#tag-res">3.1. Tag resources</a></li>
+<li><a href="#account-res">3.2. account resources</a></li>
+</ul>
+</li>
+<li><a href="#api-calls">4. API calls</a></li>
+<li>
+<ul class="sectlevel2">
+<li><a href="#get-serviceviews-tags">4.1. GET /serviceViews/{id}?tags</a></li>
+<li><a href="#put-serviceviews-tags">4.2. PUT /views/{id}?tags</a></li>
+<li><a href="#_get_assets_id_tags">4.3. GET /assets/{id}?tags</a></li>
+<li><a href="#_put_assets_id_tags">4.4. PUT /assets/{id}?tags</a></li>
+<li><a href="#_get_attributes_id_tags">4.5. GET /attributes/{id}?tags</a></li>
+<li><a href="#_put_attributes_id_tags">4.6. PUT /attributes/{id}?tags</a></li>
+<li><a href="#_get_measurements_id_tags">4.7. GET /measurements/{id}?tags</a></li>
+<li><a href="#_put_measurements_id_tags">4.8. PUT /measurements/{id}?tags</a></li>
+<li><a href="#_get_metrics_id_tags">4.9. GET /metrics/{id}?tags</a></li>
+<li><a href="#_put_metrics_id_tags">4.10. PUT /metrics/{id}?tags</a></li>
+<li><a href="#_get_triggers_id_tags">4.11. GET /triggers/{id}?tags</a></li>
+<li><a href="#_put_triggers_id_tags">4.12. PUT /triggers/{id}?tags</a></li>
+<li><a href="#_get_dependencies_id_tags">4.13. GET /dependencies/{id}?tags</a></li>
+<li><a href="#_put_dependencies_id_tags">4.14. PUT /dependencies/{id}?tags</a></li>
+<li><a href="#_get_logs_id_tags">4.15. GET /logs/{id}?tags</a></li>
+<li><a href="#_put_logs_id_tags">4.16. PUT /logs/{id}?tags</a></li>
+<li><a href="#_get_accounts_id_tags">4.17. GET /accounts/{id}?tags</a></li>
+<li><a href="#_put_accounts_id_tags">4.18. PUT /accounts/{id}?tags</a></li>
+<li><a href="#_get_logs">4.19. GET /logs</a></li>
+<li><a href="#_put_measurements_id_result">4.20. PUT /measurements/{id}?result</a></li>
+<li><a href="#_put_measurements_id_objective">4.21. PUT /measurements/{id}?objective</a></li>
+<li><a href="#post-serviceviews">4.22. POST /serviceViews</a></li>
+<li><a href="#_post_serviceviews_id_assets">4.23. POST /serviceViews/{id}/assets</a></li>
+<li><a href="#_post_assets_id_attributes">4.24. POST /assets/{id}/attributes</a></li>
+<li><a href="#_post_attributes_id_measurements">4.25. POST /attributes/{id}/measurements</a></li>
+<li><a href="#_post_metrics">4.26. POST /metrics</a></li>
+<li><a href="#_post_dependencies">4.27. POST /dependencies</a></li>
+<li><a href="#_delete_views_id">4.28. DELETE /views/{id}</a></li>
+<li><a href="#_delete_serviceviews_id">4.29. DELETE /serviceViews/{id}</a></li>
+<li><a href="#_delete_assets_id">4.30. DELETE /assets/{id}</a></li>
+<li><a href="#_delete_attributes_id">4.31. DELETE /attributes/{id}</a></li>
+<li><a href="#_delete_measurements_id">4.32. DELETE /measurements/{id}</a></li>
+<li><a href="#_delete_metrics_id">4.33. DELETE /metrics/{id}</a></li>
+<li><a href="#_delete_dependencies_id">4.34. DELETE /dependencies/{id}</a></li>
+<li><a href="#_delete_logs_id">4.35. DELETE /logs/{id}</a></li>
+<li><a href="#_get_account_id">4.36. GET /account/{id}</a></li>
+<li><a href="#_post_account">4.37. POST /account</a></li>
+<li><a href="#_get_tokens">4.38. GET /tokens</a></li>
+<li><a href="#_put_tokens_id">4.39. PUT /tokens/{id}</a></li>
+<li><a href="#_delete_tokens_id">4.40. DELETE /tokens/{id}</a></li>
+</ul>
+</li>
+<li><a href="#_references">5. References</a></li>
+</ul>
+</div>
+
+</div>
 </div>
 <div class="sect1">
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document describes the <em>CTP back office API</em>, hereafter simply referenced as the <em>BO-API</em>.  As such it complements
-the <em>CTP API data model and API</em>, hereafter simply referenced as the <a href="#client_API">[client_API]</a>. Concepts and reference material
-defined in the <a href="#client_API">[client_API]</a> will not be repeated here.</p>
+<p>This document describes the <em>CTP prototype back office API</em> used in the ctpd
+prototype, hereafter simply referred as the <em>back office API</em>.
+As such it complements the <em>CTP API data model and API</em> <a href="#client_API">[client_API]</a>,
+hereafter simply referred as the <em>client API</em>. Most concepts and reference
+material defined in the <em>client API</em> will not be repeated here.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <em>CTP back office API</em> is not part of the official CTP API specifications
+published by Cloud Security Alliance (CSA).
+It is only intended to be used for the prototype ctpd implementation available
+at <a href="https://github.com/cloudsecurityalliance/ctpd">https://github.com/cloudsecurityalliance/ctpd</a></p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>There are two key differences between the <em>BO-API</em> and the <a href="#client_API">[client_API]</a> that are worth noting.  First&#8201;&#8212;&#8201;with few
-exceptions&#8201;&#8212;&#8201;the <a href="#client_API">[client_API]</a> mainly describes read-only API calls with the <code>GET</code> method, while the <em>BO-API</em> contains
-many write calls with the <code>POST</code> or <code>PUT</code> methods, mirroring the read-only methods in the <em>client API</em>. With an
-understanding of the <a href="#client_API">[client_API]</a> it should be straightforward to understand related calls in the <em>BO-API</em>.  Second,
-the <em>BO-API</em> contains specific administrative API methods, for the purpose of configuring access control, through the
-creation of credentials (i.e. <em>access tokens</em>) and the definition of access rights (through the use of <em>tags</em>).</p>
+<p>There are two key differences between the <em>back office API</em> and the
+<em>client API</em> that are worth noting.  First&#8201;&#8212;&#8201;with few exceptions&#8201;&#8212;&#8201;the
+<em>client API</em> mainly describes read-only API calls with the <code>GET</code> method, while
+the <em>back office API</em> contains many write calls with the <code>POST</code> or <code>PUT</code>
+methods, mirroring the read-only methods in the <em>client API</em>. With an
+understanding of the <em>client API</em> it should be straightforward to understand
+related calls in the <em>back office API</em>.  Second, the <em>back office API</em> contains
+specific administrative API methods, for the purpose of configuring access
+control, through the creation of credentials (i.e. <em>access tokens</em>) and the
+definition of access rights (through the use of <em>tags</em>).</p>
 </div>
 <div class="sect2">
 <h3 id="_notations">1.1. Notations</h3>
 <div class="sect3">
 <h4 id="_identifiers">1.1.1. Identifiers</h4>
 <div class="paragraph">
-<p>As described in the <a href="#client_API">[client_API]</a>, CTP API method URLs are composed of two parts:</p>
+<p>As described in the <em>client API</em>, CTP API method URLs are composed of two parts:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -546,20 +610,20 @@ accessible through specific HTTP methods.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>The relative URL is itself further broken down into resource types (e.g. <code>assets</code> in
-<code>/assets/a1b2c3</code>) and resource identifiers (e.g. <code>a1b2c3</code> in
+<p>The relative URL is itself further broken down into resource types (e.g.
+<code>assets</code> in <code>/assets/a1b2c3</code>) and resource identifiers (e.g. <code>a1b2c3</code> in
 <code>/assets/a1b2c3</code>).</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 1. Breaking down a CTP URL</div>
 <div class="content">
 <div class="paragraph">
-<p>The URL <code><a href="https://ctp.ikialab.net:4443/ctp/assets/a1b2c3" class="bare">https://ctp.ikialab.net:4443/ctp/assets/a1b2c3</a></code> is broken down into:</p>
+<p>The URL <code>https://ctp.ikialab.net:4443/ctp/assets/a1b2c3</code> is broken down into:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>{ctpBase}</code>=<code><a href="https://ctp.ikialab.net:4443/ctp" class="bare">https://ctp.ikialab.net:4443/ctp</a></code>, and</p>
+<p><code>{ctpBase}</code>=<code>https://ctp.ikialab.net:4443/ctp/</code>, and</p>
 </li>
 <li>
 <p>the relative URL path <code>/assets/a1b2c3</code>.</p>
@@ -567,12 +631,13 @@ accessible through specific HTTP methods.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The relative URL path is further broken down into a resource type &#8220;asset&#8221; and a resource identifier &#8220;a1b2c3&#8221;.</p>
+<p>The relative URL path is further broken down into a resource type "<code>asset</code>" and
+a resource identifier "<code>a1b2c3</code>".</p>
 </div>
 </div>
 </div>
 <div class="paragraph">
-<p>See the <a href="#client_API">[client_API]</a> for details.</p>
+<p>See the <em>client API</em> for details.</p>
 </div>
 </div>
 <div class="sect3">
@@ -581,59 +646,168 @@ accessible through specific HTTP methods.</p>
 <p>In this document, we will often describe API calls through their <em>signature</em>.</p>
 </div>
 <div class="paragraph">
-<p>Given an HTTP query to a fully qualified URL, a CTP API query signature <strong>S</strong> is
-created with the following algorithm:</p>
+<p>Given an HTTP query to a fully qualified URL, a CTP API query signature is
+created as the direct concatenation of the following elements:</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">STEP 1</dt>
-<dd>
-<p>Let <strong>M</strong> represent the HTTP method in uppercase (i.e. <code>GET</code>, <code>POST</code>, <code>PUT</code> or <code>DELETE</code>).</p>
-</dd>
-<dt class="hdlist1">STEP 2</dt>
-<dd>
-<p>Let <strong>P</strong> represent the relative URL path to <code>{ctpBase}</code>, not including the query string (e.g. <code><a href="http://example.com/ctp/asset/01?x=tag" class="bare">http://example.com/ctp/asset/01?x=tag</a></code> &#8594; <code>/asset/01</code>)</p>
-</dd>
-<dt class="hdlist1">STEP 3</dt>
-<dd>
-<p>Replace all resource identifiers in <strong>P</strong> with the symbol <code>{id}</code> (e.g. <code>/assets/a1b2c3</code> &#8594; <code>/assets/{id}</code>).</p>
-</dd>
-<dt class="hdlist1">STEP 4</dt>
-<dd>
-<p>If the query string does not contain a variable named <code>x</code>, go to step 6.</p>
-</dd>
-<dt class="hdlist1">STEP 5</dt>
-<dd>
-<p>Append the character <code>?</code> to <strong>P</strong> followed by the value of the query string variable <code>x</code> (e.g. <code><a href="http://example.com/ctp/asset/01?x=tag" class="bare">http://example.com/ctp/asset/01?x=tag</a></code> &#8594; <code>/assets/{id}?tag</code>)</p>
-</dd>
-<dt class="hdlist1">STEP 6</dt>
-<dd>
-<p>Return <strong>S</strong>  as the string concatenation of <strong>M</strong>, a space (U+0020) and <strong>P</strong>.</p>
-</dd>
-</dl>
+<div class="ulist">
+<ul>
+<li>
+<p>The HTTP method in uppercase (i.e. <code>GET</code>, <code>POST</code>, <code>PUT</code> or <code>DELETE</code>).</p>
+</li>
+<li>
+<p>A space (U+0020).</p>
+</li>
+<li>
+<p>The relative URL path to <code>{ctpBase}</code>, not including the query string, where
+all resource identifiers are replaced with the symbol <code>{id}</code>.</p>
+</li>
+<li>
+<p>If and only if the query string contains a variable named <code>x</code>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The character <code>?</code> (U+003F).</p>
+</li>
+<li>
+<p>The value of the query string variable <code>x</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
 </div>
 <div class="exampleblock">
 <div class="title">Example 2. A signature of a URL</div>
 <div class="content">
 <div class="paragraph">
-<p>A <code>GET</code> query to the URL <code><a href="http://example.com/ctp/assets/01?x=foo&amp;y=bar" class="bare">http://example.com/ctp/assets/01?x=foo&amp;y=bar</a></code> will have the following signature:</p>
+<p>Assuming <code>{ctpBase}</code> = <em>http://example.com/ctp/</em>, a GET query to the URL
+<em>http//example.com/ctp/assets/ab01?x=foo&amp;y=bar</em> will have the following
+signature:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>GET /assets/{id}?foo</pre>
+</div>
 </div>
 <div class="paragraph">
-<p><code>GET /assets/{id}?foo</code></p>
+<p>Explanation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The HTTP method is <code>GET</code></p>
+</li>
+<li>
+<p>The relative URL path is <code>/assets/ab01</code> where the resource identifier <code>ab01</code>
+is replaced by <code>{id}</code>.</p>
+</li>
+<li>
+<p>The query string does contain a variable <code>x</code> set to <code>foo</code> (but the variable
+<code>y</code> is ignored).</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_structure_of_this_document">1.2. Structure of this document</h3>
+<h3 id="_high_level_view_of_the_back_office_api">1.2. High-level view of the back office API</h3>
+<div class="paragraph">
+<p>A typical use of the <em>back office API</em> can be devided into three types of
+activities:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Creating an account for a user and populating the data accessible to that
+user through ctp.</p>
+</li>
+<li>
+<p>Updating the data available to the user, in particular <em>measurement results</em>.</p>
+</li>
+<li>
+<p>Removing a user and related data.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Creating an account for a user and populating the relevant data is done as
+follows:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Step 1</dt>
+<dd>
+<p>Create an account, with the <code>POST /accounts</code> API call.</p>
+</dd>
+<dt class="hdlist1">Step 2</dt>
+<dd>
+<p>Create a <em>service view</em> and “tag” it with the identifier of the
+account created in Step 1, using the <code>POST /serviceViews</code> API call.</p>
+</dd>
+<dt class="hdlist1">Step 3</dt>
+<dd>
+<p>Create one or more <em>assets</em> within the <em>service view</em> created in
+step 2, using the <code>POST /serviceViews/{id}/assets</code> API call,
+where <code>{id}</code> represents the identifier of the <em>service view</em>.</p>
+</dd>
+<dt class="hdlist1">Step 4</dt>
+<dd>
+<p>Proceed similarly to step 3, to create <em>attributes</em> within <em>assets</em>, using the
+<code>POST /assets/{id}/attributes</code> API call, where <code>{id}</code> represents
+the identifier of an <em>asset</em>.</p>
+</dd>
+<dt class="hdlist1">Step 5</dt>
+<dd>
+<p>Proceed similarly to step 3 or 4, to create <em>measurements</em> within <em>attributes</em>,
+using the <code>POST /attributes/{id}/measurements</code> API call, where <code>{id}</code>
+represents the identifier of an <em>attribute</em>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>In addition to these steps that are specific to each new user, it will be
+necessary to create the <em>metrics</em> that the ctpd server implements, which are
+usually shared by all users, using the <code>POST /metrics</code> API call.</p>
+</div>
+<div class="paragraph">
+<p>In the ctpd server, access control is managed by tags. Each resource described
+in the <em>client API</em> has an extra hidden field called <code>accesTags</code> that is only
+available to administrators using the <em>back office API</em>. Creating a “tag” in
+step 2 is necessary as part of the access control system used in ctp to make
+sure that a user can only access its own resources, as detailed in
+<a href="#access-control">Access control</a>.  Tags are also created in the following steps of the
+process, but this is done implicitly: by default the tags of an <em>asset</em> are
+inherited from the <em>service view</em>, the tags of an <em>attribute</em> are inherited from
+the <em>asset</em>, and finally the tags of a <em>measurement</em> are inherited from the
+relevant <em>attribute</em>. Of course, if you don&#8217;t like the implicit behavior you
+can override it by specifying explicit <code>accessTags</code> in all steps described
+above.</p>
+</div>
+<div class="paragraph">
+<p>Updating the data available to the user is mainly done by updating measurement
+results through the <code>PUT /measurements/{id}?x=result</code> API call, where
+<code>{id}</code> represents the identifier of the measurement.</p>
+</div>
+<div class="paragraph">
+<p>Finally removing data is done through relevant calls using the <code>DELETE</code> method.
+Note that because there is a hierarchical dependency between many resources a
+delete call may affect more than one resource. For example, deleting a <em>service
+view</em> will result in the deletion of all <em>assets</em>, <em>attributes</em>, <em>measurements</em>,
+<em>triggers</em>  and <em>log entries</em> within the scope of the <em>service view</em>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_structure_of_this_document">1.3. Structure of this document</h3>
 <div class="paragraph">
 <p>The remaining of this specification is organized as follows:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Section 2 describes the principles of access control that apply to the <em>BO-API</em>, including:</p>
+<p>Section 2 describes the principles of access control that apply to the
+<em>back office API</em>, including:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -646,11 +820,12 @@ created with the following algorithm:</p>
 </div>
 </li>
 <li>
-<p>Section 3 describes the JSON resources that are used in the <em>BO-API</em> and that are not described already in the
-<em>client_API</em>.</p>
+<p>Section 3 describes the JSON resources that are used in the <em>back office API</em>
+and that are not described already in the <em>client API</em>.</p>
 </li>
 <li>
-<p>Section 4 details all the administrator API calls that compose the <em>BO-API</em>.</p>
+<p>Section 4 details all the administrator API calls that compose the
+<em>back office API</em>.</p>
 </li>
 </ul>
 </div>
@@ -658,82 +833,98 @@ created with the following algorithm:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_access_control">2. Access control</h2>
+<h2 id="access-control">2. Access control</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Access control in the <em>BO-API</em> is controlled by two elements:</p>
+<p>In this document we use the word <em>principal</em> to refer to any entity that can
+be authenticated by a computer system, and more specifically here by the ctpd
+server. Each principal is associated to an account in the ctpd server.</p>
+</div>
+<div class="paragraph">
+<p>Access control in the <em>back office API</em> is controlled by two elements:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Tokens</strong>: unpredictable random strings that serves to identify and authenticate principals (encoded as Base64 URL-safe strings <a href="#RFC_4648">[RFC_4648]</a>).</p>
+<p><strong>Tokens</strong>: unpredictable random strings that serves to identify and
+authenticate principals. These are "Bearer" OAuth2 tokens (see <a href="#RFC_6750">[RFC_6750]</a>).</p>
 </li>
 <li>
-<p><strong>Tags</strong>: textual strings that can be associated to tokens, API query signatures or API resources, which represent access rights.</p>
+<p><strong>Tags</strong>: textual strings that can be associated to
+tokens, API query signatures or API resources, which represent access rights.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p><a href="#authentication">Authentication</a> is controlled by the verification, creation and deletion of tokens.</p>
+<p><a href="#authentication">Authentication</a> is controlled by the verification, creation
+and deletion of tokens.</p>
 </div>
 <div class="paragraph">
-<p><a href="#authorisation">Authorisation</a> is controlled by tags. Tags are associated with tokens, API resources and API query
-signatures. In order to determine if a principal is authorised to access an API resource, the server will perform tag
-matching verifications between the tags associated with the client&#8217;s token and the tag of the API resource as well
-as the tag of the API query signature as detailed hereafter.</p>
+<p><a href="#authorisation">Authorisation</a> is controlled by tags. Tags are associated with
+user accounts, API resources and API query signatures. In order to determine if
+a principal is authorized to access an API resource, the server will perform tag
+matching verifications between the tags associated with the principal&#8217;s account
+and the tag of the API resource as well as the tag of the API query
+signature as detailed hereafter.</p>
 </div>
 <div class="sect2">
 <h3 id="authentication">2.1. Authentication</h3>
 <div class="paragraph">
-<p>As described in the <a href="#client_API">[client_API]</a> specification, making a CTP API call requires the user to specify an authentication token, as shown in the example below using <a href="http://curl.haxx.se">curl</a>.</p>
+<p>As described in the <em>client API</em> specification, making a CTP API call requires
+the principal to specify an OAuth2 authentication token, as shown in the
+example below using <a href="http://curl.haxx.se">curl</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash" data-lang="bash">curl -u "token:qSWzVMzJ4Ee2nAKLWL5EWbnt" -X GET https://ctp.example.com/asset/01</code></pre>
+<pre class="highlight"><code class="bash language-bash">curl -H "Authtorization: Bearer qSWzVMzJ4Ee2nAKLWL5EWbnt" -X GET https://ctp.example.com/asset/01</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>With the <em>BO-API</em>, administrators can create tokens and associate tags to them.</p>
+<p>With the <em>back office API</em>, administrators can create access tokens and
+associate tags to them, through the creation of an <em>account</em>.</p>
 </div>
 <div class="paragraph">
 <p>This is done by issuing a <code>POST</code> request:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>POST /tokens</code></pre>
+<pre class="highlight"><code class="java language-java">POST /accounts</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This request must have a JSON body describing the tags associated with the newly created token, along with an optional annotation:</p>
+<p>This request must have a JSON body describing the tags associated with the newly
+created account, along with an optional name and annotation:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
+    "name": "jsmith@example.com",
     "annotation": "this token is created for John Smith",
-    "accessTags": [
+    "accountTags": [
         "access:user",
-	    "access:anybody",
-        "view:1234"
+	      "access:anybody",
     ],
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The server will acknowledge the creation of the new token with a 201 status code followed
-by a copy of the newly created resource, which will include a <code>self</code> property pointing to the token&#8217;s
-newly created URL along with a randomly generated token key:</p>
+<p>The server will acknowledge the creation of the new account with a 201
+status code followed by a copy of the newly created resource, which will include
+a <code>self</code> property pointing to the account&#8217;s newly created URL along with a
+randomly generated token:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-    "self": "https://ctp.example.com/tokens/2931/",
+<pre class="highlight"><code class="java language-java">{
+    "self": "https://ctp.example.com/accounts/2931/",
+    "name": "jsmith@example.com",
     "annotation": "this token is created for John Smith",
-    "accessTags": [
+    "accountTags": [
         "access:user",
-	    "access:anybody",
-        "view:1234"
+	      "access:anybody",
+        "id:2931"
     ],
-    "key": "qSWzVMzJ4Ee2nAKLWL5EWbnt"
+    "token": "qSWzVMzJ4Ee2nAKLWL5EWbnt"
 }</code></pre>
 </div>
 </div>
@@ -741,50 +932,50 @@ newly created URL along with a randomly generated token key:</p>
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-For reasons detailed at the end of the section on <a href="#post-views">creating views</a>, it is
-recommended to first create a <em>view</em> and then next create a <em>token</em> for the user associated with the view.
+Alternatively it&#8217;s possible to specify the value of "token" in the body of the POST request instead of letting the ctpd server choose it for you.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The URL returned in the <code>self</code> property of the response to the <code>POST</code> request can be used to later read the token, e.g.:</p>
+<p>The URL returned in the <code>self</code> property of the response to the <code>POST</code> request
+can be used to later read the description of the account, e.g.:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>GET /tokens/2931</code></pre>
+<pre class="highlight"><code class="java language-java">GET /accounts/2931</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The same URL can also be used to delete the token, e.g.:</p>
+<p>The same URL can also be used to delete the account, e.g.:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /tokens/2931</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /accounts/2931</code></pre>
 </div>
 </div>
-<div class="admonitionblock warning">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="icon-note" title="Note"></i>
 </td>
 <td class="content">
-There is currently no way to modify a token with a PUT request.
-Modifications are done by deleting the token and reposting a new version of it.
+There is currently no way to modify an account with a PUT request. Modifications are done by deleting the account and reposting a new version of it.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Finally, the list of all existing tokens is accessible to administrators as a collection by issuing a <code>GET</code> request, e.g.:</p>
+<p>Finally, the list of all existing accounts is accessible to administrators as
+a collection by issuing a <code>GET</code> request, e.g.:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>GET /tokens/</code></pre>
+<pre class="highlight"><code class="java language-java">GET /accounts</code></pre>
 </div>
 </div>
 </div>
@@ -796,7 +987,8 @@ Modifications are done by deleting the token and reposting a new version of it.
 <p>Authorisation is based on tag matching.</p>
 </div>
 <div class="paragraph">
-<p>Tags can be any UTF-8 string. By convention they are typically composed of two parts separated by a column (e.g. <code>view:1234</code>).</p>
+<p>Tags can be any UTF-8 string. By convention they are typically composed of two
+parts separated by a column (e.g. <code>id:1234</code>).</p>
 </div>
 <div class="paragraph">
 <p>Tags are associated with 3 kinds of objects:</p>
@@ -804,20 +996,23 @@ Modifications are done by deleting the token and reposting a new version of it.
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Tokens</strong> (i.e. “users”) as described in <a href="#authentication">Authentication</a>.</p>
+<p><strong>accounts</strong> (i.e. principals) as described in <a href="#authentication">Authentication</a>.</p>
 </li>
 <li>
 <p><strong>API query signatures</strong>, as described in <a href="#api-query-signatures">API query signatures</a>.</p>
 </li>
 <li>
-<p><strong>API resources</strong>, such as an “asset”, a “view”, an “attribute”, etc.</p>
+<p><strong>API resources</strong>, such as an “asset”, a “service view”, an “attribute”, etc.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>In CTP there are two types of resources accessible by the API: individual resources and collections.
-For individual resources, access is granted by matching tags from <em>Tokens</em> with tags from both <em>API query signatures</em> and <em>API resources</em>.
-For collections, access is granted granted by matching tags from <em>Tokens</em> with tags from both <em>API query signatures</em> and the tags of the <em>API resource</em> that represents the scope of the collection.</p>
+<p>In CTP there are two types of resources accessible by the API: individual
+resources and collections. For individual resources, access is granted by
+matching tags from <em>accounts</em> with tags from both <em>API query signatures</em> and
+<em>API resources</em>. For collections, access is granted granted by matching tags
+from <em>accounts</em> with tags from both <em>API query signatures</em> and the tags of the
+<em>API resource</em> that represents the scope of the collection.</p>
 </div>
 <div class="paragraph">
 <p>More precisely:</p>
@@ -825,34 +1020,43 @@ For collections, access is granted granted by matching tags from <em>Tokens</em>
 <div class="ulist">
 <ul>
 <li>
-<p>a token (i.e. a “user”) will be authorised to perform a CTP API query to an <em>individual resource</em> if:</p>
+<p>Once authenticated, a <strong>principal</strong> will be authorized to perform a CTP API query to an <em>individual resource</em> if:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>at least one tag associated with the <em>token</em> matches a tag associated with the <em>API query signature</em>.</p>
+<p>at least one account tag associated with the principal&#8217;s <em>account</em> matches an access tag associated with the <em>API query signature</em>.</p>
 </li>
 <li>
-<p>at least one tag associated with the <em>token</em> matches a tag associated with the <em>API resource</em>.</p>
+<p>at least one account tag associated with the principal&#8217;s <em>account</em> matches an access tag associated with the <em>API resource</em>.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>a token (i.e. a “user”) will be authorised to perform a CTP API query to a <em>collection</em>:</p>
+<p>Once authenticated a <strong>principal</strong> will be authorized to perform a CTP API query to a <em>collection</em>:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>at least one tag associated with the <em>token</em> matches a tag associated with the <em>API query signature</em>.</p>
+<p>at least one account tag associated with the prinicpal&#8217;s <em>account</em> matches an access tag associated with the <em>API query signature</em>.</p>
 </li>
 <li>
-<p>at least one tag associated with the <em>token</em> matches a tag associated with the <em>API resource</em> representing the scope of the resource (i.e the ``parent'' of the collection items in the CTP resource hierarchy):</p>
+<p>at least one account tag associated with the principal&#8217;s <em>account</em> matches an access tag associated with the <em>API resource</em> representing the scope of the resource, following the CTP resource hierarchy defined in <em>client API</em>:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>EEE</p>
+<p>Accessing a collection of <em>assets</em> will require validation against the scoping <em>service view</em>.</p>
 </li>
 <li>
-<p>This rescriction does not apply to collection of <em>views</em>.</p>
+<p>Accessing a collection of <em>attributes</em> will require validation against the scoping <em>asset</em>.</p>
+</li>
+<li>
+<p>Accessing a collection of <em>measurements</em> will require validation against the scoping <em>attribute</em>.</p>
+</li>
+<li>
+<p>Accessing a collection of <em>triggers</em> or <em>logs entries</em> will require validation against the scoping <em>service view</em>.</p>
+</li>
+<li>
+<p>This restriction does not apply to collection of <em>service views</em>, <em>metrics</em> or <em>accounts</em>, which have a global scope.</p>
 </li>
 </ul>
 </div>
@@ -861,6 +1065,24 @@ For collections, access is granted granted by matching tags from <em>Tokens</em>
 </div>
 </li>
 </ul>
+</div>
+<div id="note-account-tags" class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To address a potential point of confusion, it is worth noting that
+accounts have both "access tags" and "account tags". The "account tags" are
+used to define what the principal can access following the rules defined above.
+The "access tags" defines who can access the <em>account</em> resource itself (e.g.
+usually the administrator only).</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Two tags are considered as matching if either:</p>
@@ -868,7 +1090,7 @@ For collections, access is granted granted by matching tags from <em>Tokens</em>
 <div class="ulist">
 <ul>
 <li>
-<p>they are strictly equal, OR</p>
+<p>they are strictly byte-to-byte equal, OR</p>
 </li>
 <li>
 <p>one of the tags is the wildcard value <code>*</code> (U+0042).</p>
@@ -879,11 +1101,10 @@ For collections, access is granted granted by matching tags from <em>Tokens</em>
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Use the wildcard value with care, associating it only to tokens destined to administrator.
-The wildcard allows in effect to override all access control restrictions.
+The wildcard value should be used with care, associating it only to tokens destined to administrators. The wildcard allows in effect to override all access control restrictions.
 </td>
 </tr>
 </table>
@@ -892,7 +1113,8 @@ The wildcard allows in effect to override all access control restrictions.
 <div class="title">Example 3. Matching tags</div>
 <div class="content">
 <div class="paragraph">
-<p>Consider a token with the following tags:</p>
+<p>Consider an authenticated principal, who has an <em>account</em> with the following
+account tags:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -900,13 +1122,14 @@ The wildcard allows in effect to override all access control restrictions.
 <p><code>access:user</code></p>
 </li>
 <li>
-<p><code>view:1234</code></p>
+<p><code>id:1234</code></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>A user want to use this token to access the following CTP URL with a GET request to https://ctp.example.com/assets/a1b2c3/.
-Such a request has the following API signature: <code>GET /assets/{id}</code> with <code>{ctpBase}</code>=https://ctp.example.com.</p>
+<p>This principal attempts to access the following CTP URL with a GET request:
+<code><a href="https://ctp.example.com/assets/a1b2c3/">https://ctp.example.com/assets/a1b2c3/</a></code>. Such a request has the following API
+signature: <code>GET /assets/{id}</code> with <code>{ctpBase}</code>=<code><a href="https://ctp.example.com">https://ctp.example.com</a></code> here.</p>
 </div>
 <div class="paragraph">
 <p>Further assume that:</p>
@@ -917,14 +1140,15 @@ Such a request has the following API signature: <code>GET /assets/{id}</code> wi
 <p>The CTP server associates the tag <code>access:user</code> to the API signature <code>GET /assets/{id}</code>,</p>
 </li>
 <li>
-<p>The CTP server associates the tag <code>view:1234</code> with the asset numbered <code>a1b2c3</code>.</p>
+<p>The CTP server associates the tag <code>id:1234</code> with the asset identified as <code>a1b2c3</code>.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The client will be allowed to access the resource because one tag in the token matches a tag associated to the API
-signature and another matches the resource itself.
-If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view:6789</code> instead for example, access would be refused.</p>
+<p>The client will be allowed to access the resource because one tag of the token
+matches a tag associated to the API signature and another matches the resource
+itself. If the tag associated with the asset numbered <code>a1b2c3</code> was <code>id:6789</code>
+instead of <code>id:1234</code> for example, access would be refused.</p>
 </div>
 </div>
 </div>
@@ -932,12 +1156,12 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 <div class="sect3">
 <h4 id="query-signatures">2.2.2. Tags of API query signatures</h4>
 <div class="paragraph">
-<p>The following table describes the tag that is associated with each API query signature, as currently hard-coded in the server.</p>
+<p>The following table describes the tag that is associated with each API query signature, as currently hard-coded in the CTP server.</p>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all" style="width:100%; ">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width:50%;">
+<col style="width:50%;"> 
 </colgroup>
 <thead>
 <tr>
@@ -947,31 +1171,23 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /views/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /views/{id}/serviceUnits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceViews</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /views/{id}/triggers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceViews/{id}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /views/{id}/logs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceViews/{id}/dependencies</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceUnits/{id}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceUnits/{id}/dependencies</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceUnits/{id}/assets</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceViews/{id}/assets</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
@@ -1012,19 +1228,19 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /logs/{id}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /measurements/{id}?initiate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /views/{id}/triggers</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /ServiceViews/{id}/triggers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:user</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /triggers/{id}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /views/{id}?tags</code></p></td>
@@ -1035,11 +1251,11 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceUnits/{id}?tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /serviceViews/{id}?tags</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /serviceUnits/{id}?tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /serviceViews/{id}?tags</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
@@ -1076,11 +1292,11 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /triggers/{id}?tags</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /triggers/{id}?tags</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /dependencies/{id}?tags</code></p></td>
@@ -1092,15 +1308,23 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /logs/{id}?tags</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /logs/{id}?tags</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /accounts/{id}?tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /accounts/{id}?tags</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /logs</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /measurements/{id}?result</code></p></td>
@@ -1111,15 +1335,11 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /views</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /serviceViews</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /views/{id}/serviceUnits</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /serviceUnits/{id}/assets</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /serviceViews/{id}/assets</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
@@ -1139,11 +1359,7 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /views/{id}</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /serviceUnits/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /serviceViews/{id}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
@@ -1171,56 +1387,58 @@ If the tag associated with the asset numbered <code>a1b2c3</code> was <code>view
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /tokens/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /accounts/{id}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /tokens</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>POST /accounts</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /tokens</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GET /accounts</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /tokens/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PUT /accounts/{id}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>unimplemented API call</em></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /tokens/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DELETE /accounts/{id}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>access:admin</code></p></td>
 </tr>
 </tbody>
 </table>
+
 </div>
 <div class="sect3">
 <h4 id="_tags_of_resources">2.2.3. Tags of resources</h4>
 <div class="paragraph">
-<p>An arbitrary set of tags can be associated with a resource by using the tag related methods described in this specification in <a href="#api-calls">API calls</a>.
-These methods are easily distinguished from others because they have the query string parameter <code>x=tags</code> in their URL
-(i.e. their signature ends with <code>?tags</code>).</p>
+<p>An arbitrary set of tags can be associated with a resource by using the tag
+related methods described in this specification in <a href="#api-calls">API calls</a>. These methods
+are easily distinguished from others because they have the query string
+parameter <code>x=tags</code> in their URL (i.e. their signature ends with <code>?tags</code>).</p>
 </div>
 <div class="paragraph">
-<p>When an CTP resource is created it is initiated with a set of tags that are chosen according to the following rules:</p>
+<p>When an CTP resource is created using a <code>POST</code> request it is initiated with a
+the set of tags that are passed in the request body, in the <code>accessTags</code>
+JSON property. If the <code>accessTags</code> property is not specified, the tags
+are chosen implicitly according to the following rules:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>If the resource is a <em>view</em>, it is assigned a tag of the form <code>view:{id}</code>, where <code>{id}</code> is the unique identifier of the newly created view.
-This is the same <code>{id}</code> that is found in the URL of the view.</p>
+<p>If the resource is a <em>service view</em>, it receives by default no tag.</p>
 </li>
 <li>
-<p>If the resource is a <em>metric</em>, it is assigned a set of tags containing only the predefined tag <code>access:anybody</code>.</p>
+<p>If the resource is a <em>metric</em>, it receives by default the predefined tag
+<code>access:anybody</code>.</p>
 </li>
 <li>
-<p>In all other cases, the resources will inherit all the tags of its parents, namely:</p>
+<p>In all other cases, the resource will inherit all the tags of its parents:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>A <em>service-unit</em> gets all the tags of <em>view</em> it is part of.</p>
-</li>
-<li>
-<p>An <em>asset</em> gets all of the tags of the <em>service-unit</em> it is part of.</p>
+<p>An <em>asset</em> gets all of the tags of the <em>service-view</em> it is part of.</p>
 </li>
 <li>
 <p>An <em>attribute</em> gets all of the tags of the <em>asset</em> it applies to.</p>
@@ -1229,7 +1447,10 @@ This is the same <code>{id}</code> that is found in the URL of the view.</p>
 <p>A <em>measurement</em> gets all of the tags of the <em>attribute</em> it applies to.</p>
 </li>
 <li>
-<p>A <em>trigger</em> gets all the tags of the measurement it applies to (note: <em>unimplemented</em>).</p>
+<p>A <em>trigger</em> gets all the tags of the <em>measurement</em> it applies to.</p>
+</li>
+<li>
+<p>A <em>log entry</em> gets all the tags of the <em>trigger</em> it derives from.</p>
 </li>
 </ul>
 </div>
@@ -1244,36 +1465,32 @@ This is the same <code>{id}</code> that is found in the URL of the view.</p>
 <h2 id="_resources">3. Resources</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The JSON resources used in the <em>BO-API</em> are the same as in the <a href="#client_API">[client_API]</a> with the addition of two elements: <em>tags</em> and <em>tokens</em>.
+<p>The JSON resources used in the <em>back office API</em> are the same as in the
+<em>client API</em> with the addition of two elements: <em>tags</em> and <em>accounts</em>.
 These two additional elements are detailed here.</p>
 </div>
 <div class="sect2">
 <h3 id="tag-res">3.1. Tag resources</h3>
 <div class="paragraph">
-<p>Tag resources are meant to be consulted or modified by administrators.
-If <code>/path/to/resource</code> is a link to a CTP resource, then the corresponding tag resource can be accessed simply by
-appending the query string <code>x=tags</code> to the URL (e.g. <code>/path/to/resource?x=tags</code>). This does not apply to collections
-however.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Collections have no tags. Therefore in order to access a collection, access control tags matching is limited to
-matching the tag in the token with the tag of the <a href="#query-signatures">API query signature</a>.
-</td>
-</tr>
-</table>
+<p>Tags are extensions to the <em>client API</em> that are accessible only to
+administrators. All resources described in the <em>client API</em> contain an extra
+property <code>accessTags</code> that can be set during the creation of a resource with
+a <code>POST</code> request or later consulted and modified with specific tag-related
+API calls.</p>
 </div>
 <div class="paragraph">
-<p>The format of a tag resource is described hereafter.</p>
+<p>If <code>/foo/bar</code> is a link to a CTP resource, then the corresponding tags
+can be accessed simply by appending the query string <code>x=tags</code> to the URL:
+<code>/foo/bar?x=tags</code>. This does not apply to collections however, as detailed in
+<a href="#authorisation">Authorisation</a>.</p>
+</div>
+<div class="paragraph">
+<p>When issuing a <code>PUT</code> or <code>GET</code> request to <code>/foo/bar?x=tags</code> the response will
+be of the following form.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
   "self": URL,
   "accessTags": [
     string,
@@ -1282,11 +1499,11 @@ matching the tag in the token with the tag of the <a href="#query-signatures">AP
 }</code></pre>
 </div>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all" style="width:100%; ">
 <colgroup>
-<col style="width: 28%;">
-<col style="width: 14%;">
-<col style="width: 57%;">
+<col style="width:28%;">
+<col style="width:14%;">
+<col style="width:57%;"> 
 </colgroup>
 <thead>
 <tr>
@@ -1314,35 +1531,38 @@ matching the tag in the token with the tag of the <a href="#query-signatures">AP
 </tr>
 </tbody>
 </table>
+
 </div>
 <div class="sect2">
-<h3 id="token-res">3.2. Token resources</h3>
+<h3 id="account-res">3.2. account resources</h3>
 <div class="paragraph">
-<p>Token resources describe user credentials.
-The credentials are represented as a random unpredictable string in the Base64 URL-safe alphabet <a href="#RFC_4648">[RFC_4648]</a>.
-Administrators can read, create or delete token resources with the relevant methods described in this specification.</p>
+<p>Each principal accessing the ctpd server must have an account. Account resources
+describe a binding between an authentication token and a set of access tags. The
+authentication token is represented as a random unpredictable string as
+described in <a href="#RFC_6750">[RFC_6750]</a>. Administrators can read, create or delete accounts
+with the relevant methods described in this specification.</p>
 </div>
 <div class="paragraph">
-<p>The format of a token resource is described hereafter.</p>
+<p>The format of a account is described hereafter.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
   "self": URL,
   "accessTags": [
     string,
     ...
-  ]
+  ],
   "annotation": string,
-  "key": string
+  "token": string
 }</code></pre>
 </div>
 </div>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all" style="width:100%; ">
 <colgroup>
-<col style="width: 28%;">
-<col style="width: 14%;">
-<col style="width: 57%;">
+<col style="width:28%;">
+<col style="width:14%;">
+<col style="width:57%;"> 
 </colgroup>
 <thead>
 <tr>
@@ -1374,13 +1594,14 @@ Administrators can read, create or delete token resources with the relevant meth
 <td class="tableblock halign-left valign-top"><p class="tableblock">A string representing a tag associated with the resource.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>token</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>string</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A Base64 URL-safe string of 32 characters (representing 24 bytes of random value).
-                              It does not appear in request bodies, only in responses.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A bearer OAuth2 token. When this token is omitted in a request body, it is chosen
+                              by the ctpd server randomly and returned in the response body.</p></td>
 </tr>
 </tbody>
 </table>
+
 </div>
 </div>
 </div>
@@ -1388,7 +1609,7 @@ Administrators can read, create or delete token resources with the relevant meth
 <h2 id="api-calls">4. API calls</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The following calls are already described in the <a href="#client_API">[client_API]</a> documentation and are not detailed here:</p>
+<p>The following calls are already described in the <em>client API</em> documentation and are not detailed here:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1396,25 +1617,22 @@ Administrators can read, create or delete token resources with the relevant meth
 <p><code>GET /</code></p>
 </li>
 <li>
-<p><code>GET /views/{id}</code></p>
+<p><code>GET /serviceViews/</code></p>
 </li>
 <li>
-<p><code>GET /views/{id}/serviceUnits</code></p>
+<p><code>GET /serviceViews/{id}</code></p>
 </li>
 <li>
-<p><code>GET /views/{id}/triggers</code></p>
+<p><code>GET /serviceViews/{id}/dependencies</code></p>
 </li>
 <li>
-<p><code>GET /views/{id}/logs</code></p>
+<p><code>GET /serviceViews/{id}/assets</code></p>
 </li>
 <li>
-<p><code>GET /serviceUnits/{id}</code></p>
+<p><code>GET /serviceViews/{id}/triggers</code></p>
 </li>
 <li>
-<p><code>GET /serviceUnits/{id}/dependencies</code></p>
-</li>
-<li>
-<p><code>GET /serviceUnits/{id}/assets</code></p>
+<p><code>GET /serviceViews/{id}/logs</code></p>
 </li>
 <li>
 <p><code>GET /assets/{id}</code></p>
@@ -1458,9 +1676,9 @@ Administrators can read, create or delete token resources with the relevant meth
 </ul>
 </div>
 <div class="sect2">
-<h3 id="get-views-tags">4.1. GET /views/{id}?tags</h3>
+<h3 id="get-serviceviews-tags">4.1. GET /serviceViews/{id}?tags</h3>
 <div class="paragraph">
-<p>Get the access tags associated with a view.</p>
+<p>Get the access tags associated with a service view.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -1482,7 +1700,7 @@ Administrators can read, create or delete token resources with the relevant meth
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>GET /views/0123?x=tags</code></pre>
+<pre class="highlight"><code class="java language-java">GET /servceViews/0123?x=tags</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1491,19 +1709,20 @@ Administrators can read, create or delete token resources with the relevant meth
 <div class="listingblock">
 <div class="title">Response example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
   "self": "https://ctp.ikialab.net:8080/ctp/views/VIYQUT1WG628fhbQ?x=tags",
   "accessTags": [
-    "view:VIYQUT1WG628fhbQ"
+    "id:VIYQUT1WG628gbbP"
+    "access:user"
   ]
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="put-views-tags">4.2. PUT /views/{id}?tags</h3>
+<h3 id="put-serviceviews-tags">4.2. PUT /views/{id}?tags</h3>
 <div class="paragraph">
-<p>Modify the access tags associated with a view.</p>
+<p>Modify the access tags associated with a service view.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -1525,7 +1744,7 @@ Administrators can read, create or delete token resources with the relevant meth
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>PUT /views/0123?x=tags</code></pre>
+<pre class="highlight"><code class="java language-java">PUT /views/0123?x=tags</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1533,9 +1752,9 @@ Administrators can read, create or delete token resources with the relevant meth
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
   "accessTags": [
-    "view:VIYQUT1WG628fhbQ",
+    "id:VIYQUT1WG628gbbP",
     "foo:bar"
   ]
 }</code></pre>
@@ -1547,10 +1766,10 @@ Administrators can read, create or delete token resources with the relevant meth
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
   "self": "https://ctp.ikialab.net:8080/ctp/views/VIYQUT1WG628fhbQ?x=tags",
   "accessTags": [
-    "view:VIYQUT1WG628fhbQ",
+    "view:VIYQUT1WG628gbbP",
     "foo:bar"
   ]
 }</code></pre>
@@ -1558,115 +1777,129 @@ Administrators can read, create or delete token resources with the relevant meth
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_serviceunits_id_tags">4.3. GET /serviceUnits/{id}?tags</h3>
+<h3 id="_get_assets_id_tags">4.3. GET /assets/{id}?tags</h3>
 <div class="paragraph">
-<p>Read the tags associated with a service-unit.
-It is similar to <a href="#get-views-tags">reading tags associated with a view</a>.</p>
+<p>Read the access tags associated with an asset.
+It is similar to <a href="#get-serviceviews-tags">reading tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_serviceunits_id_tags">4.4. PUT /serviceUnits/{id}?tags</h3>
+<h3 id="_put_assets_id_tags">4.4. PUT /assets/{id}?tags</h3>
 <div class="paragraph">
-<p>Change the tags associated with a service-unit.
-It is similar to <a href="#put-views-tags">modifying tags associated with a view</a>.</p>
+<p>Change the access tags associated with an asset.
+It is similar to <a href="#put-serviceviews-tags">modifying tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_assets_id_tags">4.5. GET /assets/{id}?tags</h3>
+<h3 id="_get_attributes_id_tags">4.5. GET /attributes/{id}?tags</h3>
 <div class="paragraph">
-<p>Read the tags associated with an asset.
-It is similar to <a href="#get-views-tags">reading tags associated with a view</a>.</p>
+<p>Read the access tags associated with an attribute.
+It is similar to <a href="#get-serviceviews-tags">reading tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_assets_id_tags">4.6. PUT /assets/{id}?tags</h3>
+<h3 id="_put_attributes_id_tags">4.6. PUT /attributes/{id}?tags</h3>
 <div class="paragraph">
-<p>Change the tags associated with an asset.
-It is similar to <a href="#put-views-tags">modifying tags associated with a view</a>.</p>
+<p>Change the access tags associated with an attribute.
+It is similar to <a href="#put-serviceviews-tags">modifying tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_attributes_id_tags">4.7. GET /attributes/{id}?tags</h3>
+<h3 id="_get_measurements_id_tags">4.7. GET /measurements/{id}?tags</h3>
 <div class="paragraph">
-<p>Read the tags associated with an attribute.
-It is similar to <a href="#get-views-tags">reading tags associated with a view</a>.</p>
+<p>Read the access tags associated with a measurement.
+It is similar to <a href="#get-serviceviews-tags">reading tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_attributes_id_tags">4.8. PUT /attributes/{id}?tags</h3>
+<h3 id="_put_measurements_id_tags">4.8. PUT /measurements/{id}?tags</h3>
 <div class="paragraph">
-<p>Change the tags associated with an attribute.
-It is similar to <a href="#put-views-tags">modifying tags associated with a view</a>.</p>
+<p>Change the access tags associated with a measurement.
+It is similar to <a href="#put-serviceviews-tags">modifying tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_measurements_id_tags">4.9. GET /measurements/{id}?tags</h3>
+<h3 id="_get_metrics_id_tags">4.9. GET /metrics/{id}?tags</h3>
 <div class="paragraph">
-<p>Read the tags associated with a measurement.
-It is similar to <a href="#get-views-tags">reading tags associated with a view</a>.</p>
+<p>Read the access tags associated with a metric.
+It is similar to <a href="#get-serviceviews-tags">reading tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_measurements_id_tags">4.10. PUT /measurements/{id}?tags</h3>
+<h3 id="_put_metrics_id_tags">4.10. PUT /metrics/{id}?tags</h3>
 <div class="paragraph">
-<p>Change the tags associated with a measurement.
-It is similar to <a href="#put-views-tags">modifying tags associated with a view</a>.</p>
+<p>Change the access tags associated with a metric.
+It is similar to <a href="#put-serviceviews-tags">modifying tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_metrics_id_tags">4.11. GET /metrics/{id}?tags</h3>
+<h3 id="_get_triggers_id_tags">4.11. GET /triggers/{id}?tags</h3>
 <div class="paragraph">
-<p>Read the tags associated with a metric.
-It is similar to <a href="#get-views-tags">reading tags associated with a view</a>.</p>
+<p>Read the access tags associated with a trigger.
+It is similar to <a href="#get-serviceviews-tags">reading tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_metrics_id_tags">4.12. PUT /metrics/{id}?tags</h3>
+<h3 id="_put_triggers_id_tags">4.12. PUT /triggers/{id}?tags</h3>
 <div class="paragraph">
-<p>Change the tags associated with a metric.
-It is similar to <a href="#put-views-tags">modifying tags associated with a view</a>.</p>
+<p>Change the access tags associated with a trigger.
+It is similar to <a href="#put-serviceviews-tags">modifying tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_triggers_id_tags">4.13. GET /triggers/{id}?tags</h3>
+<h3 id="_get_dependencies_id_tags">4.13. GET /dependencies/{id}?tags</h3>
 <div class="paragraph">
 <p>note: <em>unimplemented (June 2015).</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_triggers_id_tags">4.14. PUT /triggers/{id}?tags</h3>
+<h3 id="_put_dependencies_id_tags">4.14. PUT /dependencies/{id}?tags</h3>
 <div class="paragraph">
 <p>note: <em>unimplemented (June 2015).</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_dependencies_id_tags">4.15. GET /dependencies/{id}?tags</h3>
+<h3 id="_get_logs_id_tags">4.15. GET /logs/{id}?tags</h3>
 <div class="paragraph">
-<p>note: <em>unimplemented (June 2015).</em></p>
+<p>Read the access tags associated with a log entry.
+It is similar to <a href="#get-serviceviews-tags">reading tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_dependencies_id_tags">4.16. PUT /dependencies/{id}?tags</h3>
+<h3 id="_put_logs_id_tags">4.16. PUT /logs/{id}?tags</h3>
 <div class="paragraph">
-<p>note: <em>unimplemented (June 2015).</em></p>
+<p>Change the access tags associated with a log entry.
+It is similar to <a href="#put-serviceviews-tags">modifying tags associated with a service view</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_logs_id_tags">4.17. GET /logs/{id}?tags</h3>
+<h3 id="_get_accounts_id_tags">4.17. GET /accounts/{id}?tags</h3>
 <div class="paragraph">
-<p>note: <em>unimplemented (June 2015).</em></p>
+<p>Read the access tags associated with an account.
+It is similar to <a href="#get-serviceviews-tags">reading tags associated with a service view</a>.</p>
+</div>
+<div class="paragraph">
+<p>Note the distinction between the "access tags" and the "account tags" of an
+account, highligted in <a href="#note-account-tags">[note-account-tags]</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_logs_id_tags">4.18. PUT /logs/{id}?tags</h3>
+<h3 id="_put_accounts_id_tags">4.18. PUT /accounts/{id}?tags</h3>
 <div class="paragraph">
-<p>note: <em>unimplemented (June 2015).</em></p>
+<p>Change the access tags associated with an account.
+It is similar to <a href="#put-serviceviews-tags">modifying tags associated with a service view</a>.</p>
+</div>
+<div class="paragraph">
+<p>Note the distinction between the "access tags" and the "account tags" of an
+account, highligted in <a href="#note-account-tags">[note-account-tags]</a>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_get_logs">4.19. GET /logs</h3>
 <div class="paragraph">
-<p>note: <em>unimplemented (June 2015).</em></p>
+<p>Read all the log entries in the system. This can be paged as several
+complementary requests as described in the section on <em>collections</em> in the
+<em>client API</em>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1678,13 +1911,13 @@ It is similar to <a href="#put-views-tags">modifying tags associated with a view
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: the sub-part of a measurement defined as the content of the <code>result</code> property (see <a href="#client_API">[client_API]</a>, section 4.2.6).</p>
+<p><strong>Request body</strong>: the sub-part of a measurement defined as the content of the <code>result</code> property (see <em>client API</em>, section 4.2.6).</p>
 </li>
 <li>
 <p><strong>Query string</strong>: <code>x=result</code></p>
 </li>
 <li>
-<p><strong>Response body</strong>: a measurement resource (see <a href="#client_API">[client_API]</a>).</p>
+<p><strong>Response body</strong>: a measurement resource (see <em>client API</em>).</p>
 </li>
 <li>
 <p><strong>Success status code</strong>: 200</p>
@@ -1692,52 +1925,64 @@ It is similar to <a href="#put-views-tags">modifying tags associated with a view
 </ul>
 </div>
 <div class="paragraph">
-<p>The following properties may be omitted in the request body: <code>dateTime</code>, <code>authority</code> and <code>signature</code>.
-When omitted <code>dateTime</code> is set to the current date, while <code>authority</code> and <code>signature</code> are set to <code>null</code>.</p>
+<p>The following properties may be omitted in the request body: <code>updateTime</code>, <code>authority</code> and <code>signature</code>.
+When omitted <code>updateTime</code> is set to the current UTC date, while <code>authority</code> and <code>signature</code> are set to "" (the empty string).</p>
 </div>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>PUT /measurements/VYkcv8y-5zuVAAAH?x=result</code></pre>
+<pre class="highlight"><code class="java language-java">PUT /measurements/VYkcv8y-5zuVAAAH?x=result</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The request body corresponds to the content of the <code>result</code> property of a measurement resource (see <a href="#client_API">[client_API]</a>, section 4.2.6).</p>
+<p>The request body corresponds to the subset of a measurement resource formed by only keeping the <code>result</code> property, excluding all
+other elements (see <em>client API</em>, section 4.2.7).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "value": [
-     {
-        "knots": 1
-     }
-  ],
-  "dateTime": "2015-06-23T11:45:51.754+03:00",
-  "authority": "net.ikialab",
-  "signature": "eyJhbGciOiJSUz..." // shortened for clarity
+<pre class="highlight"><code class="java language-java">{
+  "result": {
+    "value": [
+        {
+            "knots": 1
+        }
+    ],
+    "updateTime": "2015-06-23T11:45:51Z",
+    "authority": "net.ikialab",
+    "signature": "eyJhbGciOiJSUz..." <i class="conum" data-value="1"></i><b>(1)</b>
+  }
 }</code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>shortened for clarity</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <div class="title">Response example</div>
-<p>The response is a measurement resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.6).</p>
+<p>The response is a measurement resource as defined in the <em>client API</em> (section 4.2.6).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/measurements/VYkcv8y-5zuVAAAH/",
-  "attribute": "https://ctp.ikialab.net:4443/ctp/attributes/VYkcv8y-5zuVAAAF/",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/measurements/VYkcv8y-5zuVAAAH",
+  "scope": "https://ctp.ikialab.net:4443/ctp/attributes/VYkcv8y-5zuVAAAF",
+  "name": "",
   "annotation": "",
-  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYkcv8y-5zuVAAAG/",
+  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYkcv8y-5zuVAAAG",
   "result": {
     "value": [
       {
         "knots": 1
       }
     ],
-    "dateTime": "2015-06-23T11:45:51.754+03:00",
+    "updateTime": "2015-06-23T11:45:51Z",
     "authority": "net.ikialab",
-    "signature": "eyJhbGciOiJSUz..." // shortened for clarity
+    "signature": "eyJhbGciOiJSUz..." <i class="conum" data-value="1"></i><b>(1)</b>
   },
   "objective": {
     "condition": "value[0].knots&gt;5",
@@ -1749,6 +1994,14 @@ When omitted <code>dateTime</code> is set to the current date, while <code>autho
 }</code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>shortened for clarity</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_put_measurements_id_objective">4.21. PUT /measurements/{id}?objective</h3>
@@ -1759,13 +2012,14 @@ When omitted <code>dateTime</code> is set to the current date, while <code>autho
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: the sub-part of a measurement defined as the content of the <code>objective</code> property (see <a href="#client_API">[client_API]</a>, section 4.2.6), without the status property.</p>
+<p><strong>Request body</strong>: the sub-part of a measurement defined as the content of the <code>objective</code> property (see <em>client API</em>, section 4.2.6),
+without the status property.</p>
 </li>
 <li>
 <p><strong>Query string</strong>: <code>x=objective</code></p>
 </li>
 <li>
-<p><strong>Response body</strong>: a measurement resource (see <a href="#client_API">[client_API]</a>).</p>
+<p><strong>Response body</strong>: a measurement resource (see <em>client API</em>).</p>
 </li>
 <li>
 <p><strong>Success status code</strong>: 200</p>
@@ -1775,39 +2029,43 @@ When omitted <code>dateTime</code> is set to the current date, while <code>autho
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>PUT /measurements/VYkcv8y-5zuVAAAH?x=objective</code></pre>
+<pre class="highlight"><code class="java language-java">PUT /measurements/VYkcv8y-5zuVAAAH?x=objective</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The request body is simply the content of the <code>objective</code> property within a measurement, without the <code>status</code> property.</p>
+<p>The request body corresponds to the subset of a measurement resource formed by only keeping the <code>object</code> property, excluding all
+other elements (see <em>client API</em>, section 4.2.7) and excluding the <code>status</code> property within the objective.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-   "condition": "value[0].knots&gt;0",
+<pre class="highlight"><code class="java language-java">{
+    "objective": {
+        "condition": "value[0].knots&gt;0"
+    }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <div class="title">Response example</div>
-<p>The response is a measurement resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.6).</p>
+<p>The response is a measurement resource as defined in the <em>client API</em> (section 4.2.6).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/measurements/VYkcv8y-5zuVAAAH/",
-  "attribute": "https://ctp.ikialab.net:4443/ctp/attributes/VYkcv8y-5zuVAAAF/",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/measurements/VYkcv8y-5zuVAAAH",
+  "scope": "https://ctp.ikialab.net:4443/ctp/attributes/VYkcv8y-5zuVAAAF",
+  "name": "",
   "annotation": "",
-  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYkcv8y-5zuVAAAG/",
+  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYkcv8y-5zuVAAAG",
   "result": {
     "value": [
       {
         "knots": 1
       }
     ],
-    "dateTime": "2015-06-23T11:45:51.754+03:00",
+    "updateTime": "2015-06-23T11:45:51Z",
     "authority": "net.ikialab",
-    "signature": "eyJhbGciOiJSUz..." // shortened for clarity
+    "signature": "eyJhbGciOiJSUz..." <i class="conum" data-value="1"></i><b>(1)</b>
   },
   "objective": {
     "condition": "value[0].knots&gt;0",
@@ -1819,17 +2077,25 @@ When omitted <code>dateTime</code> is set to the current date, while <code>autho
 }</code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>shortened for clarity</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
-<h3 id="post-views">4.22. POST /views</h3>
+<h3 id="post-serviceviews">4.22. POST /serviceViews</h3>
 <div class="paragraph">
-<p>Create a new view.</p>
+<p>Create a new service view.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: a view resource, with only the following property: <code>annotation</code> (see <a href="#client_API">[client_API]</a>).</p>
+<p><strong>Request body</strong>: a service view resource (see <em>client API</em>) with the addition of the optional <code>accessTags</code> field.</p>
 </li>
 <li>
 <p><strong>Query string</strong>: none</p>
@@ -1843,151 +2109,83 @@ When omitted <code>dateTime</code> is set to the current date, while <code>autho
 </ul>
 </div>
 <div class="paragraph">
-<p>The properties <code>serviceUnits</code>, <code>logs</code> and <code>triggers</code> are omitted in the view posted in the query.
-They are automatically set by the server.</p>
+<p>All properties in the request body are optional. The properties <code>self</code> and all
+other URL-type fields (i.e. <code>dependencies</code>, <code>assets</code>, <code>logs</code> and <code>triggers</code>)
+are ignored in the request body and are replaced by values constructed by the
+ctpd server.</p>
 </div>
 <div class="paragraph">
-<p>When a view is created, it is automatically assigned a tag of the form <code>view:{id}</code>, where <code>{id}</code> is the unique identifier assigned to the newly created view.
-This <code>{id}</code> is the same one that appears in the <code>self</code> property that is returned in the newly created view.
-This automatically assigned tag can be <a href="#get-views-tags">consulted</a> or <a href="#put-views-tags">modified</a> with the tag API.</p>
-</div>
-<div class="listingblock">
-<div class="title">Request example</div>
-<div class="content">
-<pre class="highlightjs highlight"><code>POST /views/</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The request body is a subset of the <code>view</code> resource defined in the main API.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code>{
-   "annotation": "this is a view"
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Response example</div>
-<div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/",
-  "annotation": "this is a view",
-  "serviceUnits": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/serviceUnits/",
-  "logs": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/logs/",
-  "triggers": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/triggers/"
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The simplest approach to create a new user (i.e. a new token), is therefore to proceed as follows:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Create a view (i.e. POST /views/).</p>
-</li>
-<li>
-<p>Get the tag <code>view:{id}</code> automatically associated with the newly created view (i.e. GET /views/{id}?x=tags).</p>
-</li>
-<li>
-<p>Create a token and use <code>view:{id}</code> from step 2 as one of the tags of the token (i.e. POST /tokens).</p>
-</li>
-</ol>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_post_views_id_serviceunits">4.23. POST /views/{id}/serviceUnits</h3>
-<div class="paragraph">
-<p>Creates a service-unit within the view identified by <code>{id}</code>.</p>
-</div>
-<div class="paragraph">
-<p>The newly created service-unit automatically inherits all tags from the parent view.</p>
+<p>When a service view is created, it is recommended to specify at least the
+following two tags in the request:</p>
 </div>
 <div class="ulist">
-<div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: A service-unit resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.2), excluding the following properties: <code>self</code>,
-<code>dependencies</code> and <code>assets</code>, which are set by the server.</p>
+<p><code>id:{id}</code>, where <code>{id}</code> is the unique identifier assigned to the account that will be allowed to access the service view.</p>
 </li>
 <li>
-<p><strong>Query string</strong>: none</p>
-</li>
-<li>
-<p><strong>Response body</strong>: A service-unit resource.</p>
-</li>
-<li>
-<p><strong>Success status code</strong>: 201</p>
+<p><code>access:user</code>, which allows authenticated principals to access the resources.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The property <code>serviceClass</code> may also be omitted in the query.
-It will set set to the empty string by the server in that case.</p>
+<p>Note that the response will not contain the <code>accessTags</code> field, which can only
+be accessed with the adequate tag related API call.</p>
 </div>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>POST /views/VYkcvsy-5zuVAAAB/serviceUnits</code></pre>
+<pre class="highlight"><code class="java language-java">POST /views/</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The request body is a <code>serviceUnit</code> resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.2) excluding the <code>self</code> property.</p>
+<p>The request body is a subset of the <code>serviceView</code> resource defined in the main API.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "view": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/",
-  "annotation": "this is a test to add a service.",
-  "provider": "net.ikialab",
-  "serviceClass": ""
+<pre class="highlight"><code class="java language-java">{
+   "name": "storage service",
+   "accessTags": [
+      "id:1234",
+      "access:user"
+   ]
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<div class="title">Response example</div>
-<p>The response body is a newly created <code>serviceUnit</code>, which includes a <code>self</code> property with the URL of the newly created object.</p>
-</div>
 <div class="listingblock">
+<div class="title">Response example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/serviceUnits/VYkcvsy-5zuVAAAD/",
-  "view": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/",
-  "annotation": "this is a test to add a service.",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/serviceViews/VYkcvsy-5zuVAAAB",
+  "scope": "https://ctp.ikialab.net:4443/ctp/",
+  "name": "my view",
+  "annotation": "this is a view",
   "provider": "net.ikialab",
-  "dependencies": "https://ctp.ikialab.net:4443/ctp/serviceUnits/VYkcvsy-5zuVAAAD/dependencies/",
-  "assets": "https://ctp.ikialab.net:4443/ctp/serviceUnits/VYkcvsy-5zuVAAAD/assets/",
+  "dependencies": "https://ctp.ikialab.net:4443/ctp/serviceViews/VYkcvsy-5zuVAAAD/dependencies",
+  "logs": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/logs",
+  "triggers": "https://ctp.ikialab.net:4443/ctp/views/VYkcvsy-5zuVAAAB/triggers",
+  "assets": "https://ctp.ikialab.net:4443/ctp/serviceViews/VYkcvsy-5zuVAAAD/assets",
   "serviceClass": ""
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_post_serviceunits_id_assets">4.24. POST /serviceUnits/{id}/assets</h3>
+<h3 id="_post_serviceviews_id_assets">4.23. POST /serviceViews/{id}/assets</h3>
 <div class="paragraph">
-<p>Create an asset as part of the service-unit identified by <code>{id}</code>.</p>
+<p>Create an asset as part of the service-view identified by <code>{id}</code>.</p>
 </div>
 <div class="paragraph">
-<p>The newly created asset automatically inherits all tags from the parent service-unit.</p>
+<p>The newly created asset automatically inherits all tags from the parent service-view, unless tags are specified in the request body.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: An asset resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.3), excluding the following properties: <code>self</code> and
-<code>attributes</code>.</p>
+<p><strong>Request body</strong>: An asset resource as defined in the <em>client API</em>
+(section 4.2.3), with only the following properties: <code>name</code>,
+<code>annotation</code>, <code>assetClass</code> and the additional optional
+<code>accessTags</code> field.</p>
 </li>
 <li>
 <p><strong>Query string</strong>: none</p>
@@ -2000,10 +2198,19 @@ It will set set to the empty string by the server in that case.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>All properties in the request body are optional. The properties <code>self</code> and all
+other URL-type fields are ignored in the request body and are replaced by values
+constructed by the  ctpd server.</p>
+</div>
+<div class="paragraph">
+<p>Note that the response will not contain the <code>accessTags</code> field, which can only
+be accessed with the adequate tag related API call.</p>
+</div>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>POST /serviceUnits/VYkcvsy-5zuVAAAD/assets</code></pre>
+<pre class="highlight"><code class="java language-java">POST /serviceViews/VYkcvsy-5zuVAAAD/assets</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2011,45 +2218,47 @@ It will set set to the empty string by the server in that case.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "serviceUnit": "https://ctp.ikialab.net:4443/ctp/serviceUnits/VYk6c8y-5zr9AAAD/",
-  "annotation": "testing insertion of asset",
+<pre class="highlight"><code class="java language-java">{
   "name": "name of asset",
+  "annotation": "testing insertion of asset",
   "assetClass": ""
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <div class="title">Response example</div>
-<p>The response body is a fully defined asset resource, which includes a <code>self</code> property with the URL of the newly created object.</p>
+<p>The response body is a fully defined asset resource, which includes a <code>self</code>
+property with the URL of the newly created object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/assets/VYk6dMy-5zr9AAAE/",
-  "serviceUnit": "https://ctp.ikialab.net:4443/ctp/serviceUnits/VYk6c8y-5zr9AAAD/",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/assets/VYk6dMy-5zr9AAAE",
+  "scope": "https://ctp.ikialab.net:4443/ctp/serviceViews/VYk6c8y-5zr9AAAD",
   "annotation": "testing insertion of asset",
   "name": "name of asset",
-  "attributes": "https://ctp.ikialab.net:4443/ctp/assets/VYk6dMy-5zr9AAAE/attributes/",
+  "attributes": "https://ctp.ikialab.net:4443/ctp/assets/VYk6dMy-5zr9AAAE/attributes",
   "assetClass": ""
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_post_assets_id_attributes">4.25. POST /assets/{id}/attributes</h3>
+<h3 id="_post_assets_id_attributes">4.24. POST /assets/{id}/attributes</h3>
 <div class="paragraph">
 <p>Create an attribute attached to the asset identified by <code>{id}</code>.</p>
 </div>
 <div class="paragraph">
-<p>The newly created attribute automatically inherits all tags from the parent asset.</p>
+<p>The newly created attribute automatically inherits all tags from the parent
+asset, unless tags are specified in the request body.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: an attribute resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.4), excluding the following properties: <code>self</code> and
-<code>measurements</code></p>
+<p><strong>Request body</strong>: an attribute resource as defined in the <em>client API</em> (section 4.2.4),
+with only the following properties defined: <code>name</code>, <code>annotation</code>
+and the additional optional <code>accessTags</code> field.</p>
 </li>
 <li>
 <p><strong>Query string</strong>: none</p>
@@ -2063,47 +2272,59 @@ It will set set to the empty string by the server in that case.</p>
 </ul>
 </div>
 <div class="paragraph">
+<p>All properties in the request body are optional. The properties <code>self</code> and all
+other URL-type fields are ignored in the request body and are replaced by values
+constructed by the ctpd server.</p>
+</div>
+<div class="paragraph">
+<p>Note that the response will not contain the <code>accessTags</code> field, which can only
+be accessed with the adequate tag related API call.</p>
+</div>
+<div class="paragraph">
 <div class="title">Request example</div>
 <p>The request body is a subset of an attribute resource.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "asset": "https://ctp.ikialab.net:4443/ctp/assets/VYk6dMy-5zr9AAAE/",
-  "annotation": "",
+<pre class="highlight"><code class="java language-java">{
   "name": "velocity",
+  "annotation": "",
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <div class="title">Response example</div>
-<p>The response body is a fully defined attribute resource, which includes a <code>self</code> property with the URL of the newly created object.</p>
+<p>The response body is a fully defined attribute resource, which includes a <code>self</code>
+property with the URL of the newly created object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/attributes/VYk6dMy-5zr9AAAF/",
-  "asset": "https://ctp.ikialab.net:4443/ctp/assets/VYk6dMy-5zr9AAAE/",
-  "annotation": "",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/attributes/VYk6dMy-5zr9AAAF",
+  "scope": "https://ctp.ikialab.net:4443/ctp/assets/VYk6dMy-5zr9AAAE",
   "name": "velocity",
-  "measurements": "https://ctp.ikialab.net:4443/ctp/attributes/VYk6dMy-5zr9AAAF/measurements/"
+  "annotation": "",
+  "measurements": "https://ctp.ikialab.net:4443/ctp/attributes/VYk6dMy-5zr9AAAF/measurements"
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_post_attributes_id_measurements">4.26. POST /attributes/{id}/measurements</h3>
+<h3 id="_post_attributes_id_measurements">4.25. POST /attributes/{id}/measurements</h3>
 <div class="paragraph">
 <p>Create a measurement that applies to the attribute identified by <code>{id}</code>.</p>
 </div>
 <div class="paragraph">
-<p>The newly created measurement automatically inherits all tags from the parent attribute.</p>
+<p>The newly created measurement automatically inherits all tags from the parent
+attribute, unless tags are specified in the request body.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: a measurement resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.6), excluding the following property: <code>self</code>.</p>
+<p><strong>Request body</strong>: a measurement resource as defined in the <em>client API</em>
+(section 4.2.6), with the addition of the optional
+<code>accessTags</code> field.</p>
 </li>
 <li>
 <p><strong>Query string</strong>: none</p>
@@ -2117,30 +2338,37 @@ It will set set to the empty string by the server in that case.</p>
 </ul>
 </div>
 <div class="paragraph">
+<p>All properties in the request body are optional. The properties <code>self</code> and all
+other URL-type fields are ignored in the request body and are replaced by values
+constructed by the ctpd server.</p>
+</div>
+<div class="paragraph">
+<p>Note that the response will not contain the <code>accessTags</code> field, which can only
+be accessed with the adequate tag related API call.</p>
+</div>
+<div class="paragraph">
 <div class="title">Request example</div>
-<p>The request body does not contain the <code>self</code> property.</p>
+<p>The request body does not contain the <code>self</code> or <code>scope</code> properties.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "attribute": "https://ctp.ikialab.net:4443/ctp/attributes/VYk6dMy-5zr9AAAF/",
+<pre class="highlight"><code class="java language-java">{
+  "name": "",
   "annotation": "",
-  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYk6dMy-5zr9AAAG/",
+  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYk6dMy-5zr9AAAG",
   "result": {
     "value": [
       {
         "knots": 7
       }
     ],
-    "dateTime": "2015-06-23T16:52:36+03:00",
-    "authority": null,
-    "signature": null
+    "updateTime": "2015-06-23T16:52:36Z",
   },
   "objective": {
     "condition": "value[0].knots&gt;5",
     "status": "true"
   },
-  "createTrigger": null,
+  "createTrigger": "",
   "userActivated": false,
   "state": "pending"
 }</code></pre>
@@ -2148,15 +2376,17 @@ It will set set to the empty string by the server in that case.</p>
 </div>
 <div class="paragraph">
 <div class="title">Response example</div>
-<p>The response body is a fully defined measurement resource, which includes a <code>self</code> property with the URL of the newly created object.</p>
+<p>The response body is a fully defined measurement resource, which includes a
+<code>self</code> property with the URL of the newly created object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/measurements/VYk6dMy-5zr9AAAH/",
-  "attribute": "https://ctp.ikialab.net:4443/ctp/attributes/VYk6dMy-5zr9AAAF/",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/measurements/VYk6dMy-5zr9AAAH",
+  "scope": "https://ctp.ikialab.net:4443/ctp/attributes/VYk6dMy-5zr9AAAF",
+  "name": "",
   "annotation": "",
-  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYk6dMy-5zr9AAAG/",
+  "metric": "https://ctp.ikialab.net:4443/ctp/metrics/VYk6dMy-5zr9AAAG",
   "result": {
     "value": [
       {
@@ -2164,14 +2394,14 @@ It will set set to the empty string by the server in that case.</p>
       }
     ],
     "dateTime": "2015-06-23T16:52:36+03:00",
-    "authority": null,
-    "signature": null
+    "authority": "",
+    "signature": ""
   },
   "objective": {
     "condition": "value[0].knots&gt;5",
     "status": "true"
   },
-  "createTrigger": null,
+  "createTrigger": "",
   "userActivated": false,
   "state": "pending"
 }</code></pre>
@@ -2179,18 +2409,21 @@ It will set set to the empty string by the server in that case.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_post_metrics">4.27. POST /metrics</h3>
+<h3 id="_post_metrics">4.26. POST /metrics</h3>
 <div class="paragraph">
 <p>Create a new metric.</p>
 </div>
 <div class="paragraph">
-<p>By default the metric is initialized with a set of tags containing one tag: <code>access:anybody</code>.</p>
+<p>By default the metric is initialized with a set of tags containing one tag:
+<code>access:anybody</code>, unless tags are specified in the request body.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: A metric resource as defined in the <a href="#client_API">[client_API]</a> (section 4.2.5), excluding the <code>self</code> property.</p>
+<p><strong>Request body</strong>: A metric resource as defined in the <em>client API</em>
+(section 4.2.5), with the addition of the optional
+<code>accessTags</code> field.</p>
 </li>
 <li>
 <p><strong>Query string</strong>: none</p>
@@ -2204,13 +2437,23 @@ It will set set to the empty string by the server in that case.</p>
 </ul>
 </div>
 <div class="paragraph">
+<p>All properties in the request body are optional. The properties <code>self</code> and all
+other URL-type fields are ignored in the request body and are replaced by values
+constructed by the ctpd server.</p>
+</div>
+<div class="paragraph">
+<p>Note that the response will not contain the <code>accessTags</code> field, which can only
+be accessed with the adequate tag related API call.</p>
+</div>
+<div class="paragraph">
 <div class="title">Request example</div>
 <p>The request body does not contain the <code>self</code> property.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "annotation": "Nautical knots",
+<pre class="highlight"><code class="java language-java">{
+  "name": "Nautical knots",
+  "annotation": "",
   "baseMetric": "http://en.wikipedia.org/wiki/Knot_%28unit%29",
   "measurementParameters": [],
   "resultFormat": [
@@ -2224,13 +2467,16 @@ It will set set to the empty string by the server in that case.</p>
 </div>
 <div class="paragraph">
 <div class="title">Response example</div>
-<p>The response body is a fully specified metric resource, which includes a <code>self</code> property with the URL of the newly created object.</p>
+<p>The response body is a fully specified metric resource, which includes a <code>self</code>
+property with the URL of the newly created object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/metrics/VYk6dMy-5zr9AAAG/",
-  "annotation": "Nautical knots",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/metrics/VYk6dMy-5zr9AAAG",
+  "scope": "https://ctp.ikialab.net:4443/ctp/",
+  "name": "Nautical knots",
+  "annotation": "",
   "baseMetric": "http://en.wikipedia.org/wiki/Knot_%28unit%29",
   "measurementParameters": [],
   "resultFormat": [
@@ -2244,16 +2490,17 @@ It will set set to the empty string by the server in that case.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_post_dependencies">4.28. POST /dependencies</h3>
+<h3 id="_post_dependencies">4.27. POST /dependencies</h3>
 <div class="paragraph">
 <p>note: <em>unimplemented (June 2015)</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_views_id">4.29. DELETE /views/{id}</h3>
+<h3 id="_delete_views_id">4.28. DELETE /views/{id}</h3>
 <div class="paragraph">
-<p>Deletes the view identified by <code>{id}</code> and all resources that are directly dependant on the view: service-units, assets,
-attributes, measurements, triggers  and logs.</p>
+<p>Deletes the view identified by <code>{id}</code> and all resources that are directly
+dependent on the view: service-views, assets, attributes, measurements,
+triggers and logs.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -2275,7 +2522,7 @@ attributes, measurements, triggers  and logs.</p>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /views/VYk6c8y-5zr9AAAB</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /views/VYk6c8y-5zr9AAAB</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2287,10 +2534,11 @@ attributes, measurements, triggers  and logs.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_serviceunits_id">4.30. DELETE /serviceUnits/{id}</h3>
+<h3 id="_delete_serviceviews_id">4.29. DELETE /serviceViews/{id}</h3>
 <div class="paragraph">
-<p>Deletes the service-unit identified by <code>{id}</code> and all resources that are directly dependant on the service-unit: assets,
-attributes, measurements and triggers.</p>
+<p>Deletes the service-view identified by <code>{id}</code> and all resources that are
+directly dependent on the service-view: assets, attributes, measurements and
+triggers.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -2312,7 +2560,7 @@ attributes, measurements and triggers.</p>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /serviceUnits/VYk6c8y-5zr9AAAD</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /serviceViews/VYk6c8y-5zr9AAAD</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2324,10 +2572,10 @@ attributes, measurements and triggers.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_assets_id">4.31. DELETE /assets/{id}</h3>
+<h3 id="_delete_assets_id">4.30. DELETE /assets/{id}</h3>
 <div class="paragraph">
-<p>Deletes the asset identified by <code>{id}</code> and all resources that are directly dependant on the asset: attributes,
-triggers and measurements.</p>
+<p>Deletes the asset identified by <code>{id}</code> and all resources that are directly
+dependent on the asset: attributes, triggers and measurements.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -2349,7 +2597,7 @@ triggers and measurements.</p>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /assets/VYk6c8y-5zr9AAAE</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /assets/VYk6c8y-5zr9AAAE</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2361,10 +2609,10 @@ triggers and measurements.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_attributes_id">4.32. DELETE /attributes/{id}</h3>
+<h3 id="_delete_attributes_id">4.31. DELETE /attributes/{id}</h3>
 <div class="paragraph">
-<p>Deletes the attribute identified by <code>{id}</code> and all resources that are directly dependant on the attribute:
-triggers and measurements.</p>
+<p>Deletes the attribute identified by <code>{id}</code> and all resources that are directly
+dependant on the attribute: triggers and measurements.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -2386,7 +2634,7 @@ triggers and measurements.</p>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /attributes/VYk6dMy-5zr9AAAF</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /attributes/VYk6dMy-5zr9AAAF</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2398,9 +2646,10 @@ triggers and measurements.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_measurements_id">4.33. DELETE /measurements/{id}</h3>
+<h3 id="_delete_measurements_id">4.32. DELETE /measurements/{id}</h3>
 <div class="paragraph">
-<p>Deletes the measurement identified by <code>{id}</code> and any trigger directly dependant on the measurement.</p>
+<p>Deletes the measurement identified by <code>{id}</code> and any trigger directly dependant
+on the measurement.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -2422,7 +2671,7 @@ triggers and measurements.</p>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /measurements/VYk6dMy-5zr9AAAH</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /measurements/VYk6dMy-5zr9AAAH</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2434,10 +2683,10 @@ triggers and measurements.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_metrics_id">4.34. DELETE /metrics/{id}</h3>
+<h3 id="_delete_metrics_id">4.33. DELETE /metrics/{id}</h3>
 <div class="paragraph">
-<p>Deletes the metric identified by <code>{id}</code>.
-This method will return an error if the metric is currently in use in a measurement (status code 409).</p>
+<p>Deletes the metric identified by <code>{id}</code>. This method will return an error if the
+metric is currently in use in a measurement (status code 409).</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -2459,7 +2708,7 @@ This method will return an error if the metric is currently in use in a measurem
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /metrics/VYk6dMy-5zr9AAAG</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /metrics/VYk6dMy-5zr9AAAG</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2471,21 +2720,21 @@ This method will return an error if the metric is currently in use in a measurem
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_dependencies_id">4.35. DELETE /dependencies/{id}</h3>
+<h3 id="_delete_dependencies_id">4.34. DELETE /dependencies/{id}</h3>
 <div class="paragraph">
 <p>note: <em>unimplemented (June 2015).</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_logs_id">4.36. DELETE /logs/{id}</h3>
+<h3 id="_delete_logs_id">4.35. DELETE /logs/{id}</h3>
 <div class="paragraph">
 <p>note: <em>unimplemented (June 2015).</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_tokens_id">4.37. GET /tokens/{id}</h3>
+<h3 id="_get_account_id">4.36. GET /account/{id}</h3>
 <div class="paragraph">
-<p>Read the details of a <a href="#token-res">token resource</a>.</p>
+<p>Read the details of an <a href="#account-res">account resource</a>.</p>
 </div>
 <div class="ulist">
 <div class="title">Method characteristics</div>
@@ -2497,7 +2746,7 @@ This method will return an error if the metric is currently in use in a measurem
 <p><strong>Query string</strong>: none</p>
 </li>
 <li>
-<p><strong>Response body</strong>: a <a href="#token-res">token resource</a></p>
+<p><strong>Response body</strong>: a <a href="#account-res">token resource</a></p>
 </li>
 <li>
 <p><strong>Success status code</strong>: 200</p>
@@ -2507,14 +2756,15 @@ This method will return an error if the metric is currently in use in a measurem
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>GET /tokens/VYkyC8y-5xbBAAAC</code></pre>
+<pre class="highlight"><code class="java language-java">GET /accounts/VYkyC8y-5xbBAAAC</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">Response example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>{
-  "self": "https://ctp.ikialab.net:4443/ctp/tokens/VYkyC8y-5xbBAAAC/",
+<pre class="highlight"><code class="java language-java">{
+  "self": "https://ctp.ikialab.net:4443/ctp/accounts/VYkyC8y-5xbBAAAC",
+  "name": "",
   "annotation": "john.smith@mail.com",
   "accessTags": [
      "views:1234",
@@ -2527,36 +2777,42 @@ This method will return an error if the metric is currently in use in a measurem
 </div>
 </div>
 <div class="sect2">
-<h3 id="_post_tokens">4.38. POST /tokens</h3>
+<h3 id="_post_account">4.37. POST /account</h3>
 <div class="ulist">
 <div class="title">Method characteristics</div>
 <ul>
 <li>
-<p><strong>Request body</strong>: A <a href="#token-res">token resource</a>, excluding the <code>self</code> and <code>key</code> properties.</p>
+<p><strong>Request body</strong>: A <a href="#account-res">token resource</a>.</p>
 </li>
 <li>
 <p><strong>Query string</strong>:  none</p>
 </li>
 <li>
-<p><strong>Response body</strong>: A <a href="#token-res">token resource</a>.</p>
+<p><strong>Response body</strong>: A <a href="#account-res">token resource</a>.</p>
 </li>
 <li>
 <p><strong>Success status code</strong>: 201</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>All properties in the request body are optional. The properties <code>self</code> and all
+other URL-type fields are ignored in the request body and are replaced by values
+constructed by the ctpd server.</p>
+</div>
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>POST /tokens</code></pre>
+<pre class="highlight"><code class="java language-java">POST /tokens</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The request body only contains the <code>annotation</code> and the <code>accessTags</code> properties.</p>
+<p>The request body only contains the <code>name", `annotation</code> and the <code>accessTags</code> properties.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
+  "name": "",
   "annotation": "jsmith@gmx.com",
   "accessTags": [
      "views:1234",
@@ -2572,21 +2828,18 @@ This method will return an error if the metric is currently in use in a measurem
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
   "self": "https://ctp.ikialab.net:4443/ctp/tokens/VYkyC8y-5xbBAAAC/",
+  "scope": "https://ctp.ikialab.net:4443/ctp/",
+  "name": "",
   "annotation": "jsmith@gmx.com",
-  "accessTags": [
-     "views:1234",
-     "access:user",
-     "access:anybody"
-  ],
   "key": "9rPwDVfZwdqxMiR_fGY7BxvCTPfEPqec"
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_get_tokens">4.39. GET /tokens</h3>
+<h3 id="_get_tokens">4.38. GET /tokens</h3>
 <div class="paragraph">
 <p>Read the collection of all existing tokens.</p>
 </div>
@@ -2597,7 +2850,7 @@ This method will return an error if the metric is currently in use in a measurem
 <p><strong>Request body</strong>: none.</p>
 </li>
 <li>
-<p><strong>Query string</strong>: Optional <code>page</code> and <code>items</code> as for all collections, as defined in the <a href="#client_API">[client_API]</a> (section 4.1.5).</p>
+<p><strong>Query string</strong>: Optional <code>page</code> and <code>items</code> as for all collections, as defined in the <em>client API</em> (section 4.1.5).</p>
 </li>
 <li>
 <p><strong>Response body</strong>: A collection of links to token resources, where <code>collectionType</code> = <code>tokens</code>.</p>
@@ -2610,7 +2863,7 @@ This method will return an error if the metric is currently in use in a measurem
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>GET /tokens</code></pre>
+<pre class="highlight"><code class="java language-java">GET /tokens</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2619,8 +2872,9 @@ This method will return an error if the metric is currently in use in a measurem
 <div class="listingblock">
 <div class="title">Response example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>{
+<pre class="highlight"><code class="java language-java">{
   "self": "https://ctp.ikialab.net:4443/ctp/tokens/",
+  "scope": "https://ctp.ikialab.net:4443/ctp/"
   "collectionLength": 6,
   "returnedLength": 6,
   "collectionType": "tokens",
@@ -2637,13 +2891,13 @@ This method will return an error if the metric is currently in use in a measurem
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_tokens_id">4.40. PUT /tokens/{id}</h3>
+<h3 id="_put_tokens_id">4.39. PUT /tokens/{id}</h3>
 <div class="paragraph">
 <p>note: <em>unimplemented (June 2015).</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_delete_tokens_id">4.41. DELETE /tokens/{id}</h3>
+<h3 id="_delete_tokens_id">4.40. DELETE /tokens/{id}</h3>
 <div class="paragraph">
 <p>Delete an existing token resource.</p>
 </div>
@@ -2667,7 +2921,7 @@ This method will return an error if the metric is currently in use in a measurem
 <div class="listingblock">
 <div class="title">Request example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code>DELETE /tokens/VWcIa-sfTYZSm6Qs/</code></pre>
+<pre class="highlight"><code class="java language-java">DELETE /tokens/VWcIa-sfTYZSm6Qs/</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2686,10 +2940,13 @@ This method will return an error if the metric is currently in use in a measurem
 <div class="ulist bibliography">
 <ul class="bibliography">
 <li>
-<p><a id="client_API"></a>[client_API] Cloud Security Alliance. &#8220;CTP Technical Model and API&#8221;. Ed. Dr. Alain Pannetrat. Version 3.0. June 2015.</p>
+<p><a id="client_API"></a>[client_API] Cloud Security Alliance. "<code>CTP Technical Model and API</code>". Ed. Dr. Alain Pannetrat. Version 2.13. October 2015.</p>
 </li>
 <li>
-<p><a id="RFC_4648"></a>[RFC_4648] S. Josefsson, &#8220;RFC 4648: The Base16, Base32, and Base64 Data Encodings&#8221;, The Internet Engineering Task Force, October 2006.</p>
+<p><a id="RFC_4648"></a>[RFC_4648] S. Josefsson, "<code>RFC 4648: The Base16, Base32, and Base64 Data Encodings</code>", The Internet Engineering Task Force, October 2006.</p>
+</li>
+<li>
+<p><a id="RFC_6750"></a>[RFC_6750] M. Jones, D. Hardt, <em>RFC 6750: The OAuth 2.0 Authorization Framework: Bearer Token Usage</em>, Internet Engineering Task Force (IETF), October 2012.</p>
 </li>
 </ul>
 </div>
@@ -2698,8 +2955,8 @@ This method will return an error if the metric is currently in use in a measurem
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.1<br>
-Last updated 2015-07-24 11:42:51 EEST
+Version 0.2<br>
+Last updated 2015-10-15 12:21:01 EEST
 </div>
 </div>
 </body>

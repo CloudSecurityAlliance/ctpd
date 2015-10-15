@@ -49,8 +49,6 @@ func (serviceview *ServiceView) Load(context *ctp.ApiContext) *ctp.HttpError {
 func (serviceview *ServiceView) Create(context *ctp.ApiContext) *ctp.HttpError {
 	serviceview.BuildLinks(context)
 
-	// we don't set serviceview.AccessTags it's the admin's job to do so.
-
 	if !ctp.CreateResource(context, "serviceViews", serviceview) {
 		return ctp.NewHttpError(http.StatusInternalServerError, "Could not save object")
 	}

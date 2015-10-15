@@ -20,7 +20,7 @@ import (
 )
 
 type BaseURI struct {
-	ctp.NamedResource
+    ctp.NamedResource     `bson:",inline"`
 	Version      string   `json:"version"`
 	Provider     string   `json:"provider"`
 	ServiceViews ctp.Link `json:"serviceViews"`
@@ -38,20 +38,22 @@ func (base *BaseURI) BuildLinks(context *ctp.ApiContext) {
 func HandleGETBaseURI(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 
 	if !context.AuthenticateClient(w, r) {
-		ctp.Log(context, "Missing access tags")
+		ctp.Log(context, ctp.WARNING, "Missing access tags")
 		return
 	}
 
 	if !context.VerifyAccessTags(w, ctp.UserAccess) {
-		ctp.Log(context, "Mismatched access tags for API signature")
+		ctp.Log(context, ctp.WARNING, "Mismatched access tags for API signature")
 		return
 	}
 
-	base := new(BaseURI)
+    base := new(BaseURI)
 
-	base.Version = "0"
-	base.Annotation = "ctpd prototype server"
-	base.BuildLinks(context)
+    if !ctp.LoadResource(context, "baseuri", ctp.Base64Id("0"), base) {
+        base.Version = "0"
+        base.Annotation = "Unconfigured ctpd prototype server"
+    }
+    base.BuildLinks(context)
 
 	ctp.RenderJsonResponse(w, context, 200, base)
 }

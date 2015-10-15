@@ -36,7 +36,8 @@ type ApiContext struct {
     QueryParam    string
     Id            SessionId
     Session       *mgo.Session
-    AccessTags    Tags
+    AccountTags   Tags
+    ColorLogs     bool
 }
 
 type HandlerFunc func(http.ResponseWriter, *http.Request, *ApiContext)
@@ -64,11 +65,14 @@ func NewApiContext(r *http.Request, conf Configuration) (*ApiContext, error) {
 
     session, err := mgo.Dial(conf["databaseurl"])
     if err!=nil {
-        Log(c,"Failed to connect to database %s: %s",conf["databaseurl"],err.Error())
+        Log(c,ERROR,"Failed to connect to database %s: %s",conf["databaseurl"],err.Error())
         return c, err
     }
     c.Session = session
-    c.AccessTags = AnybodyAccess
+    c.AccountTags = AnybodyAccess
+    if conf["color-logs"]=="true" {
+        c.ColorLogs = true
+    }
 	return c, nil
 }
 
@@ -78,10 +82,10 @@ func (c *ApiContext) Close() {
     }
 }
 
-func load_access_tags(session *mgo.Session, key string) ([]string, bool) {
-    var access Access
+func load_account_tags(session *mgo.Session, key string) ([]string, bool) {
+    var account Account
 
-    query := session.DB("ctp").C("access").Find(bson.M{"token": key})
+    query := session.DB("ctp").C("accounts").Find(bson.M{"token": key})
 
     count, err := query.Count()
     if err != nil {
@@ -91,20 +95,20 @@ func load_access_tags(session *mgo.Session, key string) ([]string, bool) {
         return nil, false
     }
 
-    if err = query.One(&access); err != nil {
+    if err = query.One(&account); err != nil {
         return nil, false
     }
-    if access.AccessTags == nil {
+    if account.AccountTags == nil {
         return nil, false
     }
-    return access.AccessTags, true
+    return account.AccountTags, true
 }
 
 func (c *ApiContext) VerifyAccessTags(w http.ResponseWriter, dest Tags) bool {
-    if MatchTags(c.AccessTags,dest) {
+    if MatchTags(c.AccountTags,dest) {
         return true
     }
-    Log(c,"context-tags=%s / dest-tags=%s", c.AccessTags.String(),dest.String())
+    Log(c,DEBUG,"Verifying account-tags=%s versus access-tags=%s", c.AccountTags.String(),dest.String())
     RenderErrorResponse(w,c,NewHttpError(http.StatusUnauthorized,"You do not have permission to access this resource"))
     return false
 }
@@ -112,14 +116,15 @@ func (c *ApiContext) VerifyAccessTags(w http.ResponseWriter, dest Tags) bool {
 func (c *ApiContext) AuthenticateClient(w http.ResponseWriter, r *http.Request) bool {
     token, ok := BearerAuth(r)
 
+    c.AccountTags = nil
     if ok {
-        if accesstags, ok := load_access_tags(c.Session,token); ok {
-            c.AccessTags = accesstags
+        if accounttags, ok := load_account_tags(c.Session,token); ok {
+            c.AccountTags = accounttags
             return true
         }
-        Log(c,"Could not find token '%s'",token);
+        Log(c,WARNING,"Could not find account with token '%s'",token);
     } else {
-        Log(c,"Failed to parse http authorization header (%s)",r.Header.Get("Authorization"))
+        Log(c,INFO,"Failed to parse http authorization header (%s)",r.Header.Get("Authorization"))
     }
 
     w.Header().Set("WWW-Authenticate", `Bearer realm="ctp api"`)
@@ -196,7 +201,7 @@ func RenderErrorResponse(w http.ResponseWriter, context *ApiContext, err *HttpEr
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(err.StatusCode())
 	fmt.Fprintf(w, `{ "error": "%s" }`, err.Error())
-    Log(context,"Error: %s", err.Error())
+    Log(context,WARNING,"%s", err.Error())
 }
 
 func RenderJsonResponse(w http.ResponseWriter, context *ApiContext, code int, item interface{}) {
@@ -216,7 +221,7 @@ func RenderJsonResponse(w http.ResponseWriter, context *ApiContext, code int, it
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(jsonRendering)
-    Log(context,"Succes: %d bytes content, status code=%d ", len(jsonRendering), code)
+    Log(context,INFO,"%d bytes response content, status code=%d ", len(jsonRendering), code)
 }
 
 

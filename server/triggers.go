@@ -104,7 +104,7 @@ func triggerCheckCondition(context *ctp.ApiContext, trigger *Trigger, measuremen
 		return false, nil
 	}
 	if measurement.Result == nil {
-		ctp.Log(context, "WARNING: in /measurements/%s, the state is activated but the value is null.", measurement.Id)
+		ctp.Log(context, ctp.ERROR, "In /measurements/%s, the state is activated but the value is null.", measurement.Id)
 		return false, nil
 	}
 

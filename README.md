@@ -68,6 +68,16 @@ The result should look something like this:
 Note that the value "1234" above is not an example of a secure token and
 was created by `build_db.js` for demonstration purposes only.
 
+You can also test the embedded lightweight javscript client by launching
+ctpd as follows:
+
+```bash
+go run ctpd.go --color-logs --client=./client/
+```
+
+Then point your browser to http://ctpserver:8080/ where 'ctpserver' 
+should be replaced by the hostname of the machine that is running ctpd.
+
 Using ctpd
 ----------
 

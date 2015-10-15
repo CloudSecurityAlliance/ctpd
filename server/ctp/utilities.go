@@ -15,7 +15,6 @@
 package ctp
 
 import (
-	"log"
 	"net/http"
 	"path"
 	"regexp"
@@ -45,7 +44,7 @@ func RequestSignature(prefix string, r *http.Request) (signature string, params 
 	}
 
 	if !strings.HasPrefix(path, prefix) {
-		log.Printf("%s, pref=%s", path, prefix)
+		Log(nil, DEBUG, "%s, pref=%s", path, prefix)
 		return "", nil, ""
 	}
 
@@ -61,7 +60,7 @@ func RequestSignature(prefix string, r *http.Request) (signature string, params 
 			if v != "" {
 				if (i & 1) == 1 {
 					if !IsValidIdentifier(v) {
-						log.Printf("identifier '%s' is not in base64url format", v)
+						Log(nil, WARNING, "identifier '%s' is not in base64url format", v)
 						return "", nil, ""
 					}
 					signature = signature + "/$"
@@ -80,3 +79,4 @@ func RequestSignature(prefix string, r *http.Request) (signature string, params 
 	}
 	return /* signature, params, x */
 }
+

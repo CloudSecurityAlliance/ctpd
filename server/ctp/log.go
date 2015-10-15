@@ -22,8 +22,35 @@ import (
 
 var logMutex sync.Mutex
 
-func Log(c *ApiContext, format string, v ...interface{}) {
-	id := fmt.Sprintf("<%d> ", c.Id)
+type LogLevel uint
+
+const (
+	DEBUG LogLevel = iota
+	INFO
+	WARNING
+	ERROR
+)
+
+var color_tags = [...]string{
+	"\033[34mDEBUG\033[0m",
+	"\033[90mINFO\033[0m",
+	"\033[93mWARNING\033[0m",
+	"\033[91mERROR\033[0m",
+}
+
+func Log(c *ApiContext, level LogLevel, format string, v ...interface{}) {
+	var id string
+
+    if c==nil {
+        id = "[*] "
+    } else {
+        if c.ColorLogs {
+            id = fmt.Sprintf("[\033[35m%d\033[0m] ", c.Id)
+            id += color_tags[level] + " "
+        } else {
+            id = fmt.Sprintf("[%d] ", c.Id)
+        }
+    }
 
 	logMutex.Lock()
 	defer logMutex.Unlock()

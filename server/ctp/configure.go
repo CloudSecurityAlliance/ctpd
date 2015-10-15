@@ -41,7 +41,7 @@ func LoadConfigurationFromFile(fname string) (Configuration, bool) {
 		return nil, false
 	}
 	if (info.Mode() & 077) != 0 {
-		log.Printf("Permissions 0%o for %s are too open.", info.Mode()&os.ModePerm, fname)
+		Log(nil, ERROR, "Permissions 0%o for %s are too open.", info.Mode()&os.ModePerm, fname)
 		log.Fatalf("Configuration file should not be readable or writable by other users.")
 	}
 
@@ -83,7 +83,7 @@ func LoadConfigurationFromFile(fname string) (Configuration, bool) {
 		conf["basepath"] += "/"
 	}
 
-	log.Printf("Loaded configuration from %s.\n", fname)
+	Log(nil, INFO, "Loaded configuration from %s.", fname)
 
 	return conf, true
 }

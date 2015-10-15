@@ -82,8 +82,8 @@ func HandleGETCollection(w http.ResponseWriter, r *http.Request, context *ctp.Ap
 			if !context.VerifyAccessTags(w, ctp.UserAccess) {
 				return
 			}
-			if !ctp.MatchTags(context.AccessTags, ctp.AdminAccess) {
-				selector["accessTags"] = bson.M{"$in": context.AccessTags.WithPrefix("id:")}
+			if !ctp.MatchTags(context.AccountTags, ctp.AdminAccess) {
+				selector["accessTags"] = bson.M{"$in": context.AccountTags.WithPrefix("id:")}
 			}
 		case "metrics":
 			if !context.VerifyAccessTags(w, ctp.UserAccess) {

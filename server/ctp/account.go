@@ -19,8 +19,9 @@ import (
 	"strings"
 )
 
-type Access struct {
+type Account struct {
 	NamedResource `bson:",inline"`
+	AccountTags   Tags   `json:"accountTags" bson:"accountTags"`
 	Token         string `json:"token" bson:"token"`
 }
 
