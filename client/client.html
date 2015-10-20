@@ -40,11 +40,24 @@ body {
             <button class="btn btn-primary btn-lg" type="Submit" role="button">Start client</button>
         </form>
         <p id="errormsg" class="text-danger"></p>
-        <p id="ctp">
-            <span class='label label-default'>ctp server</span> 
-            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="click to refresh the ctp data" id="refreshctp"><i class="glyphicon glyphicon-refresh"></i></button>
-            <div id="jstree"></div>
-        </p>
+        <div id="ctp">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active" id="slos-tab"><a href="#">Service Level Objectives</a></li>
+                <li role="presentation" id="details-tab"><a href="#">Details</a></li>
+            </ul>
+            <div class="panel" id="slos">
+                <div class="panel-body">
+                    details here
+                </div>
+            </div>
+             <div class="panel" id="details">
+                <div class="panel-body">
+                    <span class='label label-default'>ctp server</span> 
+                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="click to refresh the ctp data" id="refreshctp"><i class="glyphicon glyphicon-refresh"></i></button>
+                    <div id="jstree"></div>
+                </div>
+            </div>
+        </div>
     </div>
     <h1>About this demo</h1>
     <p>
@@ -72,6 +85,8 @@ function getTypeAndId(url) {
 
 folder_keys = [ "metrics", "dependencies", "serviceViews", "assets", "attributes", "measurements", "triggers", "logs" ]
 ignore_keys = [ "serviceView", "asset", "attribute" ]
+
+
 
 function mapObject(obj) {
     var children = []
@@ -162,8 +177,23 @@ function restorePageAfterError(resp) {
 
 $(function () {
         // 
+        $("#details").hide()
         $("#ctp").hide()
         $('[data-toggle="tooltip"]').tooltip()
+
+        $('#slos-tab').click(function() {
+            $("#slos-tab").addClass("active")
+            $("#details-tab").removeClass("active")
+            $("#details").hide()
+            $("#slos").show()
+            });
+
+        $('#details-tab').click(function() {
+            $("#details-tab").addClass("active")
+            $("#slos-tab").removeClass("active")
+            $("#slos").hide()
+            $("#details").show()
+            });
 
         // launch jstree on click
         $("#bootctp").submit(function (event) {

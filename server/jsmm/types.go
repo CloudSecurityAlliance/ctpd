@@ -40,13 +40,9 @@ type JSFunction func(*Machine, *Function, int) (int, *MachineException)
  *  all types, whether primitive or objects.
  */
 
-type Typer interface {
-    Type() MachineType
-}
 
 type MachineValue interface {
-	Typer
-
+    Type() MachineType
 	ToString() string
 	ToNumber() float64
 	ToBoolean() bool
@@ -59,7 +55,7 @@ type MachineValue interface {
  * TypeOf returns a string representation of the type
  */
 
-func TypeOf(m Typer) string {
+func TypeOf(m MachineValue) string {
 	switch m.Type() {
 	case TypeError:
 		return "error"
@@ -82,34 +78,26 @@ func TypeOf(m Typer) string {
 }
 
 /*
- * SimpleType is used as base type to describe the default
- * behaviour of GetProperty and SetProperty
+ * default behaviour of GetProperty and SetProperty
  */
 
-type SimpleType MachineType
-
-func (dummy *SimpleType) Type() MachineType {
-    return MachineType(*dummy)
+func failGetProperty(v MachineValue, prop string) (MachineValue, *MachineException) {
+    return NewNull(), NewMachineException("BadType: cannot read property '%s' of %s", prop, TypeOf(v))
 }
 
-func (dummy *SimpleType) GetProperty(prop string) (MachineValue, *MachineException) {
-    return NewNull(), NewMachineException("BadType: cannot read property %s of %s", prop, TypeOf(dummy))
-}
-
-func (dummy *SimpleType) SetProperty(prop string, val MachineValue) *MachineException {
-	return NewMachineException("BadType: cannot set property %s of %s", prop, TypeOf(dummy))
+func failSetProperty(v MachineValue, prop string) *MachineException {
+	return NewMachineException("BadType: cannot set property %s of %s", prop, TypeOf(v))
 }
 
 //
 // The Number type
 //
 type Number struct {
-	SimpleType
 	value float64
 }
 
 func NewNumber(f float64) MachineValue {
-	return &Number{SimpleType(TypeNumber), f}
+	return &Number{f}
 }
 func NewNumberString(v string) MachineValue {
 	f, err := strconv.ParseFloat(v, 64)
@@ -117,6 +105,9 @@ func NewNumberString(v string) MachineValue {
 		panic("syntax error in number " + v)
 	}
 	return NewNumber(f)
+}
+func (n *Number) Type() MachineType {
+    return TypeNumber
 }
 func (n *Number) ToBoolean() bool {
 	if n.value == 0 || math.IsNaN(n.value) {
@@ -134,16 +125,26 @@ func (n *Number) ToJSON() string {
 	return n.ToString()
 }
 
+func (n *Number) GetProperty(prop string) (MachineValue, *MachineException) {
+    return failGetProperty(n,prop)
+}
+func (n *Number) SetProperty(prop string, val MachineValue) *MachineException {
+    return failSetProperty(n,prop)
+}
+
+
 //
 // The String type
 //
 type String struct {
-	SimpleType
 	value string
 }
 
 func NewString(v string) MachineValue {
-	return &String{SimpleType(TypeString), v}
+	return &String{v}
+}
+func (s *String) Type() MachineType {
+    return TypeString
 }
 func (s *String) ToString() string {
 	return s.value
@@ -162,17 +163,22 @@ func (s *String) ToBoolean() bool {
 func (s *String) ToJSON() string {
 	return `"` + s.ToString() + `"`
 }
+func (s *String) GetProperty(prop string) (MachineValue, *MachineException) {
+    return failGetProperty(s,prop)
+}
+func (s *String) SetProperty(prop string, val MachineValue) *MachineException {
+    return failSetProperty(s,prop)
+}
 
 //
 // The Boolean type
 //
 type Boolean struct {
-	SimpleType
 	value bool
 }
 
 func NewBoolean(b bool) MachineValue {
-	return &Boolean{SimpleType(TypeBoolean), b}
+	return &Boolean{b}
 }
 func NewBooleanString(v string) MachineValue {
 	if v == "true" {
@@ -182,6 +188,9 @@ func NewBooleanString(v string) MachineValue {
 		panic("Boolean string representation must be 'true' or 'false'")
 	}
 	return NewBoolean(false)
+}
+func (b *Boolean) Type() MachineType {
+    return TypeBoolean
 }
 func (b *Boolean) ToString() string {
 	if b.value {
@@ -201,18 +210,25 @@ func (b *Boolean) ToBoolean() bool {
 func (b *Boolean) ToJSON() string {
 	return b.ToString()
 }
+func (b *Boolean) GetProperty(prop string) (MachineValue, *MachineException) {
+    return failGetProperty(b,prop)
+}
+func (b *Boolean) SetProperty(prop string, val MachineValue) *MachineException {
+    return failSetProperty(b,prop)
+}
 
 //
 // The null type
 //
-type Null struct {
-	SimpleType
-}
+type Null struct {}
 
-var NullConst = &Null{SimpleType(TypeNull)}
+var NullConst = &Null{}
 
 func NewNull() MachineValue {
 	return NullConst
+}
+func (u *Null) Type() MachineType {
+    return TypeNull
 }
 func (u *Null) ToString() string {
 	return ""
@@ -226,6 +242,12 @@ func (u *Null) ToBoolean() bool {
 func (u *Null) ToJSON() string {
 	return u.ToString()
 }
+func (u *Null) GetProperty(prop string) (MachineValue, *MachineException) {
+    return failGetProperty(u,prop)
+}
+func (u *Null) SetProperty(prop string, val MachineValue) *MachineException {
+    return failSetProperty(u,prop)
+}
 
 //
 // The object type
@@ -234,26 +256,23 @@ func (u *Null) ToJSON() string {
 type Object struct {
     // not a SimpleType !
 	class     string
-	prototype *Object
+	prototype MachineValue
 	value     map[string]MachineValue
 }
 
-func NewObjectWithPrototype(prototype *Object) *Object {
-	klass := "Undefined"
-	if prototype != nil {
-		klass = prototype.class
-	}
-	return &Object{
+func CreateObjectWithPrototype(klass string, prototype MachineValue) Object {
+	return Object{
 		class:     klass,
 		prototype: prototype,
 		value:     make(map[string]MachineValue),
 	}
 }
 
-var ObjectPrototype = NewObjectWithPrototype(nil)
+var defaultObjectPrototype = CreateObjectWithPrototype("Object", nil)
 
 func NewObject() *Object {
-	return NewObjectWithPrototype(ObjectPrototype)
+    o := CreateObjectWithPrototype("Object",&defaultObjectPrototype)
+    return &o
 }
 
 func (o *Object) GetProperty(prop string) (MachineValue, *MachineException) {
@@ -261,12 +280,16 @@ func (o *Object) GetProperty(prop string) (MachineValue, *MachineException) {
         return val, nil
     }
     if o.prototype!=nil {
-        return o.prototype.GetProperty(prop)
+        _, err := o.prototype.GetProperty(prop)
+        if err!=nil {
+            return failGetProperty(o,prop)
+        }
     }
 	return NullConst, nil
 }
+
 func (o *Object) SetProperty(prop string, val MachineValue) *MachineException {
-	o.value[prop] = val
+    o.value[prop] = val
     return nil
 }
 
@@ -307,7 +330,7 @@ type Array struct {
 }
 
 func NewArray(init ...MachineValue) *Array {
-	a := &Array{*ObjectPrototype, 0}
+	a := &Array{CreateObjectWithPrototype("Array",&defaultObjectPrototype), 0}
 	a.Object.SetProperty("min", NewFunction("min",ArrayMin))
 	a.Object.SetProperty("max", NewFunction("max",ArrayMax))
 	for k, v := range init {
@@ -391,13 +414,13 @@ func (a *Array) Append(val MachineValue) {
 //
 
 type Function struct {
-	SimpleType
+	Object
     name string
 	call JSFunction
 }
 
 func NewFunction(name string, call JSFunction) *Function {
-	return &Function{SimpleType(TypeFunction), name, call}
+	return &Function{CreateObjectWithPrototype("Function",&defaultObjectPrototype), name, call}
 }
 func (f *Function) Type() MachineType {
 	return TypeFunction

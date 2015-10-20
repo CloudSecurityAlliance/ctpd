@@ -30,7 +30,9 @@ const CTPD_VERSION = 0.1
 var (
     configFileFlag string
     versionFlag bool
+    logfileFlag string
     colorFlag bool
+    debugVMFlag bool
     clientFlag string
     helpFlag bool
 )
@@ -38,7 +40,9 @@ var (
 func init() {
 	flag.StringVar(&configFileFlag, "config", "/path/to/file", "Specify an alternative configuration file to use.")
 	flag.BoolVar(&versionFlag, "version", false, "Print version information.")
+	flag.StringVar(&logfileFlag, "log-file", "", "Store logs in indicated file instead of standard output.")
 	flag.BoolVar(&colorFlag, "color-logs", false, "Print logs with color on terminal.")
+	flag.BoolVar(&debugVMFlag, "debug-vm", false, "Enable CTPScript virtual machine debugging output in logs.")
 	flag.StringVar(&clientFlag, "client", "", "Set path to optional lightweight embedded javasciprt client. If empty, client is dissabled.")
 	flag.BoolVar(&helpFlag, "help", false, "Print help.")
 }
@@ -64,6 +68,15 @@ func main() {
 		return
 	}
 
+    if logfileFlag!="" {
+        file, err := os.Create(logfileFlag)
+        if err!=nil {
+            log.Fatalf("Could not open %s, %s", logfileFlag, err.Error())
+        }
+        defer file.Close()
+        log.SetOutput(file)
+    }
+
 	if configFileFlag == "/path/to/file" {
 		conf, ok = ctp.SearchAndLoadConfigurationFile()
 	} else {
@@ -81,6 +94,10 @@ func main() {
 
     if clientFlag!="" {
         conf["client"]=clientFlag
+    }
+
+    if debugVMFlag {
+        conf["debug-vm"]="true"
     }
 
 	if conf["client"] != "" {

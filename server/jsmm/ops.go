@@ -66,7 +66,7 @@ var Ops = [I_COUNT]Op{
 			//if r.Type()==TypeNull {
 			//    return NewMachineException("ReferenceError: %s is not defined.",key)
 			//}
-			m.Push(m.context)
+			m.Push(&m.context)
 			return nil
 		}},
 	{"get_index", 1,

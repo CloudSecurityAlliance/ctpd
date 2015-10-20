@@ -49,11 +49,12 @@ func (account *Account) Create(context *ctp.ApiContext) *ctp.HttpError {
 	}
 
 	if len(account.AccountTags.WithPrefix("id:")) == 0 {
-		account.AccessTags.Append("id:" + string(account.Id))
+		account.AccountTags.Append("id:" + string(account.Id))
 	}
 
 	if len(account.AccountTags.WithPrefix("access:")) == 0 {
-		account.AccessTags.Append("access:user")
+		account.AccountTags.Append("access:user")
+		account.AccountTags.Append("access:anybody")
 	}
 
 	if !ctp.CreateResource(context, "accounts", account) {

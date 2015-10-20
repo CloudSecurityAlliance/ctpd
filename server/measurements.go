@@ -268,11 +268,20 @@ func measurementObjectiveEvaluate(context *ctp.ApiContext, item *Measurement) *c
 
 	machine, err := jsmm.Compile(item.Objective.Condition)
 	if err != nil {
-		return ctp.NewBadRequestErrorf("Error in objective evaluation - %s", err.Error())
+		return ctp.NewBadRequestErrorf("Error in objective compilation - %s", err.Error())
 	}
 
+    if item.Result==nil {
+		item.Objective.Status = ctp.Ttrue
+        return nil
+    }
+
+    if context.DebugVM {
+        machine.DebugMode(true)
+    }
+
 	if err := importMeasurementResultInJSMM(machine, item.Result); err != nil {
-		return ctp.NewBadRequestErrorf("Error in objective evaluation - %s", err.Error)
+		return ctp.NewBadRequestErrorf("Error in objective evaluation while importing result - %s", err.Error)
 	}
 
 	v, exception := machine.Execute()

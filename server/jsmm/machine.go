@@ -20,10 +20,6 @@ import (
 	"log"
 )
 
-const (
-	DEBUG_LOG = false
-)
-
 type MachineException struct {
 	msg string
 }
@@ -42,7 +38,8 @@ type Machine struct {
 	stack               []MachineValue
 	code                []byte
 	pc                  int
-	context             *Object
+	context             Object
+    debug_mode          bool
 }
 
 func NewMachine() *Machine {
@@ -52,7 +49,8 @@ func NewMachine() *Machine {
 		stack:               make([]MachineValue, 0, 10),
 		code:                make([]byte, 0, 10),
 		pc:                  -1,
-		context:             NewObject(),
+		context:             CreateObjectWithPrototype("GlobalObject",NewNull()),
+        debug_mode:          false,
 	}
 	m.context.SetProperty("toString",NewFunction("toString",ToString))
 	m.context.SetProperty("toBoolean",NewFunction("toBoolean",ToString))
@@ -71,6 +69,10 @@ func Compile(expr string) (*Machine, error) {
 	m := NewMachine()
 	ast.Compile(m)
 	return m, nil
+}
+
+func (m *Machine) DebugMode(debug bool) {
+    m.debug_mode = debug
 }
 
 func (m *Machine) AddConst(c MachineValue) int {
@@ -147,13 +149,13 @@ func (m *Machine) Call(pc int) *MachineException {
 	m.pc = pc
 	for m.pc < len(m.code) {
 		op := m.code[m.pc]
-		if DEBUG_LOG {
+		if m.debug_mode {
 			log.Printf("pc=%d, st=%d, opcode=%d, opname=%s\n", m.pc, m.Top(), op, Ops[op].name)
 		}
 		if err := Ops[op].exec(m); err != nil {
 			return err
 		}
-		if DEBUG_LOG {
+		if m.debug_mode {
 			if m.Top() >= 0 {
                 top := m.Get(m.Top())
                 log.Printf("st -> %s: %s", TypeOf(top),top.ToString())
@@ -179,7 +181,7 @@ func (m *Machine) Execute() (MachineValue, *MachineException) {
 }
 
 func (m *Machine) GlobalObject() *Object {
-	return m.context
+	return &m.context
 }
 
 //

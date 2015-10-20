@@ -100,6 +100,10 @@ func triggerCheckCondition(context *ctp.ApiContext, trigger *Trigger, measuremen
 		return false, ctp.NewBadRequestErrorf("Error in condition specification - %s", err.Error())
 	}
 
+    if context.DebugVM {
+        machine.DebugMode(true)
+    }
+
 	if measurement.State != "activated" {
 		return false, nil
 	}
