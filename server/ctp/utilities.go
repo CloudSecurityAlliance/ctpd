@@ -22,10 +22,9 @@ import (
 )
 
 var (
-	AnybodyAccess = NewTags("access:anybody")
-	UserAccess    = NewTags("access:user")
-	AgentAccess   = NewTags("access:agent")
-	AdminAccess   = NewTags("access:admin")
+	UserRoleTag  = NewTags("role:user")
+	AgentRoleTag = NewTags("role:agent")
+	AdminRoleTag = NewTags("role:admin")
 )
 
 var idRegex = regexp.MustCompile("^[-_a-zA-Z0-9=]+$")
@@ -79,4 +78,3 @@ func RequestSignature(prefix string, r *http.Request) (signature string, params 
 	}
 	return /* signature, params, x */
 }
-

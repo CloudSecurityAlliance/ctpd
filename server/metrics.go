@@ -84,7 +84,7 @@ func (metric *Metric) Delete(context *ctp.ApiContext) *ctp.HttpError {
 func HandleGETMetric(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var metric Metric
 
-	handler := ctp.NewGETHandler(ctp.UserAccess)
+	handler := ctp.NewGETHandler(ctp.UserRoleTag)
 
 	handler.Handle(w, r, context, &metric)
 }
@@ -92,7 +92,7 @@ func HandleGETMetric(w http.ResponseWriter, r *http.Request, context *ctp.ApiCon
 func HandlePOSTMetric(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var metric Metric
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &metric)
 }
@@ -100,7 +100,7 @@ func HandlePOSTMetric(w http.ResponseWriter, r *http.Request, context *ctp.ApiCo
 func HandleDELETEMetric(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var metric Metric
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &metric)
 }

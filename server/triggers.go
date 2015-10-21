@@ -34,7 +34,7 @@ type Trigger struct {
 
 func (trigger *Trigger) BuildLinks(context *ctp.ApiContext) {
 	trigger.Self = ctp.NewLink(context, "@/triggers/$", trigger.Id)
-	trigger.Scope = ctp.NewLink(context, "@/serviceView/$", trigger.Parent)
+	trigger.Scope = ctp.NewLink(context, "@/serviceView/$", trigger.Parent[0])
 }
 
 func (trigger *Trigger) Load(context *ctp.ApiContext) *ctp.HttpError {
@@ -126,7 +126,7 @@ func triggerCheckCondition(context *ctp.ApiContext, trigger *Trigger, measuremen
 func HandleGETTrigger(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var trigger Trigger
 
-	handler := ctp.NewGETHandler(ctp.UserAccess)
+	handler := ctp.NewGETHandler(ctp.UserRoleTag)
 
 	handler.Handle(w, r, context, &trigger)
 }
@@ -134,7 +134,7 @@ func HandleGETTrigger(w http.ResponseWriter, r *http.Request, context *ctp.ApiCo
 func HandlePOSTTrigger(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var trigger Trigger
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &trigger)
 }
@@ -142,7 +142,7 @@ func HandlePOSTTrigger(w http.ResponseWriter, r *http.Request, context *ctp.ApiC
 func HandleDELETETrigger(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var trigger Trigger
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &trigger)
 }

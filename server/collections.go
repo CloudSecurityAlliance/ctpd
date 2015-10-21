@@ -79,23 +79,23 @@ func HandleGETCollection(w http.ResponseWriter, r *http.Request, context *ctp.Ap
 
 		switch collectionType {
 		case "serviceViews":
-			if !context.VerifyAccessTags(w, ctp.UserAccess) {
+			if !context.VerifyAccessTags(w, ctp.UserRoleTag) {
 				return
 			}
-			if !ctp.MatchTags(context.AccountTags, ctp.AdminAccess) {
-				selector["accessTags"] = bson.M{"$in": context.AccountTags.WithPrefix("id:")}
+			if !ctp.MatchTags(context.AccountTags, ctp.AdminRoleTag) {
+				selector["accessTags"] = bson.M{"$in": context.AccountTags.WithPrefix("account:")}
 			}
 		case "metrics":
-			if !context.VerifyAccessTags(w, ctp.UserAccess) {
+			if !context.VerifyAccessTags(w, ctp.UserRoleTag) {
 				return
 			}
 		default:
-			if !context.VerifyAccessTags(w, ctp.AdminAccess) {
+			if !context.VerifyAccessTags(w, ctp.AdminRoleTag) {
 				return
 			}
 		}
 	} else {
-		if !context.VerifyAccessTags(w, ctp.UserAccess) {
+		if !context.VerifyAccessTags(w, ctp.UserRoleTag) {
 			return
 		}
 
@@ -110,7 +110,11 @@ func HandleGETCollection(w http.ResponseWriter, r *http.Request, context *ctp.Ap
 		collection.Scope = ctp.NewLink(context, "/$/$", context.Params[0], context.Params[1])
 
 		collectionType = context.Params[2]
-		mgoCollection = context.Session.DB("ctp").C(collectionType)
+        if context.Params[2]=="indicators" {
+            mgoCollection = context.Session.DB("ctp").C("measurements")
+        } else {
+            mgoCollection = context.Session.DB("ctp").C(collectionType)
+        }
 		selector["parent"] = context.Params[1]
 	}
 

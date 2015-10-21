@@ -48,13 +48,12 @@ func (account *Account) Create(context *ctp.ApiContext) *ctp.HttpError {
 		account.Token = base64.StdEncoding.EncodeToString(key[:])
 	}
 
-	if len(account.AccountTags.WithPrefix("id:")) == 0 {
-		account.AccountTags.Append("id:" + string(account.Id))
+	if len(account.AccountTags.WithPrefix("account:")) == 0 {
+		account.AccountTags.Append(ctp.NewTags("account:" + string(account.Id)))
 	}
 
-	if len(account.AccountTags.WithPrefix("access:")) == 0 {
-		account.AccountTags.Append("access:user")
-		account.AccountTags.Append("access:anybody")
+	if len(account.AccountTags.WithPrefix("role:")) == 0 {
+		account.AccountTags.Append(ctp.UserRoleTag)
 	}
 
 	if !ctp.CreateResource(context, "accounts", account) {
@@ -75,7 +74,7 @@ func (account *Account) Delete(context *ctp.ApiContext) *ctp.HttpError {
 func HandleGETAccount(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var account Account
 
-	handler := ctp.NewGETHandler(ctp.AdminAccess)
+	handler := ctp.NewGETHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &account)
 }
@@ -83,7 +82,7 @@ func HandleGETAccount(w http.ResponseWriter, r *http.Request, context *ctp.ApiCo
 func HandlePOSTAccount(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var account Account
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &account)
 }
@@ -91,7 +90,7 @@ func HandlePOSTAccount(w http.ResponseWriter, r *http.Request, context *ctp.ApiC
 func HandleDELETEAccount(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var account Account
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &account)
 }

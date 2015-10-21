@@ -10,8 +10,8 @@ func NewTags(tags ...string) Tags {
     return Tags(tags)
 }
 
-func (t *Tags) Append(tag string) {
-    *t = append(*t, tag)
+func (t *Tags) Append(tags Tags) {
+    *t = append(*t, tags...)
 }
 
 func (t Tags) HasWildcard() bool {

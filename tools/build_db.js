@@ -30,13 +30,13 @@ db.baseuri.insert(x)
 
 /*********************/
 access_id = MakeId()
-access_id_tag = "id:" + access_id
+access_id_tag = "account:" + access_id
 
 x = {
     "_id": access_id,
-    "accessTags": [ "access:admin" ],
+    "accessTags": [ "role:admin" ],
     "name": "ordinary user",
-    "accountTags": [ access_id_tag, "access:user", "access:anybody" ],
+    "accountTags": [ access_id_tag, "role:user" ],
     "token": "1234",
 }
 
@@ -44,7 +44,7 @@ db.accounts.insert(x);
 
 x = {
     "_id": MakeId(),
-    "accessTags": [ "access:admin" ],
+    "accessTags": [ "role:admin" ],
     "name": "super user",
     "accountTags": [ "*" ],
     "token": "0000",
@@ -76,7 +76,7 @@ assetId = MakeId("548610513d561badbc7e16d4")
 
 x = {
     "_id": assetId,
-    "parent": serviceViewId,
+    "parent": [ serviceViewId ],
     "accessTags": [ access_id_tag ],
     "name": "Webserver on machine 1",
     "annotation": "Webserver running on Linux Ubuntu (apache)",
@@ -91,7 +91,7 @@ attributeId = MakeId("548610513d561badbc7e16d5")
 
 x = { 
     "_id": attributeId,
-    "parent": assetId,
+    "parent": [ assetId, serviceViewId ],
     "accessTags": [ access_id_tag ],
     "annotation": "Availability attribute for demo",
     "name": "availability"
@@ -106,7 +106,7 @@ metricId = MakeId("548610513d561badbc7e16d6")
 x = {
     "_id" : metricId,
     /* no parent */
-    "accessTags": [ "access:user" ],
+    "accessTags": [ "role:user" ],
     "name": "unix uptime",
     "annotation" : "",
     "baseMetric" : "https://cloudsecurityalliance.org/ctp/metrics#csa:unix-uptime",
@@ -136,7 +136,7 @@ measurementId = MakeId("548610513d561badbc7e1600")
 
 x = {
     "_id" : measurementId,
-    "parent" : attributeId,
+    "parent" : [ attributeId, assetId, serviceViewId ], 
     "accessTags": [ access_id_tag ],
     "name": "unix uptime",
     "annotation" : "",
@@ -169,7 +169,7 @@ attributeId = MakeId()
 
 x = { 
     "_id": attributeId,
-    "parent": assetId,
+    "parent": [assetId, serviceViewId ],
     "accessTags": [ access_id_tag ],
     "annotation": "confidentiality of data in transit with SSL/TLS",
     "name": "confidentiality"
@@ -210,7 +210,7 @@ measurementId = MakeId()
 
     x = {
         "_id" : measurementId,
-        "parent" : attributeId,
+        "parent" : [ attributeId, assetId, serviceViewId ],
         "accessTags": [ access_id_tag ],
         "name": "SSL/TLS encryption strength",
         "annotation" : "",

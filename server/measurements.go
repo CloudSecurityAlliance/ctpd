@@ -26,7 +26,7 @@ type resultRow map[string]interface{}
 
 type Result struct {
 	Value       []resultRow   `json:"value" bson:"value"`
-	UpdateTime  ctp.Timestamp `json:"updateTime,omitempty" bson:"updateTime"`
+	UpdateTime  ctp.Timestamp `json:"updateTime" bson:"updateTime"`
 	AuthorityId string        `json:"authorityId" bson:"authorityId"`
 	Signature   string        `json:"signature" bson:"signature"`
 }
@@ -48,7 +48,7 @@ type Measurement struct {
 
 func (measurement *Measurement) BuildLinks(context *ctp.ApiContext) {
 	measurement.Self = ctp.NewLink(context, "@/measurements/$", measurement.Id)
-	measurement.Scope = ctp.NewLink(context, "@/attributes/$", measurement.Parent)
+	measurement.Scope = ctp.NewLink(context, "@/attributes/$", measurement.Parent[0])
 }
 
 func (measurement *Measurement) Load(context *ctp.ApiContext) *ctp.HttpError {
@@ -362,7 +362,7 @@ func measurementTriggersEvaluate(context *ctp.ApiContext, measurement *Measureme
 func HandleGETMeasurement(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var measurement Measurement
 
-	handler := ctp.NewGETHandler(ctp.UserAccess)
+	handler := ctp.NewGETHandler(ctp.UserRoleTag)
 
 	handler.Handle(w, r, context, &measurement)
 }
@@ -370,7 +370,7 @@ func HandleGETMeasurement(w http.ResponseWriter, r *http.Request, context *ctp.A
 func HandlePOSTMeasurement(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var measurement Measurement
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &measurement)
 }
@@ -382,11 +382,11 @@ func HandlePUTMeasurement(w http.ResponseWriter, r *http.Request, context *ctp.A
 
 	switch context.QueryParam {
 	case "userActivated":
-		access = ctp.UserAccess
+		access = ctp.UserRoleTag
 	case "result":
-		access = ctp.AgentAccess
+		access = ctp.AgentRoleTag
 	case "objective":
-		access = ctp.AdminAccess
+		access = ctp.AdminRoleTag
 	}
 	handler := ctp.NewPUTHandler(access)
 
@@ -396,7 +396,7 @@ func HandlePUTMeasurement(w http.ResponseWriter, r *http.Request, context *ctp.A
 func HandleDELETEMeasurement(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var measurement Measurement
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &measurement)
 }

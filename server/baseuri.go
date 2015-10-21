@@ -42,7 +42,7 @@ func HandleGETBaseURI(w http.ResponseWriter, r *http.Request, context *ctp.ApiCo
 		return
 	}
 
-	if !context.VerifyAccessTags(w, ctp.UserAccess) {
+	if !context.VerifyAccessTags(w, ctp.UserRoleTag) {
 		ctp.Log(context, ctp.WARNING, "Mismatched access tags for API signature")
 		return
 	}

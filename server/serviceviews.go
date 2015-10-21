@@ -67,7 +67,7 @@ func (serviceview *ServiceView) Delete(context *ctp.ApiContext) *ctp.HttpError {
 func HandleGETServiceView(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var serviceview ServiceView
 
-	handler := ctp.NewGETHandler(ctp.UserAccess)
+	handler := ctp.NewGETHandler(ctp.UserRoleTag)
 
 	handler.Handle(w, r, context, &serviceview)
 }
@@ -75,7 +75,7 @@ func HandleGETServiceView(w http.ResponseWriter, r *http.Request, context *ctp.A
 func HandlePOSTServiceView(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var serviceview ServiceView
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &serviceview)
 }
@@ -83,7 +83,7 @@ func HandlePOSTServiceView(w http.ResponseWriter, r *http.Request, context *ctp.
 func HandleDELETEServiceView(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var serviceview ServiceView
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &serviceview)
 }

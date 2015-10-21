@@ -27,7 +27,7 @@ type Asset struct {
 
 func (asset *Asset) BuildLinks(context *ctp.ApiContext) {
 	asset.Self = ctp.NewLink(context, "@/assets/$", asset.Id)
-	asset.Scope = ctp.NewLink(context, "@/serviceViews/$", asset.Parent)
+	asset.Scope = ctp.NewLink(context, "@/serviceViews/$", asset.Parent[0])
 	asset.Attributes = ctp.NewLink(context, "@/assets/$/attributes", asset.Id)
 }
 
@@ -59,7 +59,7 @@ func (asset *Asset) Delete(context *ctp.ApiContext) *ctp.HttpError {
 func HandleGETAsset(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var asset Asset
 
-	handler := ctp.NewGETHandler(ctp.UserAccess)
+	handler := ctp.NewGETHandler(ctp.UserRoleTag)
 
 	handler.Handle(w, r, context, &asset)
 }
@@ -67,7 +67,7 @@ func HandleGETAsset(w http.ResponseWriter, r *http.Request, context *ctp.ApiCont
 func HandlePOSTAsset(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var asset Asset
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &asset)
 }
@@ -75,7 +75,7 @@ func HandlePOSTAsset(w http.ResponseWriter, r *http.Request, context *ctp.ApiCon
 func HandleDELETEAsset(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var asset Asset
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &asset)
 }

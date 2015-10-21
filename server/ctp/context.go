@@ -70,7 +70,7 @@ func NewApiContext(r *http.Request, conf Configuration) (*ApiContext, error) {
 		return c, err
 	}
 	c.Session = session
-	c.AccountTags = AnybodyAccess
+	c.AccountTags = NewTags()
 	if conf["color-logs"] == "true" {
 		c.ColorLogs = true
 	}

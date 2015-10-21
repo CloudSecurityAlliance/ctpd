@@ -87,7 +87,7 @@ func CreateErrorLogEntry(context *ctp.ApiContext, trigger *Trigger, errmsg strin
 func HandleGETLogEntry(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var log LogEntry
 
-	handler := ctp.NewGETHandler(ctp.UserAccess)
+	handler := ctp.NewGETHandler(ctp.UserRoleTag)
 
 	handler.Handle(w, r, context, &log)
 }
@@ -96,7 +96,7 @@ func HandleGETLogEntry(w http.ResponseWriter, r *http.Request, context *ctp.ApiC
 func HandlePOSTLogEntry(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var log LogEntry
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &log)
 }
@@ -104,7 +104,7 @@ func HandlePOSTLogEntry(w http.ResponseWriter, r *http.Request, context *ctp.Api
 func HandleDELETELogEntry(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var log LogEntry
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &log)
 }

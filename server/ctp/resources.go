@@ -32,12 +32,16 @@ func NewBase64Id() Base64Id {
 	return Base64Id(base64.URLEncoding.EncodeToString([]byte(bson.NewObjectId())))
 }
 
+func (id *Base64Id) String() string {
+	return string(*id)
+}
+
 type Resource struct {
-	Id         Base64Id `json:"-" bson:"_id,omitempty"`
-	Parent     Base64Id `json:"-" bson:"parent,omitempty"`
-	Self       Link     `json:"self" bson:"-"`
-	Scope      Link     `json:"scope,omitempty" bson:"-"`
-	AccessTags Tags     `json:"accessTags,omitempty" bson:"accessTags"`
+	Id         Base64Id   `json:"-" bson:"_id,omitempty"`
+	Parent     []Base64Id `json:"-" bson:"parent,omitempty"`
+	Self       Link       `json:"self" bson:"-"`
+	Scope      Link       `json:"scope,omitempty" bson:"-"`
+	AccessTags Tags       `json:"accessTags,omitempty" bson:"accessTags"`
 }
 
 func (r *Resource) Super() *Resource {
@@ -143,18 +147,18 @@ func (handler *POSTHandler) Handle(w http.ResponseWriter, r *http.Request, conte
 	}
 	res.Super().Id = NewBase64Id()
 
-    // For level 3 urls, we inherit tags from parent unless tags are specified in the request
-    // for level 1 urls, we set defaults if necessary
+	// For level 3 urls, we inherit tags from parent unless tags are specified in the request
+	// for level 1 urls, we set defaults if necessary
 	if level == 3 {
-		res.Super().Parent = parent.Id
-        if res.Super().AccessTags == nil {
-            res.Super().AccessTags = parent.AccessTags
-        }
-    } else { 
-        if res.Super().AccessTags == nil && context.Params[0] == "metrics" {
-            res.Super().AccessTags = NewTags("access:user")
-        }
-    }
+		res.Super().Parent = append([]Base64Id{parent.Id}, parent.Parent...)
+		if res.Super().AccessTags == nil {
+			res.Super().AccessTags = parent.AccessTags
+		}
+	} else {
+		if res.Super().AccessTags == nil && context.Params[0] == "metrics" {
+			res.Super().AccessTags = UserRoleTag
+		}
+	}
 
 	if err := res.Create(context); err != nil {
 		RenderErrorResponse(w, context, err)
@@ -187,7 +191,7 @@ func (handler *PUTHandler) Handle(w http.ResponseWriter, r *http.Request, contex
 	}
 
 	if !LoadResource(context, context.Params[0], Base64Id(context.Params[1]), resource) {
-        RenderErrorResponse(w, context, NewHttpErrorf(http.StatusNotFound, "%s was not found",r.RequestURI))
+		RenderErrorResponse(w, context, NewHttpErrorf(http.StatusNotFound, "%s was not found", r.RequestURI))
 		return
 	}
 
@@ -232,7 +236,7 @@ func (handler *DELETEHandler) Handle(w http.ResponseWriter, r *http.Request, con
 	}
 
 	if !LoadResource(context, context.Params[0], Base64Id(context.Params[1]), resource) {
-        RenderErrorResponse(w, context, NewHttpErrorf(http.StatusNotFound, "%s was not found",r.RequestURI))
+		RenderErrorResponse(w, context, NewHttpErrorf(http.StatusNotFound, "%s was not found", r.RequestURI))
 		return
 	}
 

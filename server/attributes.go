@@ -26,7 +26,7 @@ type Attribute struct {
 
 func (attribute *Attribute) BuildLinks(context *ctp.ApiContext) {
 	attribute.Self = ctp.NewLink(context, "@/attributes/$", attribute.Id)
-	attribute.Scope = ctp.NewLink(context, "@/assets/$", attribute.Parent)
+	attribute.Scope = ctp.NewLink(context, "@/assets/$", attribute.Parent[0])
 	attribute.Measurements = ctp.NewLink(context, "@/attributes/$/measurements", attribute.Id)
 }
 
@@ -59,7 +59,7 @@ func (attribute *Attribute) Delete(context *ctp.ApiContext) *ctp.HttpError {
 func HandleGETAttribute(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var attribute Attribute
 
-	handler := ctp.NewGETHandler(ctp.UserAccess)
+	handler := ctp.NewGETHandler(ctp.UserRoleTag)
 
 	handler.Handle(w, r, context, &attribute)
 }
@@ -67,7 +67,7 @@ func HandleGETAttribute(w http.ResponseWriter, r *http.Request, context *ctp.Api
 func HandlePOSTAttribute(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var attribute Attribute
 
-	handler := ctp.NewPOSTHandler(ctp.AdminAccess)
+	handler := ctp.NewPOSTHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &attribute)
 }
@@ -75,7 +75,7 @@ func HandlePOSTAttribute(w http.ResponseWriter, r *http.Request, context *ctp.Ap
 func HandleDELETEAttribute(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var attribute Attribute
 
-	handler := ctp.NewDELETEHandler(ctp.AdminAccess)
+	handler := ctp.NewDELETEHandler(ctp.AdminRoleTag)
 
 	handler.Handle(w, r, context, &attribute)
 }

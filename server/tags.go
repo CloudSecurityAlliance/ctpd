@@ -51,7 +51,7 @@ func (res *TaggedResource) Update(context *ctp.ApiContext, update ctp.ResourceUp
 func HandleGETTags(w http.ResponseWriter, r *http.Request, context *ctp.ApiContext) {
 	var res TaggedResource
 
-	handler := ctp.NewGETHandler(ctp.AdminAccess)
+	handler := ctp.NewGETHandler(ctp.AdminRoleTag)
 
     handler.ShowTags = true
 
@@ -62,7 +62,7 @@ func HandlePUTTags(w http.ResponseWriter, r *http.Request, context *ctp.ApiConte
 	var res TaggedResource
     var update TaggedResource
 
-	handler := ctp.NewPUTHandler(ctp.AdminAccess)
+	handler := ctp.NewPUTHandler(ctp.AdminRoleTag)
 
     handler.ShowTags = true
 
