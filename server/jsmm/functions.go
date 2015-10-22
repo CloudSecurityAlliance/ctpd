@@ -117,18 +117,20 @@ func MatchRegexp(m *Machine, fn *Function, paramCount int) (int, *MachineExcepti
 		m.Push(NewBoolean(re.MatchString(objref.ToString())))
 	case TypeArray:
 		var i uint32
+
 		array := objref.(*Array)
+		retval := false
 
 		for i = 0; i < array.length; i++ {
 			val, err := array.GetUInt32Property(i)
-            if err!=nil && val.Type() == TypeString {
-				if !re.MatchString(val.ToString()) {
-                    m.Push(NewBoolean(false))
-                    return 1, nil
+			if err == nil && val.Type() == TypeString {
+				retval = re.MatchString(val.ToString())
+				if !retval {
+				    break
                 }
 			}
 		}
-		m.Push(NewBoolean(true))
+		m.Push(NewBoolean(retval))
 	default:
 		return 0, NewMachineException("matchRegex expects a string or an array as parameters")
 	}
@@ -143,7 +145,7 @@ func Select(m *Machine, fn *Function, paramCount int) (int, *MachineException) {
 	objref := m.Get(-3)
 
 	if keyref.Type() != TypeString || objref.Type() != TypeArray {
-		return 0, NewMachineException("select expects a string key and an array as parameters, got (%s,%s) instead",TypeOf(keyref),TypeOf(objref))
+		return 0, NewMachineException("select expects a string key and an array as parameters, got (%s,%s) instead", TypeOf(keyref), TypeOf(objref))
 	}
 
 	var i uint32
@@ -153,12 +155,12 @@ func Select(m *Machine, fn *Function, paramCount int) (int, *MachineException) {
 
 	for i = 0; i < array.length; i++ {
 		val, err := array.GetUInt32Property(i)
-        if err!=nil {
-            val2, err2 := val.GetProperty(key)
-            if err2!=nil {
-                result.Push(val2)
-            }
-        }
+		if err == nil {
+			val2, err2 := val.GetProperty(key)
+			if err2 == nil {
+				result.Push(val2)
+			}
+		}
 	}
 	m.Push(result)
 	return 1, nil
@@ -175,8 +177,9 @@ func ArrayMin(m *Machine, fn *Function, paramCount int) (int, *MachineException)
 		ref = NullConst
 
 		for i = 0; i < array.length; i++ {
+
 			val, err := array.GetUInt32Property(i)
-			if err!=nil && val.Type() != TypeNull {
+			if err == nil && val.Type() != TypeNull {
 				if ref == NullConst {
 					ref = val
 				} else {
@@ -205,7 +208,7 @@ func ArrayMax(m *Machine, fn *Function, paramCount int) (int, *MachineException)
 
 		for i = 0; i < array.length; i++ {
 			val, err := array.GetUInt32Property(i)
-			if err!=nil && val.Type() != TypeNull {
+			if err == nil && val.Type() != TypeNull {
 				if ref == NullConst {
 					ref = val
 				} else {
@@ -223,6 +226,6 @@ func ArrayMax(m *Machine, fn *Function, paramCount int) (int, *MachineException)
 }
 
 func ToJSON(m *Machine, fn *Function, paramCount int) (int, *MachineException) {
-    m.Push(NewString(m.Get(-2).ToJSON()))
-    return 1, nil
+	m.Push(NewString(m.Get(-2).ToJSON()))
+	return 1, nil
 }
