@@ -3,24 +3,25 @@ state 0
 	$accept: .final $end 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	tokenEOF  shift 3
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 2
 	final  goto 1
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 1
 	$accept:  final.$end 
@@ -51,22 +52,22 @@ state 2
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEOF  shift 18
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEOF  shift 19
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  error
 
 
@@ -80,64 +81,67 @@ state 4
 	expr:  '!'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
-	expr  goto 34
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	expr  goto 35
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 5
 	expr:  '-'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
-	expr  goto 35
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	expr  goto 36
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 6
 	expr:  '('.expr ')' 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
-	expr  goto 36
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	expr  goto 37
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 7
 	expr:  tokenInteger.    (19)
@@ -164,385 +168,406 @@ state 10
 
 
 state 11
-	expr:  attribute.    (23)
+	expr:  tokenNull.    (23)
 
 	.  reduce 23 (src line 64)
 
 
 state 12
-	expr:  arraydef.    (24)
+	expr:  attribute.    (24)
 
 	.  reduce 24 (src line 65)
 
 
 state 13
-	expr:  objectdef.    (25)
+	expr:  arraydef.    (25)
 
 	.  reduce 25 (src line 66)
 
 
 state 14
-	expr:  call.    (26)
+	expr:  objectdef.    (26)
 
 	.  reduce 26 (src line 67)
 
 
 state 15
-	attribute:  tokenIdentifier.    (29)
-	call:  tokenIdentifier.'(' clist ')' 
-	call:  tokenIdentifier.'(' ')' 
+	expr:  call.    (27)
 
-	'('  shift 37
-	.  reduce 29 (src line 73)
+	.  reduce 27 (src line 68)
 
 
 state 16
+	attribute:  tokenIdentifier.    (30)
+	call:  tokenIdentifier.'(' clist ')' 
+	call:  tokenIdentifier.'(' ')' 
+
+	'('  shift 38
+	.  reduce 30 (src line 74)
+
+
+state 17
 	arraydef:  '['.alist ']' 
 	arraydef:  '['.']' 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	']'  shift 39
-	'{'  shift 17
+	']'  shift 40
+	'{'  shift 18
 	.  error
 
-	expr  goto 40
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-	alist  goto 38
+	expr  goto 41
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
+	alist  goto 39
 
-state 17
+state 18
 	objectdef:  '{'.olist '}' 
 	objectdef:  '{'.'}' 
 
-	tokenString  shift 43
-	tokenIdentifier  shift 44
-	'}'  shift 42
+	tokenString  shift 44
+	tokenIdentifier  shift 45
+	'}'  shift 43
 	.  error
 
-	olist  goto 41
+	olist  goto 42
 
-state 18
+state 19
 	final:  expr tokenEOF.    (1)
 
 	.  reduce 1 (src line 40)
 
 
-state 19
+state 20
 	expr:  expr '+'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
-	.  error
-
-	expr  goto 45
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-
-state 20
-	expr:  expr '-'.expr 
-
-	tokenString  shift 9
-	tokenIdentifier  shift 15
-	tokenInteger  shift 7
-	tokenFloat  shift 8
-	tokenBoolean  shift 10
-	'!'  shift 4
-	'-'  shift 5
-	'['  shift 16
-	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 46
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 21
-	expr:  expr '/'.expr 
+	expr:  expr '-'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 47
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 22
-	expr:  expr '*'.expr 
+	expr:  expr '/'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 48
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 23
-	expr:  expr '%'.expr 
+	expr:  expr '*'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 49
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 24
-	expr:  expr tokenEqu.expr 
+	expr:  expr '%'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 50
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 25
-	expr:  expr tokenNeq.expr 
+	expr:  expr tokenEqu.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 51
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 26
-	expr:  expr tokenLt.expr 
+	expr:  expr tokenNeq.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 52
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 27
-	expr:  expr tokenGt.expr 
+	expr:  expr tokenLt.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 53
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 28
-	expr:  expr tokenLte.expr 
+	expr:  expr tokenGt.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 54
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 29
-	expr:  expr tokenGte.expr 
+	expr:  expr tokenLte.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 55
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 30
-	expr:  expr tokenAnd.expr 
+	expr:  expr tokenGte.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 56
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 31
-	expr:  expr tokenOr.expr 
+	expr:  expr tokenAnd.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 57
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 32
+	expr:  expr tokenOr.expr 
+
+	tokenString  shift 9
+	tokenIdentifier  shift 16
+	tokenInteger  shift 7
+	tokenFloat  shift 8
+	tokenBoolean  shift 10
+	tokenNull  shift 11
+	'!'  shift 4
+	'-'  shift 5
+	'['  shift 17
+	'('  shift 6
+	'{'  shift 18
+	.  error
+
+	expr  goto 58
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
+
+state 33
 	attribute:  expr '.'.tokenIdentifier 
 	call:  expr '.'.tokenIdentifier '(' clist ')' 
 	call:  expr '.'.tokenIdentifier '(' ')' 
 
-	tokenIdentifier  shift 58
+	tokenIdentifier  shift 59
 	.  error
 
 
-state 33
+state 34
 	attribute:  expr '['.expr ']' 
 	call:  expr '['.expr ']' '(' clist ')' 
 	call:  expr '['.expr ']' '(' ')' 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
-	expr  goto 59
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	expr  goto 60
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
-state 34
+state 35
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -564,17 +589,17 @@ state 34
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 16 (src line 57)
 
 
-state 35
+state 36
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -599,7 +624,7 @@ state 35
 	.  reduce 17 (src line 58)
 
 
-state 36
+state 37
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -621,65 +646,66 @@ state 36
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	')'  shift 60
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	')'  shift 61
 	.  error
 
 
-state 37
+state 38
 	call:  tokenIdentifier '('.clist ')' 
 	call:  tokenIdentifier '('.')' 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	')'  shift 62
-	'{'  shift 17
+	')'  shift 63
+	'{'  shift 18
 	.  error
 
-	expr  goto 63
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-	clist  goto 61
+	expr  goto 64
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
+	clist  goto 62
 
-state 38
+state 39
 	arraydef:  '[' alist.']' 
 	alist:  alist.',' expr 
 
-	']'  shift 64
-	','  shift 65
+	']'  shift 65
+	','  shift 66
 	.  error
 
 
-state 39
-	arraydef:  '[' ']'.    (39)
-
-	.  reduce 39 (src line 89)
-
-
 state 40
+	arraydef:  '[' ']'.    (40)
+
+	.  reduce 40 (src line 90)
+
+
+state 41
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -699,57 +725,57 @@ state 40
 	call:  expr.'.' tokenIdentifier '(' ')' 
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
-	alist:  expr.    (40)
+	alist:  expr.    (41)
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	.  reduce 40 (src line 92)
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	.  reduce 41 (src line 93)
 
 
-state 41
+state 42
 	objectdef:  '{' olist.'}' 
 	olist:  olist.',' tokenString ':' expr 
 	olist:  olist.',' tokenIdentifier ':' expr 
 
-	','  shift 67
-	'}'  shift 66
+	','  shift 68
+	'}'  shift 67
 	.  error
-
-
-state 42
-	objectdef:  '{' '}'.    (43)
-
-	.  reduce 43 (src line 97)
 
 
 state 43
-	olist:  tokenString.':' expr 
+	objectdef:  '{' '}'.    (44)
 
-	':'  shift 68
-	.  error
+	.  reduce 44 (src line 98)
 
 
 state 44
-	olist:  tokenIdentifier.':' expr 
+	olist:  tokenString.':' expr 
 
 	':'  shift 69
 	.  error
 
 
 state 45
+	olist:  tokenIdentifier.':' expr 
+
+	':'  shift 70
+	.  error
+
+
+state 46
 	expr:  expr.'+' expr 
 	expr:  expr '+' expr.    (3)
 	expr:  expr.'-' expr 
@@ -771,15 +797,15 @@ state 45
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 3 (src line 44)
 
 
-state 46
+state 47
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr '-' expr.    (4)
@@ -801,15 +827,15 @@ state 46
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 4 (src line 45)
 
 
-state 47
+state 48
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -831,12 +857,12 @@ state 47
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	'.'  shift 32
-	'['  shift 33
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 5 (src line 46)
 
 
-state 48
+state 49
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -858,12 +884,12 @@ state 48
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	'.'  shift 32
-	'['  shift 33
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 6 (src line 47)
 
 
-state 49
+state 50
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -885,12 +911,12 @@ state 49
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	'.'  shift 32
-	'['  shift 33
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 7 (src line 48)
 
 
-state 50
+state 51
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -912,23 +938,23 @@ state 50
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 8 (src line 49)
 
 
-state 51
+state 52
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -950,23 +976,23 @@ state 51
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 9 (src line 50)
 
 
-state 52
+state 53
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -988,23 +1014,23 @@ state 52
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 10 (src line 51)
 
 
-state 53
+state 54
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1026,23 +1052,23 @@ state 53
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 11 (src line 52)
 
 
-state 54
+state 55
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1064,23 +1090,23 @@ state 54
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 12 (src line 53)
 
 
-state 55
+state 56
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1102,23 +1128,23 @@ state 55
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 13 (src line 54)
 
 
-state 56
+state 57
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1140,25 +1166,25 @@ state 56
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 14 (src line 55)
 
 
-state 57
+state 58
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1180,34 +1206,34 @@ state 57
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 15 (src line 56)
 
 
-state 58
-	attribute:  expr '.' tokenIdentifier.    (27)
+state 59
+	attribute:  expr '.' tokenIdentifier.    (28)
 	call:  expr '.' tokenIdentifier.'(' clist ')' 
 	call:  expr '.' tokenIdentifier.'(' ')' 
 
-	'('  shift 70
-	.  reduce 27 (src line 71)
+	'('  shift 71
+	.  reduce 28 (src line 72)
 
 
-state 59
+state 60
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1231,47 +1257,47 @@ state 59
 	call:  expr.'[' expr ']' '(' ')' 
 	call:  expr '[' expr.']' '(' ')' 
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	']'  shift 71
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	']'  shift 72
 	.  error
 
 
-state 60
+state 61
 	expr:  '(' expr ')'.    (18)
 
 	.  reduce 18 (src line 59)
 
 
-state 61
+state 62
 	call:  tokenIdentifier '(' clist.')' 
 	clist:  clist.',' expr 
 
-	')'  shift 72
-	','  shift 73
+	')'  shift 73
+	','  shift 74
 	.  error
 
 
-state 62
-	call:  tokenIdentifier '(' ')'.    (35)
-
-	.  reduce 35 (src line 81)
-
-
 state 63
+	call:  tokenIdentifier '(' ')'.    (36)
+
+	.  reduce 36 (src line 82)
+
+
+state 64
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1291,171 +1317,176 @@ state 63
 	call:  expr.'.' tokenIdentifier '(' ')' 
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
-	clist:  expr.    (36)
+	clist:  expr.    (37)
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	.  reduce 36 (src line 84)
-
-
-state 64
-	arraydef:  '[' alist ']'.    (38)
-
-	.  reduce 38 (src line 88)
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	.  reduce 37 (src line 85)
 
 
 state 65
+	arraydef:  '[' alist ']'.    (39)
+
+	.  reduce 39 (src line 89)
+
+
+state 66
 	alist:  alist ','.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
-	expr  goto 74
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-
-state 66
-	objectdef:  '{' olist '}'.    (42)
-
-	.  reduce 42 (src line 96)
-
+	expr  goto 75
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 67
-	olist:  olist ','.tokenString ':' expr 
-	olist:  olist ','.tokenIdentifier ':' expr 
+	objectdef:  '{' olist '}'.    (43)
 
-	tokenString  shift 75
-	tokenIdentifier  shift 76
-	.  error
+	.  reduce 43 (src line 97)
 
 
 state 68
+	olist:  olist ','.tokenString ':' expr 
+	olist:  olist ','.tokenIdentifier ':' expr 
+
+	tokenString  shift 76
+	tokenIdentifier  shift 77
+	.  error
+
+
+state 69
 	olist:  tokenString ':'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
-	.  error
-
-	expr  goto 77
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-
-state 69
-	olist:  tokenIdentifier ':'.expr 
-
-	tokenString  shift 9
-	tokenIdentifier  shift 15
-	tokenInteger  shift 7
-	tokenFloat  shift 8
-	tokenBoolean  shift 10
-	'!'  shift 4
-	'-'  shift 5
-	'['  shift 16
-	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 78
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 70
+	olist:  tokenIdentifier ':'.expr 
+
+	tokenString  shift 9
+	tokenIdentifier  shift 16
+	tokenInteger  shift 7
+	tokenFloat  shift 8
+	tokenBoolean  shift 10
+	tokenNull  shift 11
+	'!'  shift 4
+	'-'  shift 5
+	'['  shift 17
+	'('  shift 6
+	'{'  shift 18
+	.  error
+
+	expr  goto 79
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
+
+state 71
 	call:  expr '.' tokenIdentifier '('.clist ')' 
 	call:  expr '.' tokenIdentifier '('.')' 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	')'  shift 80
-	'{'  shift 17
+	')'  shift 81
+	'{'  shift 18
 	.  error
 
-	expr  goto 63
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-	clist  goto 79
+	expr  goto 64
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
+	clist  goto 80
 
-state 71
-	attribute:  expr '[' expr ']'.    (28)
+state 72
+	attribute:  expr '[' expr ']'.    (29)
 	call:  expr '[' expr ']'.'(' clist ')' 
 	call:  expr '[' expr ']'.'(' ')' 
 
-	'('  shift 81
-	.  reduce 28 (src line 72)
-
-
-state 72
-	call:  tokenIdentifier '(' clist ')'.    (34)
-
-	.  reduce 34 (src line 80)
+	'('  shift 82
+	.  reduce 29 (src line 73)
 
 
 state 73
+	call:  tokenIdentifier '(' clist ')'.    (35)
+
+	.  reduce 35 (src line 81)
+
+
+state 74
 	clist:  clist ','.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
-	expr  goto 82
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	expr  goto 83
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
-state 74
+state 75
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1475,78 +1506,38 @@ state 74
 	call:  expr.'.' tokenIdentifier '(' ')' 
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
-	alist:  alist ',' expr.    (41)
+	alist:  alist ',' expr.    (42)
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	.  reduce 41 (src line 93)
-
-
-state 75
-	olist:  olist ',' tokenString.':' expr 
-
-	':'  shift 83
-	.  error
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	.  reduce 42 (src line 94)
 
 
 state 76
-	olist:  olist ',' tokenIdentifier.':' expr 
+	olist:  olist ',' tokenString.':' expr 
 
 	':'  shift 84
 	.  error
 
 
 state 77
-	expr:  expr.'+' expr 
-	expr:  expr.'-' expr 
-	expr:  expr.'/' expr 
-	expr:  expr.'*' expr 
-	expr:  expr.'%' expr 
-	expr:  expr.tokenEqu expr 
-	expr:  expr.tokenNeq expr 
-	expr:  expr.tokenLt expr 
-	expr:  expr.tokenGt expr 
-	expr:  expr.tokenLte expr 
-	expr:  expr.tokenGte expr 
-	expr:  expr.tokenAnd expr 
-	expr:  expr.tokenOr expr 
-	attribute:  expr.'.' tokenIdentifier 
-	attribute:  expr.'[' expr ']' 
-	call:  expr.'.' tokenIdentifier '(' clist ')' 
-	call:  expr.'.' tokenIdentifier '(' ')' 
-	call:  expr.'[' expr ']' '(' clist ')' 
-	call:  expr.'[' expr ']' '(' ')' 
-	olist:  tokenString ':' expr.    (44)
+	olist:  olist ',' tokenIdentifier.':' expr 
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	.  reduce 44 (src line 100)
+	':'  shift 85
+	.  error
 
 
 state 78
@@ -1569,66 +1560,107 @@ state 78
 	call:  expr.'.' tokenIdentifier '(' ')' 
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
-	olist:  tokenIdentifier ':' expr.    (45)
+	olist:  tokenString ':' expr.    (45)
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 45 (src line 101)
 
 
 state 79
-	call:  expr '.' tokenIdentifier '(' clist.')' 
-	clist:  clist.',' expr 
+	expr:  expr.'+' expr 
+	expr:  expr.'-' expr 
+	expr:  expr.'/' expr 
+	expr:  expr.'*' expr 
+	expr:  expr.'%' expr 
+	expr:  expr.tokenEqu expr 
+	expr:  expr.tokenNeq expr 
+	expr:  expr.tokenLt expr 
+	expr:  expr.tokenGt expr 
+	expr:  expr.tokenLte expr 
+	expr:  expr.tokenGte expr 
+	expr:  expr.tokenAnd expr 
+	expr:  expr.tokenOr expr 
+	attribute:  expr.'.' tokenIdentifier 
+	attribute:  expr.'[' expr ']' 
+	call:  expr.'.' tokenIdentifier '(' clist ')' 
+	call:  expr.'.' tokenIdentifier '(' ')' 
+	call:  expr.'[' expr ']' '(' clist ')' 
+	call:  expr.'[' expr ']' '(' ')' 
+	olist:  tokenIdentifier ':' expr.    (46)
 
-	')'  shift 85
-	','  shift 73
-	.  error
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	.  reduce 46 (src line 102)
 
 
 state 80
-	call:  expr '.' tokenIdentifier '(' ')'.    (31)
+	call:  expr '.' tokenIdentifier '(' clist.')' 
+	clist:  clist.',' expr 
 
-	.  reduce 31 (src line 77)
+	')'  shift 86
+	','  shift 74
+	.  error
 
 
 state 81
+	call:  expr '.' tokenIdentifier '(' ')'.    (32)
+
+	.  reduce 32 (src line 78)
+
+
+state 82
 	call:  expr '[' expr ']' '('.clist ')' 
 	call:  expr '[' expr ']' '('.')' 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	')'  shift 87
-	'{'  shift 17
+	')'  shift 88
+	'{'  shift 18
 	.  error
 
-	expr  goto 63
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-	clist  goto 86
+	expr  goto 64
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
+	clist  goto 87
 
-state 82
+state 83
 	expr:  expr.'+' expr 
 	expr:  expr.'-' expr 
 	expr:  expr.'/' expr 
@@ -1648,127 +1680,89 @@ state 82
 	call:  expr.'.' tokenIdentifier '(' ')' 
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
-	clist:  clist ',' expr.    (37)
+	clist:  clist ',' expr.    (38)
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	.  reduce 37 (src line 85)
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	.  reduce 38 (src line 86)
 
 
-state 83
+state 84
 	olist:  olist ',' tokenString ':'.expr 
 
 	tokenString  shift 9
-	tokenIdentifier  shift 15
+	tokenIdentifier  shift 16
 	tokenInteger  shift 7
 	tokenFloat  shift 8
 	tokenBoolean  shift 10
+	tokenNull  shift 11
 	'!'  shift 4
 	'-'  shift 5
-	'['  shift 16
+	'['  shift 17
 	'('  shift 6
-	'{'  shift 17
-	.  error
-
-	expr  goto 88
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
-
-state 84
-	olist:  olist ',' tokenIdentifier ':'.expr 
-
-	tokenString  shift 9
-	tokenIdentifier  shift 15
-	tokenInteger  shift 7
-	tokenFloat  shift 8
-	tokenBoolean  shift 10
-	'!'  shift 4
-	'-'  shift 5
-	'['  shift 16
-	'('  shift 6
-	'{'  shift 17
+	'{'  shift 18
 	.  error
 
 	expr  goto 89
-	attribute  goto 11
-	call  goto 14
-	arraydef  goto 12
-	objectdef  goto 13
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 85
-	call:  expr '.' tokenIdentifier '(' clist ')'.    (30)
+	olist:  olist ',' tokenIdentifier ':'.expr 
 
-	.  reduce 30 (src line 76)
+	tokenString  shift 9
+	tokenIdentifier  shift 16
+	tokenInteger  shift 7
+	tokenFloat  shift 8
+	tokenBoolean  shift 10
+	tokenNull  shift 11
+	'!'  shift 4
+	'-'  shift 5
+	'['  shift 17
+	'('  shift 6
+	'{'  shift 18
+	.  error
 
+	expr  goto 90
+	attribute  goto 12
+	call  goto 15
+	arraydef  goto 13
+	objectdef  goto 14
 
 state 86
-	call:  expr '[' expr ']' '(' clist.')' 
-	clist:  clist.',' expr 
+	call:  expr '.' tokenIdentifier '(' clist ')'.    (31)
 
-	')'  shift 90
-	','  shift 73
-	.  error
+	.  reduce 31 (src line 77)
 
 
 state 87
-	call:  expr '[' expr ']' '(' ')'.    (33)
+	call:  expr '[' expr ']' '(' clist.')' 
+	clist:  clist.',' expr 
 
-	.  reduce 33 (src line 79)
+	')'  shift 91
+	','  shift 74
+	.  error
 
 
 state 88
-	expr:  expr.'+' expr 
-	expr:  expr.'-' expr 
-	expr:  expr.'/' expr 
-	expr:  expr.'*' expr 
-	expr:  expr.'%' expr 
-	expr:  expr.tokenEqu expr 
-	expr:  expr.tokenNeq expr 
-	expr:  expr.tokenLt expr 
-	expr:  expr.tokenGt expr 
-	expr:  expr.tokenLte expr 
-	expr:  expr.tokenGte expr 
-	expr:  expr.tokenAnd expr 
-	expr:  expr.tokenOr expr 
-	attribute:  expr.'.' tokenIdentifier 
-	attribute:  expr.'[' expr ']' 
-	call:  expr.'.' tokenIdentifier '(' clist ')' 
-	call:  expr.'.' tokenIdentifier '(' ')' 
-	call:  expr.'[' expr ']' '(' clist ')' 
-	call:  expr.'[' expr ']' '(' ')' 
-	olist:  olist ',' tokenString ':' expr.    (46)
+	call:  expr '[' expr ']' '(' ')'.    (34)
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
-	.  reduce 46 (src line 102)
+	.  reduce 34 (src line 80)
 
 
 state 89
@@ -1791,41 +1785,81 @@ state 89
 	call:  expr.'.' tokenIdentifier '(' ')' 
 	call:  expr.'[' expr ']' '(' clist ')' 
 	call:  expr.'[' expr ']' '(' ')' 
-	olist:  olist ',' tokenIdentifier ':' expr.    (47)
+	olist:  olist ',' tokenString ':' expr.    (47)
 
-	tokenAnd  shift 30
-	tokenOr  shift 31
-	tokenEqu  shift 24
-	tokenNeq  shift 25
-	tokenLte  shift 28
-	tokenGte  shift 29
-	tokenLt  shift 26
-	tokenGt  shift 27
-	'+'  shift 19
-	'-'  shift 20
-	'/'  shift 21
-	'*'  shift 22
-	'%'  shift 23
-	'.'  shift 32
-	'['  shift 33
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
 	.  reduce 47 (src line 103)
 
 
 state 90
-	call:  expr '[' expr ']' '(' clist ')'.    (32)
+	expr:  expr.'+' expr 
+	expr:  expr.'-' expr 
+	expr:  expr.'/' expr 
+	expr:  expr.'*' expr 
+	expr:  expr.'%' expr 
+	expr:  expr.tokenEqu expr 
+	expr:  expr.tokenNeq expr 
+	expr:  expr.tokenLt expr 
+	expr:  expr.tokenGt expr 
+	expr:  expr.tokenLte expr 
+	expr:  expr.tokenGte expr 
+	expr:  expr.tokenAnd expr 
+	expr:  expr.tokenOr expr 
+	attribute:  expr.'.' tokenIdentifier 
+	attribute:  expr.'[' expr ']' 
+	call:  expr.'.' tokenIdentifier '(' clist ')' 
+	call:  expr.'.' tokenIdentifier '(' ')' 
+	call:  expr.'[' expr ']' '(' clist ')' 
+	call:  expr.'[' expr ']' '(' ')' 
+	olist:  olist ',' tokenIdentifier ':' expr.    (48)
 
-	.  reduce 32 (src line 78)
+	tokenAnd  shift 31
+	tokenOr  shift 32
+	tokenEqu  shift 25
+	tokenNeq  shift 26
+	tokenLte  shift 29
+	tokenGte  shift 30
+	tokenLt  shift 27
+	tokenGt  shift 28
+	'+'  shift 20
+	'-'  shift 21
+	'/'  shift 22
+	'*'  shift 23
+	'%'  shift 24
+	'.'  shift 33
+	'['  shift 34
+	.  reduce 48 (src line 104)
 
 
-34 terminals, 10 nonterminals
-48 grammar rules, 91/2000 states
+state 91
+	call:  expr '[' expr ']' '(' clist ')'.    (33)
+
+	.  reduce 33 (src line 79)
+
+
+35 terminals, 10 nonterminals
+49 grammar rules, 92/2000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
 59 working sets used
 memory: parser 168/30000
-67 extra closures
-607 shift entries, 1 exceptions
+68 extra closures
+635 shift entries, 1 exceptions
 36 goto entries
 110 entries saved by goto default
-Optimizer space used: output 307/30000
-307 table entries, 93 zero
-maximum spread: 34, maximum offset: 84
+Optimizer space used: output 315/30000
+315 table entries, 95 zero
+maximum spread: 35, maximum offset: 85

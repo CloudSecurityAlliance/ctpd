@@ -66,6 +66,18 @@ func (e *literalBooleanExpr) String() string {
 }
 
 //
+// Literal null
+//
+type literalNullExpr struct  {}
+
+func (n *literalNullExpr) Compile(m *Machine) {
+	m.AddIParam(i_load_const, m.AddConst(NewNull()))
+}
+func (n *literalNullExpr) String() string {
+	return "null"
+}
+
+//
 // List def expression
 //
 

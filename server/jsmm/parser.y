@@ -16,7 +16,7 @@ import (
     list           ExpressionList
 }
 
-%token tokenString tokenIdentifier tokenInteger tokenFloat tokenBoolean 
+%token tokenString tokenIdentifier tokenInteger tokenFloat tokenBoolean tokenNull 
 /* %token tokenEqu tokenNeq tokenGt tokenLt tokenGte tokenLte */
 %token tokenAnd tokenOr tokenEOF tokenError
 
@@ -61,6 +61,7 @@ expr: expr '+' expr             { $$=&binExpr{i_add,$1,$3} }
     | tokenFloat                { $$=&literalNumberExpr{$1} }
     | tokenString               { $$=&literalStringExpr{$1} }
     | tokenBoolean              { $$=&literalBooleanExpr{$1} }
+    | tokenNull                 { $$=&literalNullExpr{} }
     | attribute                 { $$=$1 }
     | arraydef                  { $$=$1 }
     | objectdef                 { $$=$1 }
@@ -242,9 +243,10 @@ func lexNumber(l *lexer) stateFn {
 }
 
 func lexIdentifier(l* lexer) stateFn {
-    if !unicode.IsLetter(l.next()) {
-        return l.errorf("Unexpected character in symbol")
-    } 
+    r := l.next()
+    if !unicode.IsLetter(r) && r!='_' {
+        return l.errorf("Unexpected character '%c' in identifier",r)
+    }
     for {
         r := l.next()
         if !unicode.IsLetter(r) && !unicode.IsNumber(r) {
@@ -254,6 +256,8 @@ func lexIdentifier(l* lexer) stateFn {
                 l.emit(tokenBoolean)
             case l.input[l.start:l.pos] == "false":
                 l.emit(tokenBoolean)
+            case l.input[l.start:l.pos] == "null":
+                l.emit(tokenNull)
             default:
                 l.emit(tokenIdentifier)
             }
@@ -268,7 +272,7 @@ func lexDefault(l *lexer) stateFn {
 		switch r := l.next(); {
 		case unicode.IsSpace(r):
 			l.ignore()
-        case unicode.IsLetter(r):
+        case unicode.IsLetter(r), r=='_':
             l.backup()
             return lexIdentifier
 		case r == '"':

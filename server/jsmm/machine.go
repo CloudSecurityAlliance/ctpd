@@ -39,7 +39,7 @@ type Machine struct {
 	code                []byte
 	pc                  int
 	context             Object
-    debug_mode          bool
+	debug_mode          bool
 }
 
 func NewMachine() *Machine {
@@ -49,15 +49,15 @@ func NewMachine() *Machine {
 		stack:               make([]MachineValue, 0, 10),
 		code:                make([]byte, 0, 10),
 		pc:                  -1,
-		context:             CreateObjectWithPrototype("GlobalObject",NewNull()),
-        debug_mode:          false,
+		context:             CreateObjectWithPrototype("GlobalObject", NewNull()),
+		debug_mode:          false,
 	}
-	m.context.SetProperty("toString",NewFunction("toString",ToString))
-	m.context.SetProperty("toBoolean",NewFunction("toBoolean",ToString))
-	m.context.SetProperty("toNumber",NewFunction("toNumber",ToString))
-	m.context.SetProperty("timeUTC",NewFunction("timeUTC",TimeUTC))
-	m.context.SetProperty("matchRegexp",NewFunction("matchRegex",MatchRegexp))
-	m.context.SetProperty("select",NewFunction("select",Select))
+	m.context.SetProperty("toString", NewFunction("toString", ToString))
+	m.context.SetProperty("toBoolean", NewFunction("toBoolean", ToString))
+	m.context.SetProperty("toNumber", NewFunction("toNumber", ToString))
+	m.context.SetProperty("timeUTC", NewFunction("timeUTC", TimeUTC))
+	m.context.SetProperty("matchRegexp", NewFunction("matchRegex", MatchRegexp))
+	m.context.SetProperty("select", NewFunction("select", Select))
 	return m
 }
 
@@ -72,7 +72,7 @@ func Compile(expr string) (*Machine, error) {
 }
 
 func (m *Machine) DebugMode(debug bool) {
-    m.debug_mode = debug
+	m.debug_mode = debug
 }
 
 func (m *Machine) AddConst(c MachineValue) int {
@@ -157,8 +157,8 @@ func (m *Machine) Call(pc int) *MachineException {
 		}
 		if m.debug_mode {
 			if m.Top() >= 0 {
-                top := m.Get(m.Top())
-                log.Printf("st -> %s: %s", TypeOf(top),top.ToString())
+				top := m.Get(m.Top())
+				log.Printf("st -> %s: %s", TypeOf(top), top.ToString())
 			}
 		}
 		m.pc += Ops[op].length
@@ -221,4 +221,3 @@ func DumpCode(w io.Writer, m *Machine) {
 		}
 	}
 }
-

@@ -60,12 +60,6 @@ var Ops = [I_COUNT]Op{
 		}},
 	{"get_global", 1,
 		func(m *Machine) *MachineException {
-			//key := m.Get(-1).ToString()
-			//m.Pop(1)
-			//r := m.context.GetProperty(key)
-			//if r.Type()==TypeNull {
-			//    return NewMachineException("ReferenceError: %s is not defined.",key)
-			//}
 			m.Push(&m.context)
 			return nil
 		}},
@@ -250,7 +244,7 @@ var Ops = [I_COUNT]Op{
             if err!=nil {
                 return err
             }
-            if functionref.Type() != TypeFunction {
+            if functionref.Type() == TypeFunction {
 				if function, ok := functionref.(*Function); ok {
 					result_len, merror := function.Call(m, paramcount)
 					if merror == nil {
