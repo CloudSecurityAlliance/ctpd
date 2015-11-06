@@ -54,7 +54,7 @@ func main() {
 	flag.Parse()
 
 	if versionFlag {
-		fmt.Println("ctpd version %f.", CTPD_VERSION)
+		fmt.Println("ctpd version", CTPD_VERSION)
 		fmt.Println(" Copyright 2015 Cloud Security Alliance EMEA (cloudsecurityalliance.org).")
 		fmt.Println(" ctpd is licensed under the Apache License, Version 2.0.")
 		fmt.Println(" see http://www.apache.org/licenses/LICENSE-2.0")
@@ -103,6 +103,10 @@ func main() {
 	if conf["client"] != "" {
 		http.Handle("/", http.FileServer(http.Dir(conf["client"])))
 	}
+
+    if !ctp.IsMongoRunning(conf) {
+        log.Fatal("Missing mongodb.")
+    }
 
 	http.Handle(conf["basepath"], server.NewCtpApiHandlerMux(conf))
 	if conf["tls_use"] != "" && conf["tls_use"] != "no" {
