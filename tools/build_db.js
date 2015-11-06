@@ -63,6 +63,8 @@ x = {
     "annotation": "mock data",
     "provider": "csa.demo"
 }
+x.changeId = x._id
+
 
 db.serviceViews.insert(x);
 
@@ -82,6 +84,7 @@ x = {
     "annotation": "Webserver running on Linux Ubuntu (apache)",
     "name": "https://paris.matrix.lan/"
 }
+x.changeId = x._id
 
 db.assets.insert(x);
 
@@ -96,6 +99,7 @@ x = {
     "annotation": "Availability attribute for demo",
     "name": "availability"
 }
+x.changeId = x._id
 
 db.attributes.insert(x);
 
@@ -126,6 +130,7 @@ x = {
     }
     ],
 }
+x.changeId = x._id
 
 db.metrics.insert(x)
 
@@ -158,6 +163,7 @@ x = {
     "userActivated": false,
     "state" : "activated"
 }
+x.changeId = x._id
 
 db.measurements.insert(x);
 
@@ -174,12 +180,13 @@ x = {
     "annotation": "confidentiality of data in transit with SSL/TLS",
     "name": "confidentiality"
 }
+x.changeId = x._id
 
 db.attributes.insert(x);
 
 /**********************/
 
-metricId = MakeId()
+metricId = MakeId();
 
 x = {
         "_id" : metricId,
@@ -201,37 +208,39 @@ x = {
             },
         ],
 }
+x.changeId = x._id
 
 db.metrics.insert(x);
 
 /**********************/
 
-measurementId = MakeId()
+measurementId = MakeId();
 
-    x = {
-        "_id" : measurementId,
-        "parent" : [ attributeId, assetId, serviceViewId ],
-        "accessTags": [ access_id_tag ],
-        "name": "SSL/TLS encryption strength",
-        "annotation" : "",
-        "metric" : "@/metrics/" + metricId,
-        //"metric" : metricId,
-        "result" : {
-            "value" : [
-                { 
-                    "level": 7,
-                }
-            ],
+x = {
+    "_id" : measurementId,
+    "parent" : [ attributeId, assetId, serviceViewId ],
+    "accessTags": [ access_id_tag ],
+    "name": "SSL/TLS encryption strength",
+    "annotation" : "",
+    "metric" : "@/metrics/" + metricId,
+    //"metric" : metricId,
+    "result" : {
+        "value" : [
+        { 
+            "level": 7,
+        }
+        ],
             "dateTime" : ISODate()
-        },       
-        "objective" : {
-            "condition" : "value[0].level>=7",
-            "status" : true
-        },
-        "userInitiated" : "false",
-        "state" : "activated"
+    },       
+    "objective" : {
+        "condition" : "value[0].level>=7",
+        "status" : true
+    },
+    "userInitiated" : "false",
+    "state" : "activated"
 
 }
+x.changeId = x._id
 
 
 db.measurements.insert(x);
