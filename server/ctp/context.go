@@ -86,6 +86,23 @@ func (c *ApiContext) Close() {
 	}
 }
 
+func IsMongoRunning(conf Configuration) bool {
+	session, err := mgo.Dial(conf["databaseurl"])
+	if err != nil {
+		Log(nil, ERROR, "Failed to connect to database %s: %s", conf["databaseurl"], err.Error())
+		return false
+	}
+	defer session.Close()
+
+	bi, err := session.BuildInfo()
+	if err != nil {
+		Log(nil, ERROR, "Failed to retrieve version info for database %s: %s", conf["databaseurl"], err.Error())
+		return false
+	}
+	Log(nil, INFO, "Database %s is running mongodb version %s (%s)", conf["databaseurl"], bi.Version, bi.SysInfo)
+    return true
+}
+
 func load_account_tags(session *mgo.Session, key string) ([]string, bool) {
 	var account Account
 
@@ -128,7 +145,11 @@ func (c *ApiContext) AuthenticateClient(w http.ResponseWriter, r *http.Request) 
 		}
 		Log(c, WARNING, "Could not find account with token '%s'", token)
 	} else {
-		Log(c, INFO, "Failed to parse http authorization header (%s)", r.Header.Get("Authorization"))
+        if r.Header.Get("Authorization")=="" {
+            Log(c, INFO, "Http authorization header is empty")
+        } else {
+            Log(c, INFO, "Failed to parse http authorization header '%s'", r.Header.Get("Authorization"))
+        }
 	}
 
 	w.Header().Set("WWW-Authenticate", `Bearer realm="ctp api"`)

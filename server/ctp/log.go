@@ -38,22 +38,36 @@ var color_tags = [...]string{
 	"\033[91mERROR\033[0m",
 }
 
+var plain_tags = [...]string{
+	"DEBUG",
+	"INFO",
+	"WARNING",
+	"ERROR",
+}
+
+
 func Log(c *ApiContext, level LogLevel, format string, v ...interface{}) {
-	var id string
+	var (
+        tag string
+        id string
+    )
 
     if c==nil {
-        id = "[*] "
+        id = "*"
     } else {
-        if c.ColorLogs {
-            id = fmt.Sprintf("[\033[35m%d\033[0m] ", c.Id)
-            id += color_tags[level] + " "
-        } else {
-            id = fmt.Sprintf("[%d] ", c.Id)
-        }
+        id = fmt.Sprintf("%d",c.Id)
+    }
+
+    if c!=nil && c.ColorLogs {
+        tag = fmt.Sprintf("[\033[35m%s\033[0m] ", id)
+        tag += color_tags[level] + " "
+    } else {
+        tag = fmt.Sprintf("[%s] ", id)
+        tag += plain_tags[level] + " "
     }
 
 	logMutex.Lock()
 	defer logMutex.Unlock()
 
-	log.Printf(id+format, v...)
+	log.Printf(tag+format, v...)
 }

@@ -42,10 +42,42 @@ type Resource struct {
 	Self       Link       `json:"self" bson:"-"`
 	Scope      Link       `json:"scope,omitempty" bson:"-"`
 	AccessTags Tags       `json:"accessTags,omitempty" bson:"accessTags"`
+	ChangeId   Base64Id   `json:"changeId,omitempty" bson:"changeId,omitempty"`
 }
 
 func (r *Resource) Super() *Resource {
 	return r
+}
+
+func propagateChangeId(context *ApiContext, res *Resource) bool {
+    var category string
+    
+    if len(context.Params)==3 {
+        category = context.Params[2]
+    } else {
+        category = context.Params[0]
+    }
+    o_category := category
+
+    for i:=0; i<len(res.Parent); i++ {
+        switch category {
+        case "measurements":
+            category="attributes";
+        case "attributes":
+            category="assets"
+        case "assets", "triggers", "dependencies", "logs":
+            category="serviceViews"
+        default:
+            Log(context, ERROR, "Trying to propagate a changeId to '%s'",category)
+            return false
+        }
+
+        if !UpdateResourcePart(context,category,res.Parent[i],"changeId",res.ChangeId) {
+            Log(context, ERROR, "Failed propagating a changeId to /%s/%s from /%s/%s",category,res.Parent[i],o_category,res.Id)
+            return false
+        }
+    }
+    return true
 }
 
 type ResourceLoader interface {
@@ -160,10 +192,16 @@ func (handler *POSTHandler) Handle(w http.ResponseWriter, r *http.Request, conte
 		}
 	}
 
+    res.Super().ChangeId = res.Super().Id
+
 	if err := res.Create(context); err != nil {
 		RenderErrorResponse(w, context, err)
 		return
 	}
+
+    if !propagateChangeId(context,res.Super()) {
+        RenderErrorResponse(w, context, NewInternalServerError("Failed to propagate 'changeID'"))
+    }
 
 	res.Super().AccessTags = nil
 
@@ -205,10 +243,16 @@ func (handler *PUTHandler) Handle(w http.ResponseWriter, r *http.Request, contex
 		return
 	}
 
-	if err := resource.Update(context, update); err != nil {
+    resource.Super().ChangeId = NewBase64Id()
+	
+    if err := resource.Update(context, update); err != nil {
 		RenderErrorResponse(w, context, err)
 		return
 	}
+
+    if !propagateChangeId(context,resource.Super()) {
+        RenderErrorResponse(w, context, NewInternalServerError("Failed to propagate 'changeID'"))
+    }
 
 	if !handler.ShowTags {
 		resource.Super().AccessTags = nil

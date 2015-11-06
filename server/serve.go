@@ -93,6 +93,8 @@ func NewCtpApiHandlerMux(conf ctp.Configuration) *CtpApiHandlerMux {
 
 var muxRunOnce bool = false
 
+/* TODO: add signal processing (e.g. SIG_HUP) */
+
 func (mux *CtpApiHandlerMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	context, err := ctp.NewApiContext(r, mux.Configuration)
 	if err != nil {
