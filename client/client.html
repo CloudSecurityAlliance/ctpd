@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title>Bootstrap 101 Template</title>
+<title>CTP demo client</title>
 
 <!-- Bootstrap -->
 <link href="static/css/bootstrap.min.css" rel="stylesheet">
@@ -32,6 +32,7 @@ body {
         This URL provides access to a lightweight CTP client for testing purposes only.
         Launch the client by entering your access token and clicking on the button below.
         </p>
+    </div>
         <form id="bootctp">
             <div class="form-group">
                 <label for="text">Token</label>
@@ -47,7 +48,7 @@ body {
             </ul>
             <div class="panel" id="slos">
                 <div class="panel-body">
-                    details here
+                    <div id="detailshere">SLOs are summarized here</div>
                 </div>
             </div>
              <div class="panel" id="details">
@@ -58,13 +59,14 @@ body {
                 </div>
             </div>
         </div>
-    </div>
     <h1>About this demo</h1>
     <p>
     This lightweight client is provided at this URL for demonstration or testing purposes. 
-    It has not been tested for security and cross-browser compatibility.
+    It is reported to work on Safari 8, Chrome 45 and Firefox 40.
+    It has not been tested for security and wide cross-browser compatibility.
     Users of CTP will likely develop their own client, using the CTP API. 
     </p>
+    <div id="foo"></div>
 </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -73,6 +75,24 @@ body {
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/jstree.min.js"></script>
 <script>
+
+function clone(objectToBeCloned) {
+  if (objectToBeCloned instanceof Array) {
+    return objectToBeCloned.slice(0);
+  }
+  if (!(objectToBeCloned instanceof Object)) {
+    return objectToBeCloned;
+  }
+
+  var objectClone = new objectToBeCloned.constructor();
+  
+  // Clone each property.
+  for (var prop in objectToBeCloned) {
+    objectClone[prop] = clone(objectToBeCloned[prop]);
+  }
+  
+  return objectClone;
+}
 
 
 function getTypeAndId(url) {
@@ -84,83 +104,8 @@ function getTypeAndId(url) {
 }
 
 folder_keys = [ "metrics", "dependencies", "serviceViews", "assets", "attributes", "measurements", "triggers", "logs" ]
-ignore_keys = [ "serviceView", "asset", "attribute" ]
 
-
-
-function mapObject(obj) {
-    var children = []
-        if (typeof(obj) !== 'object') {
-        return false
-    }
-
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            var grand_children = mapObject(obj[key])
-                if (grand_children !== false) {
-                    children.push({ text: "<b>" + key + ":</b>", 
-                            icon: "glyphicon glyphicon-minus",
-                            state: { opened: true },
-                            children: grand_children
-                            })
-                } else {
-                    children.push({ text: "<b>" + key + ":</b> <code>" + obj[key] + "</code>", 
-                            icon: "glyphicon glyphicon-minus",
-                            }) 
-                }
-        }
-    }
-    return children
-}
-
-function parser(data, cb) {
-    var nodes = []
-
-    if (data.hasOwnProperty("collection")) {
-        // case 1: this is collection of resources
-        var collectionLength = data.collection.length
-        for (var i = 0; i<collectionLength; i++)
-        {
-            var parts = getTypeAndId(data.collection[i].link)
-            var text = parts[1]
-            if (typeof data.collection[i].name != "undefined")
-                text = '"' + data.collection[i].name + '"'
-            nodes.push({ text: "<b>" + text + "</b>", 
-                         icon: "glyphicon glyphicon-stop",
-                         id: data.collection[i].link, 
-                         children: true })
-        }
-    } else { 
-        // case 2: this is a simple resource
-        for (var key in data) {
-            if (ignore_keys.indexOf(key)>=0) {
-                continue
-            }
-            if (data.hasOwnProperty(key)) {
-                if (folder_keys.indexOf(key)>=0) {
-                    nodes.push({ text: "<span class='label label-success'>" + key + "</span>", 
-                                 icon: "glyphicon glyphicon-th-list",
-                                 id: data[key], 
-                                 children:  true })
-                } else {
-                    var children = mapObject(data[key])
-                    if (children !== false) {
-                        nodes.push({ text: "<span class='label label-default'>" + key + ":</span>", 
-                                     icon: "glyphicon glyphicon-info-sign",
-                                     state: { opened: true },
-                                     children: children
-                                 })
-                    } else {
-                        nodes.push({ text: "<span class='label label-default'>" + key + ":</span> <code>" + data[key] + "</code>", 
-                                     icon: "glyphicon glyphicon-info-sign",
-                                 }) 
-                    }
-                }
-            }
-        }
-    }
-    cb.call(this, nodes)
-}
+/*
 
 function restorePageAfterError(resp) {
     $("#ctp").hide()
@@ -174,6 +119,227 @@ function restorePageAfterError(resp) {
     $("#errormsg").text('Error loading data:'+ err.error)
     $("#errormsg").delay(5000).fadeOut(500)
 }
+*/
+
+function signalError(x) {
+    var message = "Commmunication failure (" + x.statusText + "), stopping client.";
+    var error = '<div class="alert alert-danger" role="alert">' +
+                '<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>' +
+                '<span class="sr-only">Error:</span> ' +
+                 message +
+                '</div>';
+
+    $("#errormsg").show()
+    $("#errormsg").html(error)
+    //$("#errormsg").delay(5000).fadeOut(500)
+}
+
+var Completer = function(cb) {
+    this.count = 0
+    this.cb = cb
+}
+
+Completer.prototype.Push = function() {
+    this.count++;
+}
+Completer.prototype.Pop = function() {
+    this.count--;
+    if (this.count<=0) {
+        this.cb.call()
+    }
+}
+
+visit_keys = [ "serviceViews", "assets", "attributes", "measurements" ]
+function visit_node(parNode, token, completer, data) {
+    // @parNode: is the parent node, must never be nil
+    // @token: OAuth token needed for authentication
+    // @completer: an object to track the completion of async calls (ajax).
+    // @data: the result of the ajax call (json)
+
+    // if data is null, we assume that we are starting at the root of the tree.
+    if (!data) {
+        completer.Push();
+        $.ajax({
+                "url": '/api/1.0/',
+                "headers": { "Authorization": "Bearer " + token },
+                "success": function(data) { visit_node(parNode,token,completer,data); completer.Pop(); },
+                "error": function(x) { signalError(x); }
+                });
+        return
+    }
+
+    // if the data is a collection, we send an ajax request to all members in the collection.
+    if (data.hasOwnProperty("collection")) 
+    {
+        completer.Push();
+        for (var i = 0; i<data.collection.length; i++)
+        {
+            completer.Push();
+            $.ajax({
+                    "url": data.collection[i].link,
+                    "headers": { "Authorization": "Bearer " + token },
+                    "success": (function (_object,_token,_completer) {
+                                return function(data) { 
+                                    visit_node(_object,_token,_completer,data); 
+                                    completer.Pop();
+                                    }
+                                })(parNode,token,completer),
+                    "error": function(x) { signalError(x); }
+                    });
+        }
+        completer.Pop()
+    } 
+    else // this is not a collection
+    {
+        var parts = getTypeAndId(data.self); // parts[0] = type, parts[1]=id
+
+        if (parts.length<2) {
+            parts = [ "root", "root" ];
+        }
+
+        // If the node has not changed, don't go further.
+        if ((parNode[parts[1]]) && data.changeId && parNode[parts[1]].changeId==data.changeId) {
+            return
+        }
+        //if (parNode[parts[1]])
+        //    console.log("data.changeId=" + data.changeId + " / parnode=" + parNode[parts[1]].changeId);
+
+        var node = {}
+        
+        if (parNode[parts[1]]) {
+            node = parNode[parts[1]]
+        } else {
+            parNode[parts[1]] = node
+        }
+       
+
+        if (data.name && data.name.length>0) {
+            node.display_name = data.name;
+        } else {
+            node.display_name = parts[1];
+        }
+
+        // now we look if any property is in fact a pointer to a collection url.
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+                 
+                if (folder_keys.indexOf(key)>=0) {
+                    if (!node[key]) {
+                        node[key] = {};
+                    }
+                    completer.Push();
+                    $.ajax({
+                        "url": data[key],
+                        "headers": { "Authorization": "Bearer " + token },
+                        "success": (function (_object,_token,_completer) {
+                                return function(data) { 
+                                    visit_node(_object,_token,_completer,data); 
+                                    completer.Pop();
+                                    }
+                                })(node[key],token,completer),
+                        "error": function(x) { signalError(x); }
+                        });
+                } else {
+                    node[key] = clone(data[key]);
+                }
+            } 
+        }
+    }
+}
+
+function dashboard(tree) {
+    $("#detailshere").empty();
+    var root = tree.root;
+    for (var i in root.serviceViews) {
+        var serviceView = root.serviceViews[i];
+
+        $("#detailshere").append("<h2>"+serviceView.display_name+"</h2>")
+        var table = $('<table>').addClass('table').append("<tr><th>Asset</th><th>attribute</th><th>measurement</th><th>Objective</th></tr>")
+        for (var j in serviceView.assets) {
+            var asset = serviceView.assets[j];
+
+            for (var k in asset.attributes) {
+                var attribute = asset.attributes[k];
+
+                for (var l in attribute.measurements) {
+                    var measurement = attribute.measurements[l];
+                    var row = $('<tr>');
+                    var objectiveStatus 
+
+                    if (measurement.objective==null) {
+                        objectiveStatus = "undefined";
+                    } else {
+                        objectiveStatus = measurement.objective.status;
+                    }
+
+                    row.append("<td>"+asset.display_name+"</td>");
+                    row.append("<td>"+attribute.display_name+"</td>");
+                    row.append("<td>"+measurement.display_name+"</td>");
+                    row.append("<td><b>"+objectiveStatus+"</b></td>");
+                    if (objectiveStatus == "true")
+                        row.addClass("success");
+                    else if (objectiveStatus == "false")
+                        row.addClass("danger");
+                    else if (objectiveStatus == "error")
+                        row.addClass("warning");
+                    else
+                        row.addClass("active");
+                    table.append(row);
+                }
+            }
+        }
+        $("#detailshere").append(table)
+    }
+}
+
+function doViewTree(parNode, tree, isCollectionItem) {
+    for (var field in tree) {
+        if (field == "display_name")
+            continue;
+
+        var node = { "text": field }
+        if ($.isPlainObject(tree[field]) || $.isArray(tree[field])) {
+            if (folder_keys.indexOf(field)>=0) {
+                node.icon = "glyphicon glyphicon-th-list";
+                node.text = "<span class='label label-success'>" + field + ":</span>";
+            } else {
+                if (tree[field].display_name) {
+                    node.icon = "glyphicon glyphicon-minus";
+                    node.text = "<strong>" + tree[field].display_name + "</strong>";
+                } else {
+                    node.icon = "glyphicon glyphicon-stop";
+                    node.state = { "opened": true };
+                    node.text = "<span class='label label-default'>" + field + ":</span>";
+                }
+            }
+            node.children = [];
+            doViewTree(node.children, tree[field])
+        } else {
+            node.icon = "glyphicon glyphicon-info-sign";
+            node.text = "<span class='label label-default'>" + field + ":</span> <code>" + tree[field] + "</code>"
+        }
+        parNode.push(node);
+    }
+}
+
+function viewtree(tree) {
+    var res = [];
+    doViewTree(res, tree.root)
+    $('#jstree').jstree(true).settings.core.data = res;
+}
+
+var NODES = {}
+function updateClient() {
+    token = $("#token").val();
+ 
+    var compl = new Completer(function() { 
+            dashboard(NODES); 
+            viewtree(NODES);
+            setTimeout(function () { updateClient() }, 10000);
+            });
+
+    visit_node(NODES,token,compl,null)
+ }
 
 $(function () {
         // 
@@ -192,43 +358,25 @@ $(function () {
             $("#details-tab").addClass("active")
             $("#slos-tab").removeClass("active")
             $("#slos").hide()
+            $('#jstree').jstree(true).refresh()
             $("#details").show()
             });
 
-        // launch jstree on click
+        // launch client on click
         $("#bootctp").submit(function (event) {
-            token = $("#token").val()
-            event.preventDefault()
-            $("#bootctp").hide()
-            $("#ctp").show()
-            $('#jstree').jstree({
-                'core' : {
-                  'data' : function (obj, cb) {
-                        if (obj.id === '#') {
-                            url = '/api/1.0/'
-                            $.ajax({
-                                "url": url, 
-                                "headers": { "Authorization": "Bearer " + token },
-                                "success": function(data) { parser(data,cb) },
-                                "error": function(resp) { restorePageAfterError(resp) }
-                                })
-                        } else {
-                            url = obj.id
-                            $.ajax({
-                                "url": url, 
-                                "headers": { "Authorization": "Bearer " + token },
-                                "success": function(data) { parser(data,cb) },
-                                "error": function(resp) { restorePageAfterError(resp) }
-                                })
-                        }
-                     }
-                  }
-                }); 
-             });
+            event.preventDefault();
+            $("#bootctp").hide();
+            $("#ctp").show();
+            $("#jstree").jstree();
+            updateClient();
+            });
+
+            
         $("#refreshctp").click(function () {
             $("#jstree").jstree(true).refresh()
             });
         });
+
 </script>
 </body>
 </html>
