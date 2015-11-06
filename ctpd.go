@@ -68,15 +68,6 @@ func main() {
 		return
 	}
 
-    if logfileFlag!="" {
-        file, err := os.Create(logfileFlag)
-        if err!=nil {
-            log.Fatalf("Could not open %s, %s", logfileFlag, err.Error())
-        }
-        defer file.Close()
-        log.SetOutput(file)
-    }
-
 	if configFileFlag == "/path/to/file" {
 		conf, ok = ctp.SearchAndLoadConfigurationFile()
 	} else {
@@ -87,6 +78,19 @@ func main() {
         ctp.Log(nil,ctp.INFO,"No configuration file was loaded, using defaults.")
         conf = ctp.ConfigurationDefaults
 	}
+
+    if logfileFlag!="" {
+        conf["log-file"] = logfileFlag
+    }
+
+    if conf["log-file"]!="" {
+        file, err := os.Create(conf["log-file"])
+        if err!=nil {
+            log.Fatalf("Could not open %s, %s", conf["log-file"], err.Error())
+        }
+        defer file.Close()
+        log.SetOutput(file)
+    }
 
     if colorFlag {
         conf["color-logs"]="true"
