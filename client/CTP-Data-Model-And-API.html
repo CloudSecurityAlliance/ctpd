@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="generator" content="Asciidoctor 0.1.4">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CTP Data Model and API, rev. 2.13</title>
+<title>CTP Data Model and API, rev. 2.14</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
@@ -366,10 +366,10 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </head>
 <body class="article">
 <div id="header">
-<h1>CTP Data Model and API, rev. 2.13</h1>
+<h1>CTP Data Model and API, rev. 2.14</h1>
 <span id="author" class="author">Cloud Security Alliance</span><br>
-<span id="revnumber">version 2.13,</span>
-<span id="revdate">October 2015</span>
+<span id="revnumber">version 2.14,</span>
+<span id="revdate">November 2015</span>
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -416,6 +416,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <li><a href="#measurements">4.2.6. Measurements</a></li>
 <li><a href="#triggers">4.2.7. Triggers</a></li>
 <li><a href="#log-entries">4.2.8. Log entries</a></li>
+<li><a href="#dependencies">4.2.9. Dependencies</a></li>
 </ul>
 </li>
 <li><a href="#classes">4.3. Service classes and asset classes</a></li>
@@ -457,6 +458,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <li><a href="#delete-triggers-id">5.2.17. DELETE {CtpBase}/triggers/{id}</a></li>
 <li><a href="#get-views-id-logs">5.2.18. GET {CtpBase}/serviceViews/{id}/logs</a></li>
 <li><a href="#get-logs-id">5.2.19. GET {CtpBase}/logs/{id}</a></li>
+<li><a href="#get-dependencies-id">5.2.20. GET {CtpBase}/dependencies/{id}</a></li>
 </ul>
 </li>
 <li><a href="#evaluating-triggers-and-objectives">5.3. Evaluating triggers and objectives</a></li>
@@ -537,7 +539,8 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Nov. 2012</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complete model change. Evolution to a draft standard.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete model change. Evolution to a draft
+standard.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.1</p></td>
@@ -547,46 +550,52 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jan 15, 2013</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Transition from Google Doc to Microsoft Word format.<br>
-                             First release for expert review.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transition from Google Doc to Microsoft Word
+format. + First release for expert review.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Feb 4, 2013</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Minor changes to emphasize optional “service classes”.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minor changes to emphasize optional “service
+classes”.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">May 8, 2013</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clarification and minor changes based on expert review feedback.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clarification and minor changes based on expert
+review feedback.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">June 15, 2013</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Removed resource-group abstraction in the data model.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removed resource-group abstraction in the data
+model.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.6</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">July 3, 2013</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clarification and minor changes based on internal feedback.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clarification and minor changes based on internal
+feedback.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.8</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Nov. 25, 2014</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Major revision after creation of Cloud Trust working group and feedback from the past 12 months.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Major revision after creation of Cloud Trust
+working group and feedback from the past 12 months.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.9</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jan. 20, 2015</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Revision after internal review and before wider release to research community outside CSA.
-                             The API was switched from XML to JSON, to acknowledge current trends in
-                             cloud API development and adopt a more agile approach.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Revision after internal review and before wider
+release to research community outside CSA. The API was switched from XML to
+JSON, to acknowledge current trends in cloud API development and adopt a more
+agile approach.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.10</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">June 30, 2015</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Major revision after open public review.
-                             Abandoned MS Word for more professional tools dedicated to technical documentation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Major revision after open public review. Abandoned
+MS Word for more professional tools dedicated to technical documentation.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.11</p></td>
@@ -596,12 +605,19 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.12</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Sep. 9, 2015</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Simplification of the data model and change in the format of items in collections.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Simplification of the data model and change in the
+format of items in collections.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2.13</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Oct. 6, 2015</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Added <em>status</em> and <em>statusUpdateTime</em> to triggers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.14</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nov. 12, 2015</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Added <em>changeId</em> in resources for client caching
+optimization. Added missing information on dependencies.</p></td>
 </tr>
 </tbody>
 </table>
@@ -802,7 +818,7 @@ document are to be interpreted as described in <a href="#RFC_2119">[RFC_2119]</a
 <i class="icon-note" title="Note"></i>
 </td>
 <td class="content">
-This document does not use the term &#8220;<strong>measure</strong>&#8221; proposed
+This document does not use the term “measure” proposed
 in <a href="#ISO_27000">[ISO_27000]</a> to avoid potential confusion arising from the multiple
 conflicting uses of this term, as highlighted in <a href="#NIST">[NIST]</a>.
 </td>
@@ -872,7 +888,7 @@ provider (CSP) on current security attributes related to a cloud service
 such as the current level of availability of the service or information
 on the last vulnerability assessment. This is normally done through a classical
 query-response approach driven by the customer. CTP also enables customers
-to define &#8220;triggers&#8221; in order to receive alerts when specific conditions
+to define “triggers” in order to receive alerts when specific conditions
 are met, through a standard XMPP-based notification mechanism.
 The CTP API additionally provides access to a log facility that
 can be used to store and access security events generated by triggers.</p>
@@ -955,26 +971,26 @@ data model that is based on the following 3 hierarchical components:</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Service-Views</strong>: A service-view represents a customer&#8217;s view of a
-cloud service provided under the responsibility of a designated provider.
-In the most common case, from the perspective of a customer, there will be a
-1-to-1 mapping between what is called a “cloud service” and a service-view.
-However in more complex use-cases it can be useful to break down a “cloud
-service” into a set of distinct service-views, each potentially with a distinct designated provider.
+<p><strong>Service-Views</strong>: A service-view represents a customer&#8217;s view of a cloud
+service provided under the responsibility of a designated provider. In the most
+common case, from the perspective of a customer, there will be a 1-to-1 mapping
+between what is called a “cloud service” and a service-view. However in more
+complex use-cases it can be useful to break down a “cloud service” into a set of
+distinct service-views, each potentially with a distinct designated provider.
 A service-view encompasses a set of <em>assets</em>.</p>
 </li>
 <li>
-<p><strong>Assets:</strong> As <a href="#asset">previously defined</a>, an asset represents any physical or
-virtual component of a cloud information system that has a value to an
-organization and in particular the customer. A set of <em>attributes</em> is
-attached to an asset.</p>
+<p><strong>Assets:</strong> As <a href="#asset">previously defined</a>, an asset represents any physical
+or virtual component of a cloud information system that has a value to an
+organization and in particular the customer. A set of <em>attributes</em> is attached
+to an asset.</p>
 </li>
 <li>
 <p><strong>Attributes:</strong> As <a href="#attribute">previously defined</a>, an attribute describes a
-characteristic of an asset that can be evaluated
-quantitatively or qualitatively. CTP aims to address security
-attributes, but the framework is generic enough to address any other
-kind of attribute, including notably performance indicators.</p>
+characteristic of an asset that can be evaluated quantitatively or
+qualitatively. CTP aims to address security attributes, but the framework is
+generic enough to address any other kind of attribute, including notably
+performance indicators.</p>
 </li>
 </ol>
 </div>
@@ -1163,6 +1179,9 @@ applied:</p>
 <p>Collection of service-views.</p>
 </li>
 <li>
+<p>Dependencies.</p>
+</li>
+<li>
 <p>Collections of dependencies.</p>
 </li>
 <li>
@@ -1321,6 +1340,12 @@ the <a href="#RFC_3339">[RFC_3339]</a>.</p>
 object or array.</p>
 </li>
 <li>
+<p><code>nullable</code>: A modifier that can be associated with any JSON type
+to indicate that the value can also be set to <code>null</code>. This is used to
+show that it is uninitialized or empty (e.g. a <code>nullable string</code> can
+hold a UTF8 string or the <code>null</code> value).</p>
+</li>
+<li>
 <p><code>list</code>: A JSON array where all elements are of the same type.</p>
 </li>
 </ul>
@@ -1346,24 +1371,39 @@ Unless otherwise specified, lists may contain 0 elements.
 <div class="sect3">
 <h4 id="common-properties-of-ctp-json-objects">4.1.5. Common properties of CTP JSON objects</h4>
 <div class="paragraph">
-<p>A few JSON properties recurrently appear in the description of CTP resources.
-Firstly, all CTP JSON objects in CTP contain a property <code>self</code>.
-Secondly, except for <em>collections</em> and <em>log entries</em>, all CTP JSON objects
-contain the properties <code>name</code> and <code>annotation</code>. Finally, except for the
-<em>CTP entry point</em>, all CTP JSON objects have a <code>scope</code> property.
-These common properties are described more in detail hereafter.</p>
+<p>A few JSON properties recurrently appear in the description of CTP resources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>All CTP JSON objects in CTP contain a property <code>self</code>.</p>
+</li>
+<li>
+<p>Except for the <em>CTP entry point</em>, all CTP JSON objects have a <code>scope</code> property.</p>
+</li>
+<li>
+<p>Except for <em>collections</em> and <em>log entries</em>, all CTP JSON objects
+contain the properties <code>name</code> and <code>annotation</code>.</p>
+</li>
+<li>
+<p>Except for the <em>CTP entry point</em>, <em>collections</em> and <em>log entries</em>, all CTP
+JSON objects contain the property <code>changeId</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These common properties are described more in detail hereafter.</p>
 </div>
 <div class="sect4">
 <h5 id="self-property">The JSON "self" property</h5>
 <div class="paragraph">
-<p>All CTP API calls with the GET, PUT or POST method return a JSON
-response, with a JSON object that contains the property <code>self</code>, which is a URL that
+<p>All CTP API calls with the GET, PUT or POST method return a JSON response, with
+a JSON object that contains the property <code>self</code>, which is a URL that
 self-references the CTP resource being accessed. A GET query to this URL
-refreshes the client&#8217;s representation of the CTP API resource. In a
-response to a POST request, this URL represents the newly created CTP
-API resource URL. If the GET request includes a query string, it shall
-also be included in the self-reference provided in the response to the
-request.</p>
+refreshes the client&#8217;s representation of the CTP API resource. In a response to
+a POST request, this URL represents the newly created CTP API resource URL. If
+the GET request includes a query string, it shall also be included in the
+self-reference provided in the response to the request.</p>
 </div>
 <div class="paragraph">
 <p>Self-references MUST only be provided in response bodies, never in
@@ -1373,8 +1413,8 @@ request bodies.</p>
 <div class="sect4">
 <h5 id="scope-property">The JSON "scope" property</h5>
 <div class="paragraph">
-<p>Except for the <em>CTP entry point</em>, all resources in CTP have a scope, as illustrated
-in the data model and as further detailed in <a href="#resources">Resources</a>:</p>
+<p>Except for the <em>CTP entry point</em>, all resources in CTP have a scope, as
+illustrated in the data model and as further detailed in <a href="#resources">Resources</a>:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1396,7 +1436,8 @@ in the data model and as further detailed in <a href="#resources">Resources</a>:
 </ul>
 </div>
 <div class="paragraph">
-<p>This scoping also applies to <em>collections</em> (e.g. a collection of <em>measurements</em> is scoped to a specific <em>attribute</em>).</p>
+<p>This scoping also applies to <em>collections</em> (e.g. a collection of <em>measurements</em>
+is scoped to a specific <em>attribute</em>).</p>
 </div>
 <div class="paragraph">
 <p>The scope of a JSON object is described by the property <code>scope</code>, which
@@ -1404,32 +1445,33 @@ contains a CTP URL describing the scope of the current resource.</p>
 </div>
 <div class="paragraph">
 <p>Scoping also allows the CTP server to implement access control: each customer
-has only access to a specific set of <em>service-views</em>, which in turn gives them access
-to a specific set of <em>assets</em>, <em>log entries</em> or <em>triggers</em>, and so and so forth.</p>
+has only access to a specific set of <em>service-views</em>, which in turn gives them
+access to a specific set of <em>assets</em>, <em>log entries</em> or <em>triggers</em>, and so and so
+forth.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="name-property">the JSON "name" property</h5>
 <div class="paragraph">
-<p>Except for <em>collections</em> and <em>log entries</em>, all CTP JSON resources
-contain a property <code>name</code>. This property is designed to hold an alternate identifier
-for the resource that is meaningful to the customer or provider. This alternate identifier
-can hold any valid string and is not bound by the format that is imposed on the CTP resource
-identifiers that appear in resource URLs as defined in <a href="#identifiers">Identifiers</a>.
-This alternate identifier can be used for example
-to represent the unique identifier of a cloud resource (e.g. a virtual machine id), a
-standardised name for an attribute or a metric, etc. The CTP server does not interpret
-this value but it can be used as a search criteria in a query to a collection, as detailed in
-<a href="#collections">Collections</a>.</p>
+<p>Except for <em>collections</em> and <em>log entries</em>, all CTP JSON resources contain a
+property <code>name</code>. This property is designed to hold an alternate identifier for
+the resource that is meaningful to the customer or provider. This alternate
+identifier can hold any valid string and is not bound by the format that is
+imposed on the CTP resource identifiers that appear in resource URLs as defined
+in <a href="#identifiers">Identifiers</a>. This alternate identifier can be used for example to
+represent the unique identifier of a cloud resource (e.g. a virtual machine id),
+a standardised name for an attribute or a metric, etc. The CTP server does not
+interpret this value but it can be used as a search criteria in a query to a
+collection, as detailed in <a href="#collections">Collections</a>.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="annotation-property">the JSON "annotation" property</h5>
 <div class="paragraph">
-<p>Except for <em>collections</em> and <em>log entries</em>, all CTP JSON resources
-contain a property <code>annotation</code>. This property is designed to hold human
-readable text for information purpose only, the content of which is not
-interpreted by CTP and may be left empty.</p>
+<p>Except for <em>collections</em> and <em>log entries</em>, all CTP JSON resources contain a
+property <code>annotation</code>. This property is designed to hold human readable text for
+information purpose only, the content of which is not interpreted by CTP and may
+be left empty.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 3. Self links, alternate identifiers and annotations</div>
@@ -1451,6 +1493,139 @@ the self links, alternate identifiers and annotations:</p>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="changeid-property">the JSON "changeId" property</h5>
+<div class="paragraph">
+<p>Except for the <em>CTP entry point</em>, <em>collections</em> and <em>log entries</em>, all CTP
+JSON objects contain the property <code>changeId</code>. This property represents a value
+that allows to track changes in resources.</p>
+</div>
+<div class="paragraph">
+<p>The value of <code>changeId</code> must be upated according to the following rules:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When a resource is created it is assigned an initial <code>changeId</code>.</p>
+</li>
+<li>
+<p>When a resource is updated it is assigned a new <code>changeId</code>.</p>
+</li>
+<li>
+<p>Any creation or update of the <code>changeId</code> of a resource results in an update
+of the <code>changeId</code> of its "parent" resource (or scope), recursively for all
+resources in the scope hierarchy up to and including the "parent" service-view.</p>
+</li>
+<li>
+<p>The value of <code>changeId</code> assigned to a resource MUST be different from all the
+previous values that were assigned to <code>changeId</code> for that particular resource.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The following table summarizes the link between the creation or update of a
+resource and the creation or update of <code>changeId</code> in the resource itself and
+in other realted "parent" resources.</p>
+</div>
+<table class="tableblock frame-all grid-all" style="width:100%; ">
+<colgroup>
+<col style="width:14%;">
+<col style="width:14%;">
+<col style="width:71%;"> 
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Upated resource</th>
+<th class="tableblock halign-left valign-top">Update <code>changeId</code></th>
+<th class="tableblock halign-left valign-top">Affected <code>changeId</code> in other resources</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ctp entry point</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>not applicable</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>none.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>service-view</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yes</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>none.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>asset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yes</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>parent <em>service-view</em>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>attribute</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yes</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>parent <em>asset</em> and <em>service-view</em>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>measurement</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yes</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>parent <em>attribute</em>, <em>asset</em> and <em>service-view</em>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trigger</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yes</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>parent <em>service-view</em>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>logs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>not applicable</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>none.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>metrics</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yes</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>node.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dependencies</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yes</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>parent <em>service-view</em> or <em>dependency</em></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+
+<div class="paragraph">
+<p>This means for example that if a measurement is updated, the <code>changeId</code> of that
+measurement will be updated. Then the corresponding "parent" attribute, asset
+and service-view of that measurement will also see their <code>changeId</code> updated.</p>
+</div>
+<div class="paragraph">
+<p>This property can be used by CTP clients to optimize the number of queries they
+make to the CTP server during updates: if a CTP client queries a CTP resource
+from the CTP server and sees that the value of its <code>changeId</code> has not changed,
+it does not need to query the "children" of that resource if it already has a
+local copy of them, because it can be assured that they have not been modified.</p>
+</div>
+<div class="paragraph">
+<p>Note: While a value of <code>changeId</code> used to reflect a change to a resource SHALL
+NOT be used again to reflect in any subsequent change of that particular
+resource, the value of <code>changeId</code> is not required to be unique accross all CTP
+resources exposed by the CTP server.</p>
 </div>
 </div>
 </div>
@@ -1540,7 +1715,8 @@ items, as described below.</p>
 <p><em>string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A string describing the type of resource listed in the collection.</p>
+<p>A string describing the type of resource
+listed in the collection.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1567,8 +1743,9 @@ items, as described below.</p>
 <p><em>string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>An <em>optional</em> string representing the name associated with the resource.
-                                 This property is omited when the name associated to the resource is empty.</p>
+<p>An <em>optional</em> string representing the name
+associated with the resource. This property is omited when the name associated
+to the resource is empty.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1580,19 +1757,19 @@ items, as described below.</p>
 response.</p>
 </div>
 <div class="paragraph">
-<p>Links in the collection MUST be ordered. Collections of log entries MUST be ordered by
-chronological order, by reference to their timestamp (see <a href="#log-entries">Log entries</a>).
-For other types of collections, the choice of the
-ordering function applicable to links in the collection is left to the
-implementation. However, links returned in a collection MUST always be
-ordered the same way across queries. This ordering MUST allow
-internally for the implementation to index each link in increasing order
-from 0 to <code>collectionLength</code>-1.</p>
+<p>Links in the collection MUST be ordered. Collections of log entries MUST be
+ordered by chronological order, by reference to their timestamp (see
+<a href="#log-entries">Log entries</a>). For other types of collections, the choice of the ordering
+function applicable to links in the collection is left to the implementation.
+However, links returned in a collection MUST always be ordered the same way
+across queries. This ordering MUST allow internally for the implementation to
+index each link in increasing order from 0 to <code>collectionLength</code>-1, in order to
+return paginated results if requested by the client as described below.</p>
 </div>
 <div class="paragraph">
-<p>A plain <code>GET</code> query without a query string returns the whole collection.
-In that case <code>collectionLength</code> will have the same value as
-<code>returnedLength</code>, as shown in the example below.</p>
+<p>A plain <code>GET</code> query without a query string returns the whole collection. In that
+case <code>collectionLength</code> will have the same value as <code>returnedLength</code>, as shown
+in the example below.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 4. A GET query to a collection.</div>
@@ -1830,7 +2007,7 @@ to indices beyond the end of the collection.</p>
 about the CTP server to a CTP client (e.g. the CTP server version number).</p>
 </div>
 <div class="paragraph">
-<p>The CTP entry point represents the &#8220;root&#8221; in the hierarchical scoping of all
+<p>The CTP entry point represents the “root” in the hierarchical scoping of all
 CTP JSON resources accessible to a customer.</p>
 </div>
 <div class="paragraph">
@@ -1839,17 +2016,32 @@ CTP JSON resources accessible to a customer.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>A <em>version</em>: the CTP API version number: "1.0" in this specification.</p>
+<p><em>A name</em>: An optional name for the CTP server.</p>
 </li>
 <li>
-<p>A <em>provider</em>: the identity of the provider of the CTP server.</p>
+<p><em>A name</em>: An optional annotation providing human readable information about
+the CTP server.</p>
+</li>
+<li>
+<p><em>A version</em>: the CTP API version number: "1.0" in this specification.</p>
+</li>
+<li>
+<p><em>A provider</em>: the identity of the provider of the CTP server.</p>
 </li>
 <li>
 <p>A reference to a <em>collection of service-views</em>: this collection represents
-the service-views that are accessible to the CTP client based on the
-credentials it provides.</p>
+the service-views that are accessible to the CTP client based on the credentials
+it provides.</p>
+</li>
+<li>
+<p>A reference to a <em>collection of metrics</em>: this collection represents
+the metrics that are used by the CTP server in measurements.</p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>This resource does not contain a <code>changeId</code> property (see
+<a href="#changeid-property">the JSON "changeId" property</a>).</p>
 </div>
 </div>
 <div class="sect4">
@@ -1862,7 +2054,8 @@ credentials it provides.</p>
     "annotation": string,
     "version": string,
     "provider": string,
-    "serviceViews": URL
+    "serviceViews": URL,
+    "metrics": URL
 }</code></pre>
 </div>
 </div>
@@ -1886,7 +2079,8 @@ credentials it provides.</p>
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><a href="#self-property">Self-reference</a> to <code>{CtpBase}</code> Contrary to all other CTP resources, this URL ends with a <em>/</em> character.</p>
+<p><a href="#self-property">Self-reference</a> to <code>{CtpBase}</code> Contrary to
+all other CTP resources, this URL ends with a <em>/</em> character.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1895,7 +2089,8 @@ credentials it provides.</p>
 <p><em>string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>An optional alternate identifier for the resource as detailed <a href="#name-property">[name-property]</a></p>
+<p>An optional alternate identifier for the resource as
+detailed <a href="#name-property">[name-property]</a></p>
 </div></div></td>
 </tr>
 <tr>
@@ -1904,8 +2099,8 @@ credentials it provides.</p>
 <p><em>string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A human readable description of the CTP server
-                         (may be empty).</p>
+<p>A human readable description of the CTP server (may be
+empty).</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1923,8 +2118,8 @@ credentials it provides.</p>
 <p><em>string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>The name of the entity providing the CTP server.
-                         This entity may be different from the one listed in <a href="#service-views">service-views</a>.</p>
+<p>The name of the entity providing the CTP server. This
+entity may be different from the one listed in <a href="#service-views">service-views</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -1933,12 +2128,26 @@ credentials it provides.</p>
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A link referencing the CTP URI where further information can be obtained
-                           about the service-views that the client is authorized to access/query based on
-                           its credentials.</p>
+<p>A link referencing the CTP URI where further
+information can be obtained about the service-views that the client is
+authorized to access/query based on its credentials.</p>
 </div>
 <div class="paragraph">
 <p>The link is always equal to <code>{CtpBase}/serviceViews</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>metrics</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>URL</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A link referencing the CTP URI where further information
+can be obtained about the metrics that are used by the CTP server in
+measurements.</p>
+</div>
+<div class="paragraph">
+<p>The link is always equal to <code>{CtpBase}/metrics</code></p>
 </div></div></td>
 </tr>
 </tbody>
@@ -1951,13 +2160,12 @@ credentials it provides.</p>
 <div class="sect4">
 <h5 id="_definition">Definition</h5>
 <div class="paragraph">
-<p>A service-view represents a service offered to
-a specific customer under the responsibility of a single provider. This service
-is usually described in a SLA or service interface. A service-view encompasses
-a set of assets.</p>
+<p>A service-view represents a service offered to a specific customer under the
+responsibility of a single provider. This service is usually described in a SLA
+or service interface. A service-view encompasses a set of assets.</p>
 </div>
 <div class="paragraph">
-<p>In CTP a <strong>service-view</strong> is defined by 8 elements:</p>
+<p>In CTP a <strong>service-view</strong> is defined by 10 elements:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1965,7 +2173,14 @@ a set of assets.</p>
 <p><em>A scope</em>: A reference to the CTP entry point <code>{CtpBase}</code>.</p>
 </li>
 <li>
-<p><em>A name</em>: A optional name for the service unit.</p>
+<p><em>A change identifier</em>: A string value that changes each time this resource or
+any of its related <em>dependencies</em>, <em>assets</em> or <em>triggers</em> are updated.</p>
+</li>
+<li>
+<p><em>A name</em>: An optional unique name for the service-view.</p>
+</li>
+<li>
+<p><em>An annotation</em>: An optional annotation for the service-view.</p>
 </li>
 <li>
 <p><em>A provider</em>: The provider that has the contractual and legal
@@ -1985,7 +2200,7 @@ service-view.</p>
 <li>
 <p>An optional <em>service class reference</em>: A reference to a
 standardized set of security attributes and measurement contexts this
-service unit strictly adheres to.</p>
+service-view strictly adheres to.</p>
 </li>
 <li>
 <p><em>A collection of logs</em>: The logs that are accessible in this service-view.</p>
@@ -2006,36 +2221,33 @@ service unit strictly adheres to.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>A service-view associates groups of assets that are used together to
-provide a service to a customer under the legal responsibility of a
-specific cloud service provider.
-In the simplest case, a service-view can be considered
-as synonymous to “cloud service”. However, a “cloud service” can be
-broken down into 2 or more “service-views” to highlight independent
-components that share no common functionalities within a service (e.g. a IaaS
-platform might be broken down into two distinct “compute” and “storage”
-service-views). As such, the concept of service-views is meant to be
-sufficiently abstract to provide the flexibility to address a variety of
-use-cases and is meant to apply to any layer of the cloud stack from
-IaaS to SaaS.</p>
+<p>A service-view associates groups of assets that are used together to provide a
+service to a customer under the legal responsibility of a specific cloud service
+provider. In the simplest case, a service-view can be considered as synonymous
+to “cloud service”. However, a “cloud service” can be broken down into 2 or more
+“service-views” to highlight independent components that share no common
+functionalities within a service (e.g. a IaaS platform might be broken down into
+two distinct “compute” and “storage” service-views). As such, the concept of
+service-views is meant to be sufficiently abstract to provide the flexibility to
+address a variety of use-cases and is meant to apply to any layer of the cloud
+stack from IaaS to SaaS.</p>
 </div>
 <div class="paragraph">
-<p>By enforcing the association between a particular customer and a
-particular service-view (or set of service-views), the CTP server
-can implement an effective access control mechanism, since all
-other resources are scoped directly or indirectly to a service-view.</p>
+<p>By enforcing the association between a particular customer and a particular
+service-view (or set of service-views), the CTP server can implement an
+effective access control mechanism, since all other resources are scoped
+directly or indirectly to a service-view.</p>
 </div>
 <div class="paragraph">
-<p>The optional reference to a service class is used to impose restrictions
-on the security attributes associated with all the assets of a
-service-view, for the purpose of interoperability. By default, when no
-service class is referenced, the assets of a service-view can be
-associated with an arbitrary set of security attributes, using any
-measurement. However, when a service-view specifically references a
-<em>service class</em>, the list of usable attributes and their measurement
-contexts must strictly follow the specifications of the referenced
-<em>service class</em>. Cloud providers SHOULD adopt service-classes or
-asset-classes for the benefit of customers (see <a href="#classes">Service classes and asset classes</a>).</p>
+<p>The optional reference to a service class is used to impose restrictions on the
+security attributes associated with all the assets of a service-view, for the
+purpose of interoperability. By default, when no service class is referenced,
+the assets of a service-view can be associated with an arbitrary set of security
+attributes, using any measurement. However, when a service-view specifically
+references a <em>service class</em>, the list of usable attributes and their
+measurement contexts must strictly follow the specifications of the referenced
+<em>service class</em>. Cloud providers SHOULD adopt service-classes or asset-classes
+for the benefit of customers (see <a href="#classes">Service classes and asset classes</a>).</p>
 </div>
 </div>
 <div class="sect4">
@@ -2045,12 +2257,13 @@ asset-classes for the benefit of customers (see <a href="#classes">Service class
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
     "scope": URL,
+    "changeId": string,
     "name": string,
     "annotation": string,
     "provider": string,
     "dependencies": URL,
     "assets": URL,
-    "serviceClass": URL
+    "serviceClass": nullable URL,
     "logs": URL,
     "triggers": URL
 }</code></pre>
@@ -2086,6 +2299,15 @@ asset-classes for the benefit of customers (see <a href="#classes">Service class
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>Reference to the <a href="#ctpbase">CTP entry point</a> that exposes this service-view, which is a URL of the form <code>{CtpBase}</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeId</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A change identifier, updated as described in <a href="#changeid-property">[changeid-property]</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2143,11 +2365,11 @@ the form <code>{CtpBase}/serviceViews/{id}/assets</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>serviceClass</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>URL</em></p>
+<p><em>nullable URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>The service class applicable to all assets
-and attributes of this service-view. Must be set to an empty string if no service
+and attributes of this service-view. Must be set to <em>null</em> if no service
 class applies.</p>
 </div></div></td>
 </tr>
@@ -2157,9 +2379,9 @@ class applies.</p>
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A link providing a location where information can be found regarding all
-the logs that are stored by the CTP server for this service-view, as the results
-of triggers.</p>
+<p>A link providing a location where information can be
+found regarding all the logs that are stored by the CTP server for this
+service-view, as the results of triggers.</p>
 </div>
 <div class="paragraph">
 <p>This link is of the form <code>{CtpBase}/serviceViews/{id}/logs</code>.</p>
@@ -2171,8 +2393,9 @@ of triggers.</p>
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A link providing a location where information can be found regarding all
-the triggers that have been defined in the CTP server for this service-view.</p>
+<p>A link providing a location where information can
+be found regarding all the triggers that have been defined in the CTP server for
+this service-view.</p>
 </div>
 <div class="paragraph">
 <p>This link is of the form <code>{CtpBase}/serviceViews/{id}/triggers</code>.</p>
@@ -2194,7 +2417,7 @@ storage, processor cores or compute instances, databases, full blown
 platforms, etc. A set of attributes is attached to an asset.</p>
 </div>
 <div class="paragraph">
-<p>In CTP, an <strong>asset</strong> is defined by 4 elements:</p>
+<p>In CTP, an <strong>asset</strong> is defined by 6 elements:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2202,18 +2425,24 @@ platforms, etc. A set of attributes is attached to an asset.</p>
 <p><em>A scope</em>: A reference to the service-view this resource belongs to.</p>
 </li>
 <li>
-<p><em>A name</em>: A unique name describing the resource in a way that is
-unambiguous for the customer in the context of the service offered (e.g.
-“API.GetBlock()”, “storage-0458-fb04”, “http://example.com/login”.)</p>
+<p><em>A change identifier</em>: A value that changes each time this resource or any of
+its related <em>dependencies</em>, <em>assets</em> or <em>triggers</em> are updated.</p>
+</li>
+<li>
+<p><em>A name</em>: A unique name describing the resource in a way that is unambiguous
+for the customer in the context of the service offered (e.g. “API.GetBlock()”,
+“storage-0458-fb04”, “http://example.com/login”.)</p>
+</li>
+<li>
+<p><em>An annotation</em>: An optional annotation for the asset.</p>
 </li>
 <li>
 <p><em>A collection of applicable attributes</em>: The set of (security) attributes
 for which measurements can be produced for this particular asset.</p>
 </li>
 <li>
-<p>An optional <em>asset class reference</em>: A reference to a standardized
-set of security attributes and measurement contexts this asset strictly
-adheres to.</p>
+<p>An optional <em>asset class reference</em>: A reference to a standardized set of
+security attributes and measurement contexts this asset strictly adheres to.</p>
 </li>
 </ol>
 </div>
@@ -2222,29 +2451,26 @@ adheres to.</p>
 security attributes apply.</p>
 </div>
 <div class="paragraph">
-<p>Following the same principle as “service classes” in service-views, the
-optional reference to an asset class is used to impose restrictions on
-the security attributes associated with an asset of a service-view, for
-the purpose of interoperability. By default, when (1) no asset class is
-referenced and (2) when no service class is referenced at service-view
-level, the assets of a service-view can be associated with an arbitrary
-set of security attributes, using any measurement. However, when an
-asset specifically references an asset <em>class</em>, the list of usable
-attributes and their measurement contexts must strictly follow the
-specifications of the referenced <em>asset class</em>. Cloud providers SHOULD
-adopt service-classes or asset-classes for the benefit of customers (see
-<a href="#classes">Service classes and asset classes</a>).</p>
+<p>Following the same principle as “service classes” in service-views, the optional
+reference to an asset class is used to impose restrictions on the security
+attributes associated with an asset of a service-view, for the purpose of
+interoperability. By default, when (1) no asset class is referenced and (2) when
+no service class is referenced at service-view level, the assets of a
+service-view can be associated with an arbitrary set of security attributes,
+using any measurement. However, when an asset specifically references an <em>asset
+class</em>, the list of usable attributes and their measurement must strictly follow
+the specifications of the referenced <em>asset class</em>. Cloud providers SHOULD adopt
+service classes or asset classes for the benefit of customers (see <a href="#classes">Service classes and asset classes</a>).</p>
 </div>
 <div class="paragraph">
-<p>For simplicity and flexibility, CTP does not impose any constraints on
-the definition of what constitutes an asset. In some cases an asset
-might describe a software service and in some other cases an instance
-produced by such a service. For example, both an IaaS API that creates
-virtual machines and the produced virtual machines could be considered
-as “assets” with security attributes, depending on the context and the
-needs of the provider and his customers. To avoid ambiguities, it is
-therefore important to name assets unambiguously and to convey their
-scope clearly to cloud service customers.</p>
+<p>For simplicity and flexibility, CTP does not impose any constraints on the
+definition of what constitutes an asset. In some cases an asset might describe a
+software service and in some other cases an instance produced by such a service.
+For example, both an IaaS API that creates virtual machines and the produced
+virtual machines could be considered as “assets” with security attributes,
+depending on the context and the needs of the provider and its customers. To
+avoid ambiguities, it is therefore important to name assets unambiguously and to
+convey their scope clearly to cloud service customers.</p>
 </div>
 </div>
 <div class="sect4">
@@ -2254,6 +2480,7 @@ scope clearly to cloud service customers.</p>
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
     "scope": URL,
+    "changeId": string,
     "name": string,
     "annotation": string,
     "attributes": URL,
@@ -2291,6 +2518,15 @@ scope clearly to cloud service customers.</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>A reference to the service-view this asset belongs to.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeId</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A change identifier, updated as described in <a href="#changeid-property">[changeid-property]</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2342,13 +2578,13 @@ attributes of this asset. Must be set to the empty string if undefined.</p>
 <h5 id="_definition_3">Definition</h5>
 <div class="paragraph">
 <p>A security attribute or more simply an <a href="#attribute">attribute</a> is used to
-represent characteristic of an asset that can be evaluated
-quantitatively or qualitatively and is identified with a distinct name
-(e.g. “availability”, “incident response”, etc.). Associating a value
-with a security attribute requires the specification of a measurement.</p>
+represent characteristic of an asset that can be evaluated quantitatively or
+qualitatively and is identified with a distinct name (e.g. “availability”,
+“incident response”, etc.). Associating a value with a security attribute
+requires the specification of a measurement.</p>
 </div>
 <div class="paragraph">
-<p>In CTP an <strong>attribute</strong> <span class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</span> is defined by 3 elements:</p>
+<p>In CTP an <strong>attribute</strong> <span class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</span> is defined by 5 elements:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2356,7 +2592,14 @@ with a security attribute requires the specification of a measurement.</p>
 <p><em>A scope</em>: A reference to the asset to which this attribute applies.</p>
 </li>
 <li>
-<p><em>A name</em>: A generic name of the attribute.</p>
+<p><em>A change identifier</em>: A value that changes each time this resource or any
+of its related <em>measurements</em> change.</p>
+</li>
+<li>
+<p><em>A name</em>: An optional unique name of the attribute.</p>
+</li>
+<li>
+<p><em>An annotation</em>: An optional annotation for the attribute.</p>
 </li>
 <li>
 <p><em>A collection of available measurements</em>: The list of possible measurements
@@ -2389,6 +2632,7 @@ evaluation of availability).</p>
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
     "scope": URL,
+    "changeId": string,
     "name": string,
     "annotation": string,
     "measurements": URL
@@ -2425,6 +2669,15 @@ evaluation of availability).</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>A reference to the asset this attribute applies to.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeId</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A change identifier, updated as described in <a href="#changeid-property">[changeid-property]</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2465,24 +2718,29 @@ evaluation of availability).</p>
 <h5 id="_definition_4">Definition</h5>
 <div class="paragraph">
 <p>A <a href="#metric">metric</a> describes a standard of measurement, which will be
-referenced in <a href="#measurement">measurements</a>. A metric is typically specified
-in an external document that describes in human readable form <em>the
-conditions and the rules for performing the measurement and for
-understanding the results of a measurement.</em> This external document is
-called a “reference metric” in CTP and needs to be completed with
-concrete machine-readable information to be useful in CTP. In
-particular, while the reference metric MAY describe possible measurement
-parameters, their <a href="#measurement-parameter-value">values</a> MUST be determined for the metric to be
-applied concretely.</p>
+referenced in <a href="#measurement">measurements</a>. A metric is typically specified in
+an external document that describes in human readable form <em>the conditions and
+the rules for performing the measurement and for understanding the results of a
+measurement.</em> This external document is called a “reference metric” in CTP and
+needs to be completed with concrete machine-readable information to be useful in
+CTP. In particular, while the reference metric MAY describe possible measurement
+parameters, their <a href="#measurement-parameter-value">values</a> MUST be determined for
+the metric to be applied concretely.</p>
 </div>
 <div class="paragraph">
-<p>In CTP a <strong>metric</strong> is defined by 4 elements:</p>
+<p>In CTP a <strong>metric</strong> is defined by 6 elements:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
+<p><em>A change identifier</em>: A value that changes each time this resource changes.</p>
+</li>
+<li>
 <p><em>A name</em>: the name of the metric, which highlights its purpose and
 distinguishes it from other metrics.</p>
+</li>
+<li>
+<p><em>An annotation</em>: An optional annotation for the metric.</p>
 </li>
 <li>
 <p><em>A link to a reference metric</em>: an external document that
@@ -2536,35 +2794,33 @@ composed of:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Two metrics SHOULD share the same name if and only if they use
+<p>Two metrics SHALL share the same name if and only if they use
 the same reference metric, the same measurement parameters and the same
 measurement result format.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>We highlight that the “reference metric” is not explicitly defined as an
-object in the CTP data model: it is only defined as an external link
-(using a URL). This allows to reference metrics from external public
-standards or other documents made available by cloud providers.</p>
+<p>We highlight that the “reference metric” is not explicitly defined as an object
+in the CTP data model: it is only defined as an external link (using a URL).
+This allows to reference metrics from external public standards or other
+documents made available by cloud providers.</p>
 </div>
 <div class="paragraph">
-<p>The list of <a href="#measurement-parameter-value">measurement parameter values</a> is used to further
-specify or restrict how the measurement of a security attribute is
-conducted, as described in the reference metric. For example, when
-measuring availability of a service, we may wish to define the maximum
-delay allowed for a service request to be executed by the service
-provider before the request can be considered as failed. The reference
-metric will describe this parameter and give it a name but may not
-necessarily give it a prescriptive value. However, in order to apply a
-metric in a concrete case, this value must be specified: this is the
-role of the measurement parameter values in the metric. Other
-measurement parameters that could be used for a metric related to
-availability include: the measurement period (e.g. a week, a month),
-specific constraints (e.g. business hour specific thresholds), and
-sample sizes, etc. Some of these measurement parameter values may be
-already defined in the externally referenced reference metric but should
-be repeated in the measurement for information purposes.</p>
+<p>The list of <a href="#measurement-parameter-value">measurement parameter values</a> is used
+to further specify or restrict how the measurement of a security attribute is
+conducted, as described in the reference metric. For example, when measuring
+availability of a service, we may wish to define the maximum delay allowed for a
+service request to be executed by the service provider before the request can be
+considered as failed. The reference metric will describe this parameter and give
+it a name but may not necessarily give it a prescriptive value. However, in
+order to apply a metric in a concrete case, this value must be specified: this
+is the role of the measurement parameter values in the metric. Other measurement
+parameters that could be used for a metric related to availability include: the
+measurement period (e.g. a week, a month), specific constraints (e.g. business
+hour specific thresholds), and sample sizes, etc. Some of these measurement
+parameter values may be already defined in the externally referenced reference
+metric but should be repeated in the measurement for information purposes.</p>
 </div>
 </div>
 <div class="sect4">
@@ -2573,6 +2829,8 @@ be repeated in the measurement for information purposes.</p>
 <div class="content">
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
+    "scope": string,
+    "changeId": string,
     "name": string,
     "annotation": string,
     "baseMetric": URL,
@@ -2618,6 +2876,26 @@ be repeated in the measurement for information purposes.</p>
 </div></div></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scope</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>URL</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Reference to the <a href="#ctpbase">CTP entry point</a> that exposes
+this metric, which is a URL of the form <code>{CtpBase}</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeId</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A change identifier, updated as described in
+<a href="#changeid-property">[changeid-property]</a>.</p>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><em>string</em></p>
@@ -2643,8 +2921,8 @@ be empty).</p>
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>External link to the metric implemented by this
-measurement. This is a human readable document standardizing the metric.</p>
+<p>External link to the metric implemented by this measurement.
+This is a human readable document standardizing the metric.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2672,8 +2950,8 @@ parameter.</p>
 <p><em>string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>The type of the measurement
-parameter, which is either “boolean”, “number” or “string”.</p>
+<p>The type of the measurement parameter,
+which is either “boolean”, “number” or “string”.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2682,9 +2960,9 @@ parameter, which is either “boolean”, “number” or “string”.</p>
 <p><em>string</em> or <em>number</em> or <em>boolean</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>The
-value of the measurement parameter, encoded either as a string, number
-or boolean (depending on the type).</p>
+<p>The value of
+the measurement parameter, encoded either as a string, number or boolean
+(depending on the type).</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2693,10 +2971,10 @@ or boolean (depending on the type).</p>
 <p><em>list</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>This element provides a description of the format
-of the result of the measurement. Measurement results are represented as
-tables and this element provides the list of names of the columns that
-compose that table as well as their type.</p>
+<p>This element provides a description of the format of the
+result of the measurement. Measurement results are represented as tables and
+this element provides the list of names of the columns that compose that table
+as well as their type.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -2733,7 +3011,7 @@ in the column, which is either “boolean”, “number” or “string”.</p>
 using a specific <a href="#metric">metric</a>.</p>
 </div>
 <div class="paragraph">
-<p>In CTP a <strong>measurement</strong> is defined by 9 elements:</p>
+<p>In CTP a <strong>measurement</strong> is defined by 11 elements:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2742,7 +3020,14 @@ using a specific <a href="#metric">metric</a>.</p>
 applies.</p>
 </li>
 <li>
+<p><em>A change identifier</em>: A value that changes each time this resource is
+updated.</p>
+</li>
+<li>
 <p><em>A name</em>: The optional name of this measurement (see <a href="#name-property">the JSON "name" property</a>).</p>
+</li>
+<li>
+<p><em>An annotation</em>: An optional annotation for this measurement.</p>
 </li>
 <li>
 <p><em>A reference to a metric</em>: A reference to the metric that is
@@ -2754,8 +3039,8 @@ attribute.</p>
 result is not available.</p>
 </li>
 <li>
-<p><em>A measurement result signature</em>: see <a href="#results">below</a>. This optional element
-represents a JSON Web Signature on the measurement result, following
+<p><em>A measurement result signature</em>: see <a href="#results">below</a>. This optional
+element represents a JSON Web Signature on the measurement result, following
 <a href="#RFC_7515">[RFC_7515]</a>.</p>
 </li>
 <li>
@@ -2804,9 +3089,8 @@ example.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>By design, a cloud service provider implementing CTP has full control
-over the use of <em>measurement</em>, and can apply the following
-restrictions:</p>
+<p>By design, a cloud service provider implementing CTP has full control over the
+use of <em>measurement</em>, and can apply the following restrictions:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2823,29 +3107,27 @@ measurement or not.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>However, if the asset to which the measured attribute is attached
-adheres to an asset-class or if the service-view adheres to a
-service-class, the cloud service provider SHALL implement the
-capabilities defined in the external <em>asset class</em> or <em>service class</em>
-specification (see <a href="#classes">Service classes and asset classes</a>).</p>
+<p>However, if the asset to which the measured attribute is attached adheres to an
+asset-class or if the service-view adheres to a service-class, the cloud service
+provider SHALL implement the capabilities defined in the external <em>asset class</em>
+or <em>service class</em> specification (see <a href="#classes">Service classes and asset classes</a>).</p>
 </div>
 <div class="paragraph">
-<p>In some cases, a cloud provider may not wish to conduct the measurement
-of a security attribute of an asset on a continuous basis, but will only
-initiate a measurement at the request of a cloud service customer. In
-CTP these measurements are distinguished from others through an
-“user-activation” indicator that is set to “true”. Measurements that are
-“user-activated” are by default in “deactivated” state, which means that
-the related attribute is not evaluated with the specified metric. Cloud
-service customers can use the CTP API to activate these measurements (see <a href="#put-measurements-id-state">PUT {CtpBase}/measurements/{id}?x=state`</a>).
-Optionally, the measurement can then be in “pending” state before
-reaching “activated” state, while enough data is gathered by the
-monitoring infrastructure for example. Once in “activated” state, these
-measurements can produce measurement results and activate triggers.
-These “user-activated” measurements are used in situations where the
-intervention of the cloud service customer is meaningful. This would be
-for example the case for a measurement that requires a vulnerability
-scan, which could be requested by the cloud service customer
+<p>In some cases, a cloud provider may not wish to conduct the measurement of a
+security attribute of an asset on a continuous basis, but will only initiate a
+measurement at the request of a cloud service customer. In CTP these
+measurements are distinguished from others through an “user-activation”
+indicator that is set to “true”. Measurements that are “user-activated” are by
+default in “deactivated” state, which means that the related attribute is not
+evaluated with the specified metric. Cloud service customers can use the CTP API
+to activate these measurements (see <a href="#put-measurements-id-state">PUT {CtpBase}/measurements/{id}?x=state`</a>). Optionally,
+the measurement can then be in “pending” state before reaching “activated”
+state, while enough data is gathered by the monitoring infrastructure for
+example. Once in “activated” state, these measurements can produce measurement
+results and activate triggers. These “user-activated” measurements are used in
+situations where the intervention of the cloud service customer is meaningful.
+This would be for example the case for a measurement that requires a
+vulnerability scan, which could be requested by the cloud service customer
 occasionally instead of being constantly conducted the provider.</p>
 </div>
 <div class="paragraph">
@@ -2863,9 +3145,9 @@ subsections.</p>
 <div class="title">Example 8. A measurement result</div>
 <div class="content">
 <div class="paragraph">
-<p>Consider the following example of a measurement result: &#8220;For our storage
+<p>Consider the following example of a measurement result: “For our storage
 service, the percentage of uptime was 99.92% on December 31st, 2012, for
-a period of one month.&#8221;</p>
+a period of one month.”</p>
 </div>
 </div>
 </div>
@@ -2875,50 +3157,48 @@ a period of one month.&#8221;</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>A <em>value</em>: The actual representation of the measurement result in
-a table format. The number of columns and rows of that table depends on
-the referenced measurement. In particular, the number of columns in the
-table corresponds to the number of columns defined in the <em>measurement
-result format</em> of the underlying <em>metric</em>.</p>
+<p><em>A value</em>: The actual representation of the measurement result in a table
+format. The number of columns and rows of that table depends on the referenced
+measurement. In particular, the number of columns in the table corresponds to
+the number of columns defined in the <em>measurement result format</em> of the
+underlying <em>metric</em>.</p>
 </li>
 <li>
-<p>A <em>timestamp</em>: The date and time the measurement result was
-produced.</p>
+<p><em>A timestamp</em>: The date and time the measurement result was produced.</p>
 </li>
 <li>
-<p><em>An authority-identifier</em>: An optional identifier of the entity
-producing the measurement result. This element is optional and is mainly
-intended to be used when a signature is added.</p>
+<p><em>An authority-identifier</em>: An optional identifier of the entity producing
+the measurement result. This element is optional and is mainly intended to be
+used when a signature is added.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>In the general case, the entity producing the measurement result will be
-the cloud provider, but other alternatives could be envisaged including
-trusted third parties or TPM modules. In these alternative cases the
-entity SHOULD be identified in the measurement result.</p>
+<p>In the general case, the entity producing the measurement result will be the
+cloud provider, but other alternatives could be envisaged including trusted
+third parties or TPM modules. In these alternative cases the entity SHOULD be
+identified in the measurement result.</p>
 </div>
 <div class="paragraph">
-<p>Additionally, the authority may cryptographically sign the content of
-the measurement result, for authentication and integrity purposes. The
-signature applies to the full content of the measurement result, using
-the JSON Web Signature (JWS) as defined in <a href="#RFC_7515">[RFC_7515]</a>. The string
-representing the signature in JWS Compact Serialization format is
-provided in another property of the measurement. Providing a signature
-is left to the choice of the cloud service provider, unless otherwise
-dictated by an existing <a href="#classes">service-class or asset-class</a>.</p>
+<p>Additionally, the authority may cryptographically sign the content of the
+measurement result, for authentication and integrity purposes. The signature
+applies to the full content of the measurement result, using the JSON Web
+Signature (JWS) as defined in <a href="#RFC_7515">[RFC_7515]</a>. The string representing the
+signature in JWS Compact Serialization format is provided in another property of
+the measurement. Providing a signature is left to the choice of the cloud
+service provider, unless otherwise dictated by an existing
+<a href="#classes">service-class or asset-class</a>.</p>
 </div>
 <div id="objectives" class="paragraph">
 <div class="title">Objectives</div>
 <p>An objective is an optional part of a measurement.</p>
 </div>
 <div class="paragraph">
-<p>An <a href="#objective">objective</a> describes an expected result with
-regards to a security attribute. This expected results is expressed as a
-constraint on the measurement results of a security <a href="#attribute">attribute</a>.
-It describes the security level that the cloud provider is
-committed to achieve, as usually described to cloud service customers in
-a service interface and/or SLA.</p>
+<p>An <a href="#objective">objective</a> describes an expected result with regards to a
+security attribute. This expected results is expressed as a constraint on the
+measurement results of a security <a href="#attribute">attribute</a>. It describes the
+security level that the cloud provider is committed to achieve, as usually
+described to cloud service customers in a service interface and/or SLA.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 9. An objective</div>
@@ -2936,9 +3216,9 @@ the set of 3 countries composed of Australia, Belgium and Canada.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><em>A condition</em>: A representation of an objective as a boolean
-expression describing a constraint on the expected result of the
-measurement of the underlying security attribute.</p>
+<p><em>A condition</em>: A representation of an objective as a boolean expression
+describing a constraint on the expected result of the measurement of the
+underlying security attribute.</p>
 </li>
 <li>
 <p><em>A status</em>: A value describing the result of the evaluation of the
@@ -2960,14 +3240,13 @@ condition, which can take one of the following 3 values:</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>In CTP, <em>conditions</em> in objectives are specified using conditional
-expressions that are described in a small language called
-<a href="#ctpscript">CTPScript</a> that is similar to JavaScript Expressions. The result
-of a measurement is expressed as an array variable that can be used in a
-CTPScript expression to describe a condition. If this CTPScript
-expression does not evaluate correctly due to an error, then the status
-of the objective is set to ‘error’. If the CTPScript expression
-evaluates correctly to the boolean ‘true’, then the objective is
+<p>In CTP, <em>conditions</em> in objectives are specified using conditional expressions
+that are described in a small language called <a href="#ctpscript">CTPScript</a> that is
+similar to JavaScript Expressions. The result of a measurement is expressed as
+an array variable that can be used in a CTPScript expression to describe a
+condition. If this CTPScript expression does not evaluate correctly due to an
+error, then the status of the objective is set to ‘error’. If the CTPScript
+expression evaluates correctly to the boolean ‘true’, then the objective is
 verified to be true, otherwise it is false.</p>
 </div>
 <div class="exampleblock">
@@ -2985,9 +3264,9 @@ a SSL/TLS end-point:</p>
 </div>
 <div class="paragraph">
 <p>Some objectives can take a more complex form. Consider a measurement that
-describes distinguishes availability between &#8220;business hours&#8221; and &#8220;other hours&#8221;
-The following CTPScript expression might describe another
-objective related to availability:</p>
+describes distinguishes availability between “business hours” and “other hours”
+The following CTPScript expression might describe another objective related to
+availability:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2995,8 +3274,9 @@ objective related to availability:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Note that in this example, the actual definition of what constitutes &#8220;business hours&#8221;
-would likely be part of the measurement parameters of the <a href="#metrics">metric</a>.</p>
+<p>Note that in this example, the actual definition of what constitutes “business
+hours” would likely be part of the measurement parameters of the
+<a href="#metrics">metric</a>.</p>
 </div>
 </div>
 </div>
@@ -3008,25 +3288,27 @@ would likely be part of the measurement parameters of the <a href="#metrics">met
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
     "scope": URL,
+    "changeId": string,
     "name": string,
     "annotation": string,
     "metric": URL,
-    "result": {
+    "result":  {                  // result is nullable
         "value": [
-            nested object, ...
+            nested object,
+            ...
         ],
         "dateTime": datetime,
-        "authorityId": string,
-        "signature": string,
+        "authorityId": nullable string,
+        "signature": nullable string,
     },
-    "objective": {
+    "objective": {                // objective is nullable
         "condition": string,
-        "status": string,           // either "true", "false" or "error"
+        "status": string,         // either "true", "false" or "error"
         "statusUpdateTime": datetime
     },
-    "trigger": string,
+    "createTrigger": nullable string,
     "userInitiated": boolean,
-    "state": string             // either "deactivated", "pending" or "activated"
+    "state": string               // either "deactivated", "pending" or "activated"
 }</code></pre>
 </div>
 </div>
@@ -3050,8 +3332,7 @@ would likely be part of the measurement parameters of the <a href="#metrics">met
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><a href="#self-property">Self-reference</a> to
-<code>{CtpBase}/measurements/{id}</code></p>
+<p><a href="#self-property">Self-reference</a> to <code>{CtpBase}/measurements/{id}</code></p>
 </div></div></td>
 </tr>
 <tr>
@@ -3061,6 +3342,25 @@ would likely be part of the measurement parameters of the <a href="#metrics">met
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>A reference to the attribute this measurement applies to.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeId</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A change identifier, updated as described in
+<a href="#changeid-property">[changeid-property]</a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>An optional name assigned to the measurement.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3088,15 +3388,14 @@ would likely be part of the measurement parameters of the <a href="#metrics">met
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>result</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>nested object</em> or <em>null</em></p>
+<p><em>nullable nested object</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>If the measurement state is “pending” or “deactivated”, this object is
-null (see the state property below).</p>
-</div>
-<div class="paragraph">
-<p>Otherwise this object represents the current measurement result value,
-following the format described in the linked <a href="#relating-measurement-results-and-metrics">metric</a>.</p>
+<p>If the measurement state is “pending” or
+“deactivated”, this object is null (see the state property below). Otherwise
+this object represents the current measurement result value, following the
+format described in the linked
+<a href="#relating-measurement-results-and-metrics">metric</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3105,8 +3404,9 @@ following the format described in the linked <a href="#relating-measurement-resu
 <p><em>List</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A list of nested objects, each representing a row
-in the table representing the measurement result, <a href="#relating-measurement-results-and-metrics">as defined in the metric</a>.</p>
+<p>A list of nested objects, each representing a row in the
+table representing the measurement result,
+<a href="#relating-measurement-results-and-metrics">as defined in the metric</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3132,20 +3432,19 @@ defined in <a href="#RFC_3339">[RFC_3339]</a>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.authorityId</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>string</em></p>
+<p><em>nullable string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A string representing the
-identity of the entity that produced the measurement result. This
-property MAY be null if the entity is the same as the service provider
-or if it is not known. This property MUST be non-empty if the property
-resultSignature is non-empty.</p>
+<p>A string representing the identity of
+the entity that produced the measurement result. This property MAY be null if
+the entity is the same as the service provider or if it is not known. This
+property MUST be non-empty if the property resultSignature is non-empty.</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.signature</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>string or null</em></p>
+<p><em>nullable string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>A string representing the JWS Compact Serialization of a JSON Web
@@ -3189,7 +3488,7 @@ Web Signature.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>objective</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>nested object</em> or <em>null</em></p>
+<p><em>nullable nested object</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>If this property is not
@@ -3220,7 +3519,7 @@ CTPScript condition based on the current measurement result.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>createTrigger</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>URL</em></p>
+<p><em>nullabe URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>This optional link indicates where triggers for this measurement can be
@@ -3230,8 +3529,8 @@ created with a POST request or listed with a GET request.</p>
 <p>The link is of the form <code>{CtpBase}/serviceViews/{id}/triggers</code>.</p>
 </div>
 <div class="paragraph">
-<p>If the link is an empty string, this indicates that the measurement cannot be used
-in a trigger.</p>
+<p>If the link is an empty string, this indicates that the measurement cannot be
+used in a trigger.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3281,18 +3580,17 @@ state but can be activated with <a href="#put-measurements-id-state">a specific 
 <h5 id="_definition_6">Definition</h5>
 <div class="paragraph">
 <p>In order to enable cloud service customers to receive notifications when
-specific conditions are met, CTP allows them to defines triggers. Like
-an objective, a trigger is a conditional expression on the measured
-value of a security attribute. However, contrary to objectives, triggers
-are created by the CTP client with a specific API call. When a trigger
-conditional expression is true, a message is sent to the cloud service
-customer via XMPP <a href="#RFC_6120">[RFC_6120]</a> and an alert is logged by the cloud
-provider. For example, a cloud client might request to be notified if
-the <em>recovery time actual</em> (RTA) of a resource exceeds a certain
-duration threshold.</p>
+specific conditions are met, CTP allows them to defines triggers. Like an
+objective, a trigger is a conditional expression on the measured value of a
+security attribute. However, contrary to objectives, triggers are created by the
+CTP client with a specific API call. When a trigger conditional expression is
+true, a message is sent to the cloud service customer via XMPP <a href="#RFC_6120">[RFC_6120]</a> and
+an alert is logged by the cloud provider. For example, a cloud client might
+request to be notified if the <em>recovery time actual</em> (RTA) of a resource exceeds
+a certain duration threshold.</p>
 </div>
 <div class="paragraph">
-<p>A <strong>trigger</strong> is defined by 9 elements:</p>
+<p>A <strong>trigger</strong> is defined by 11 elements:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -3300,40 +3598,46 @@ duration threshold.</p>
 <p><em>A scope</em>: A reference to the service-view in which this trigger is defined.</p>
 </li>
 <li>
-<p><em>A name</em>: An optional name for this trigger.</p>
+<p><em>A change identifier</em>: A value that changes each time this resource is
+updated.</p>
+</li>
+<li>
+<p><em>A name</em>: An optional name for the trigger.</p>
+</li>
+<li>
+<p><em>An annotation</em>: An optional human readable annotation for this trigger.</p>
 </li>
 <li>
 <p><em>A reference measurement</em>: The measurement to which the trigger
 applies.</p>
 </li>
 <li>
-<p><em>A trigger condition</em>: A representation of a trigger as a
-conditional expression that applies to the results of the measurement of
-the underlying security attribute. When the condition is evaluated,
-<a href="#evaluating-triggers">alerting rules</a> defined in this document are
-applied to decide whether an alert is generated or not.</p>
+<p><em>A trigger condition</em>: A representation of a trigger as a conditional
+expression that applies to the results of the measurement of the underlying
+security attribute. When the condition is evaluated,
+<a href="#evaluating-triggers">alerting rules</a> defined in this document are applied to
+decide whether an alert is generated or not.</p>
 </li>
 <li>
-<p><em>A XMPP notification URI</em>: This optional URI describes an XMPP
-endpoint that will receive a notification in case of an alert. Note that
-future versions of the CTP API may define other notification mechanisms
-than XMPP, which will be distinguished by a different URI format.</p>
+<p><em>A XMPP notification URI</em>: This optional URI describes an XMPP endpoint that
+will receive a notification in case of an alert. Note that future versions of
+the CTP API may define other notification mechanisms than XMPP, which will be
+distinguished by a different URI format.</p>
 </li>
 <li>
-<p>A <em>guard time</em>: The minimal time, expressed in seconds, that should
-elapse between two alerts generated from the same trigger. This is
-indented to avoid alert overflows. This delay does not apply to alerts
-that result from an error in the evaluation of the condition: such
-alerts are only generated once regardless of how long the error
-persists.</p>
+<p><em>A guard time</em>: The minimal time, expressed in seconds, that should elapse
+between two alerts generated from the same trigger. This is indented to avoid
+alert overflows. This delay does not apply to alerts that result from an error
+in the evaluation of the condition: such alerts are only generated once
+regardless of how long the error persists.</p>
 </li>
 <li>
-<p>A <em>set of tags</em>: a set of keywords that will be added in the log entries produced
-as a result of this trigger. Tags can also be later used to sort log
+<p><em>A set of tags</em>: a set of keywords that will be added in the log entries
+produced as a result of this trigger. Tags can also be later used to sort log
 entries (a tag can be used for example to specify a severity level).</p>
 </li>
 <li>
-<p>A <em>status</em>: a value that indicates the result of the last evaluation of the
+<p><em>A status</em>: a value that indicates the result of the last evaluation of the
 trigger condition, which can take one of the following 3 values:</p>
 <div class="ulist">
 <ul>
@@ -3350,7 +3654,7 @@ trigger condition, which can take one of the following 3 values:</p>
 </div>
 </li>
 <li>
-<p>A <em>status timestamp</em>: a timestamp representing the point in time when the trigger
+<p><em>A status timestamp</em>: a timestamp representing the point in time when the trigger
 was last evaluated.</p>
 </li>
 </ol>
@@ -3421,6 +3725,7 @@ document.</p>
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
     "scope": URL,
+    "changeId": string,
     "name": string,
     "annotation": string,
     "measurement": URL,
@@ -3464,8 +3769,18 @@ document.</p>
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>Reference to the <a href="#service-views">service-view</a> that exposes this trigger,
-which is a URL of the form <code>{CtpBase}/serviceViews/{id}</code></p>
+<p>Reference to the <a href="#service-views">service-view</a> that exposes this
+trigger, which is a URL of the form <code>{CtpBase}/serviceViews/{id}</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>changeId</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>string</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A change identifier, updated as described in
+<a href="#changeid-property">[changeid-property]</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3513,8 +3828,8 @@ must be properly escaped.</p>
 <p><em>URL</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>Description of the XMPP URI that will be used to notify the cloud
-service customer, following the structure defined in RFC 5122.</p>
+<p>Description of the XMPP URI that will be used to notify
+the cloud service customer, following the structure defined in RFC 5122.</p>
 </div>
 <div class="paragraph">
 <p>Implementation must recognize XMPP URI of the form</p>
@@ -3536,8 +3851,8 @@ possibly empty XMPP path descriptor.</p>
 <p><em>number</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>The amount of time in seconds that must elapse between 2 consecutive
-alerts resulting from this specific trigger.</p>
+<p>The amount of time in seconds that must elapse between 2
+consecutive alerts resulting from this specific trigger.</p>
 </div>
 <div class="paragraph">
 <p>This is to avoid potential notification and log overflow in case where a
@@ -3560,9 +3875,8 @@ results.</p>
 <p><em>string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p>A keyword that will be recorded in the log entry
-generated as a result of the trigger. This tag can later be used to sort
-log entries.</p>
+<p>A keyword that will be recorded in the log entry generated
+as a result of the trigger. This tag can later be used to sort log entries.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3647,6 +3961,9 @@ tag “error”.</p>
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p>Note that logs do not have a <code>changeid</code> property (see <a href="#changeid-property">the JSON "changeId" property</a>).</p>
+</div>
 </div>
 <div class="sect4">
 <h5 id="normal-log-entries-encoding">Encoding of normal log entries</h5>
@@ -3654,6 +3971,7 @@ tag “error”.</p>
 <div class="content">
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
+    "scope": URL,
     "trigger": URL,
     "creationTime": datetime,
     "result": {
@@ -3661,8 +3979,8 @@ tag “error”.</p>
             nested object, ...
         ],
         "updateTime": datetime,
-        "authorityId": string,
-        "signature": string
+        "authorityId": nullable string,
+        "signature": nullable string
     }
     "tags": [
         string, ...
@@ -3691,6 +4009,15 @@ tag “error”.</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><a href="#self-property">Self-reference</a> to <code>{CtpBase}/logs/{id}</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scope</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>URL</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A reference to the service-view to which this log entry belongs.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3744,7 +4071,7 @@ in a <a href="#measurements-encoding">encoded measurement</a>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.authorityId</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>string</em></p>
+<p><em>nullable string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>See the <a href="#measurements-encoding">encoding of measurements</a> for details.</p>
@@ -3753,7 +4080,7 @@ in a <a href="#measurements-encoding">encoded measurement</a>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>result.signature</code></p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
-<p><em>string</em></p>
+<p><em>nullable string</em></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>See the <a href="#measurements-encoding">encoding of measurements</a> for details.</p>
@@ -3788,6 +4115,7 @@ empty list if no tag is set.</p>
 <div class="content">
 <pre class="highlight"><code class="java language-java">{
     "self": URL,
+    "scope": URL,
     "trigger": URL,
     "creationTime": datetime,
     "error": string,
@@ -3818,6 +4146,15 @@ empty list if no tag is set.</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p><a href="#self-property">Self-reference</a> to <code>{CtpBase}/logs/{id}</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scope</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><em>URL</em></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>A reference to the service-view to which this log entry belongs.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -3873,16 +4210,64 @@ of an error, this list contains one element.</p>
 
 </div>
 </div>
+<div class="sect3">
+<h4 id="dependencies">4.2.9. Dependencies</h4>
+<div class="sect4">
+<h5 id="_definition_8">Definition</h5>
+<div class="paragraph">
+<p>Dependencies are used to describe relationships between different cloud services
+that are associated together to form a cloud supply chain. A dependency is
+structured exactly like a service-view (see <a href="#service-views">Service-views</a>). As a consequence
+like a service-view, a dependency may itself have a list of dependencies.
+Dependencies therefore form a tree structure rooted with the primary
+service-view accessible to the CTP client.</p>
+</div>
+<div class="paragraph">
+<p>A dependency differs from a service-view only in the interpretation of the <em>scope</em> property:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the <em>scope</em> of a service-view is a reference to <code>{CtpBase}</code></p>
+</li>
+<li>
+<p>the <em>scope</em> of a dependency is either a reference to a primary <em>service view</em></p>
+</li>
+<li>
+<p>as described in <a href="#service-views">Service-views</a> or a reference to another <em>dependency</em>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="dependencies-encoding">Encoding</h5>
+<div class="paragraph">
+<p>The encoding is the same as a service-view (see <a href="#service-views">Service-views</a>), with the
+exception of the value of the <em>scope</em> property. The <em>scope</em> property of a
+dependency is a URL which can take one of the following two forms:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>a reference to a service view (e.g. <code>{CtpBase}/serviceViews/{id}</code>)</p>
+</li>
+<li>
+<p>a reference to another dependency (e.g. <code>{CtpBase}/dependencies/{id}</code>)</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="classes">4.3. Service classes and asset classes</h3>
 <div class="paragraph">
-<p>Where feasible, cloud service providers SHOULD adopt service classes or
-asset classes, as defined in this section.</p>
+<p>Where feasible, cloud service providers SHOULD adopt service classes or asset
+classes, as defined in this section.</p>
 </div>
 <div class="paragraph">
-<p>From a purely modeling perspective, CTP leaves a lot of flexibility to
-cloud service providers:</p>
+<p>From a purely modeling perspective, CTP leaves a lot of flexibility to cloud
+service providers:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3925,21 +4310,19 @@ service providers impossible.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>One first step to address this issue is for cloud service providers to
-adopt standardized metrics and reference them accordingly with a
-well-known URL (i.e. using the referenceMetric property of the metric
-resource). While necessary, standard metrics are often not enough. For
-the purpose of comparing security attributes of a cloud service either
-with a customer-defined baseline or with another competing cloud
-service, it is useful to be much less flexible and to explicitly agree
-to use a specific set of security attributes, asset categories, metrics
-and measurement methods with detailed restrictions. To this end, CTP
-defines <strong>service classes</strong> and <strong>asset classes</strong>. Both of these concepts
-define a set of restrictions applicable to security attributes, metrics,
-measurements and assets. They differ by their scope: while an asset
-class applies a restriction to a particular asset, a service class
-applies to a service-view and describes a restriction on all assets
-within that service-view.</p>
+<p>One first step to address this issue is for cloud service providers to adopt
+standardized metrics and reference them accordingly with a well-known URL (i.e.
+using the <code>referenceMetric</code> property of the metric resource). While necessary,
+standard metrics are often not enough. For the purpose of comparing security
+attributes of a cloud service either with a customer-defined baseline or with
+another competing cloud service, it is useful to be much less flexible and to
+explicitly agree to use a specific set of security attributes, asset categories,
+metrics and measurement methods with detailed restrictions. To this end, CTP
+defines <strong>service classes</strong> and <strong>asset classes</strong>. Both of these concepts define a
+set of restrictions applicable to security attributes, metrics, measurements and
+assets. They differ by their scope: while an asset class applies a restriction
+to a particular asset, a service class applies to a service-view and describes a
+restriction on all assets within that service-view.</p>
 </div>
 <div class="paragraph">
 <p>An asset class SHALL specify:</p>
@@ -4001,43 +4384,41 @@ type of service-view.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p><strong>Service classes</strong> and <strong>asset classes</strong> are referenced in CTP by a
-standardized URL, which MUST point to the document that defines the
-previously outline information.</p>
+<p><strong>Service classes</strong> and <strong>asset classes</strong> are referenced in CTP by a standardized
+*URL, which MUST point to the document that defines the previously outline
+*information.</p>
 </div>
 <div class="paragraph">
-<p>For example, we could imagine the definition of “asset class” for IaaS
-<em>storage</em> assets (or similarly <em>compute</em> assets), where a predefined set
-of attributes is standardized for objectives and measurement results,
-using a well-defined set of industry wide agreed-upon metrics (i.e.
-metrics, measurement result formats and measurement parameters). Such a
-service class could for example require “availability” to be measured
-with a measurement period of one month, the use of an uptime-based
-measurement of “availability” with a “sample window size” of 2 minutes,
-etc. A cloud provider that offers a storage resource API that adheres to
-this service class would then reference the asset class URL in the CTP
-representation of the asset: all security attributes (and related
-measurements) that pertain to that asset would be expected to follow the
-rules defined in the referenced asset class.</p>
+<p>For example, we could imagine the definition of “asset class” for IaaS <em>storage</em>
+assets (or similarly <em>compute</em> assets), where a predefined set of attributes is
+standardized for objectives and measurement results, using a well-defined set of
+industry wide agreed-upon metrics (i.e. metrics, measurement result formats and
+measurement parameters). Such a service class could for example require
+“availability” to be measured with a measurement period of one month, the use of
+an uptime-based measurement of “availability” with a “sample window size” of 2
+minutes, etc. A cloud provider that offers a storage resource API that adheres
+to this service class would then reference the asset class URL in the CTP
+representation of the asset: all security attributes (and related measurements)
+that pertain to that asset would be expected to follow the rules defined in the
+referenced asset class.</p>
 </div>
 <div class="paragraph">
 <p>The definition of the exact content of these “service classes” or “asset
-classes” is sector specific and is beyond the scope of this CTP Model
-and API specification.</p>
+classes” is sector specific and is beyond the scope of this CTP Model and API
+specification.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="relating-measurement-results-and-metrics">4.4. Relating measurement results and metrics</h3>
 <div class="paragraph">
-<p>In the CTP API, measurement results are presented as part of the result
-returned when <a href="#measurements">querying a measurement</a>. This result is an
-object that contains two key properties: (1) <code>value</code>, which is a table
-describing the actual value of the measurement result and (2) <code>updateTime</code>,
-which is a timestamp of the measurement result. The format of the table
-describing the value is not fixed: it depends on the metric referenced
-in the measurement. The referenced metric contains a field resultFormat
-that describes the format of the result, as illustrated on the <a href="#figure-metrics-vs-measurements">figure</a>
-below.</p>
+<p>In the CTP API, measurement results are presented as part of the result returned
+when <a href="#measurements">querying a measurement</a>. This result is an object that
+contains two key properties: (1) <code>value</code>, which is a table describing the actual
+value of the measurement result and (2) <code>updateTime</code>, which is a timestamp of
+the measurement result. The format of the table describing the value is not
+fixed: it depends on the metric referenced in the measurement. The referenced
+metric contains a field <code>resultFormat</code> that describes the format of the result, as
+illustrated on the <a href="#figure-metrics-vs-measurements">figure</a> below.</p>
 </div>
 <div id="figure-metrics-vs-measurements" class="imageblock">
 <div class="content">
@@ -4046,9 +4427,9 @@ below.</p>
 <div class="title">Figure 1. Relating measurement results format and values.</div>
 </div>
 <div class="paragraph">
-<p>To better understand the link between the <code>resultFormat</code> property in CTP
-API metrics and the value property of a CTP API measurement, we will
-examine 3 examples.</p>
+<p>To better understand the link between the <code>resultFormat</code> property in CTP API
+metrics and the value property of a CTP API measurement, we will examine 3
+examples.</p>
 </div>
 <div id="example-A" class="exampleblock">
 <div class="title">Example 12. (A) Single value</div>
@@ -4309,7 +4690,7 @@ reference the measured value of an attribute in a array called “value”.</p>
 <div class="paragraph">
 <p>The corresponding CTPScript expression to <a href="#example-A">(A) Single value</a> above will be a
 table value of one element, which itself has only one property
-“percentage”. A &#8220;pseudo-JavaScript&#8221; declaration of that table would be:</p>
+“percentage”. A “pseudo-JavaScript” declaration of that table would be:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4517,9 +4898,9 @@ message, encoded as follows.</p>
 <div class="sect2">
 <h3 id="specification-of-the-api-calls">5.2. Specification of the API calls</h3>
 <div class="paragraph">
-<p>Using <a href="#api-resources-urls">previously</a> introduced notation, the following list summarizes all the
-valid API calls that are defined in the specification in the following
-sections:</p>
+<p>Using <a href="#api-resources-urls">previously</a> introduced notation, the following list
+summarizes all the valid API calls that are defined in the specification in the
+following sections:</p>
 </div>
 <table class="tableblock frame-all grid-all" style="width:100%; ">
 <colgroup>
@@ -5253,7 +5634,8 @@ the server should return status code 409 (Conflict).</p>
 <div class="sect4">
 <h5 id="_response_body_11">Response body</h5>
 <div class="paragraph">
-<p>The response body is an updated JSON representation of the <a href="#measurements-encoding">measurement</a>.</p>
+<p>The response body is an updated JSON representation of the
+<a href="#measurements-encoding">measurement</a>.</p>
 </div>
 </div>
 </div>
@@ -5262,9 +5644,9 @@ the server should return status code 409 (Conflict).</p>
 <div class="sect4">
 <h5 id="_description_13">Description</h5>
 <div class="paragraph">
-<p>A <strong>GET</strong> request to <code>{CtpBase}/metrics</code> provides a collection of
-references to the metrics that are recognized by the CTP sever. This
-should include all metrics that can be used in measurements.</p>
+<p>A <strong>GET</strong> request to <code>{CtpBase}/metrics</code> provides a collection of references to
+the metrics that are recognized by the CTP sever. This should include all
+metrics that can be used in measurements.</p>
 </div>
 <div class="paragraph">
 <p>CTP servers may either make this collection accessible to anybody or may
@@ -5313,7 +5695,8 @@ information related to the metric identified by a <code>{id}</code>.</p>
 restrict it to authenticated users.</p>
 </div>
 <div class="paragraph">
-<p>The relationship between measurement and metrics is detailed in <a href="#relating-measurement-results-and-metrics">Relating measurement results and metrics</a>.</p>
+<p>The relationship between measurement and metrics is detailed in
+<a href="#relating-measurement-results-and-metrics">Relating measurement results and metrics</a>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -5681,29 +6064,7 @@ items.</p>
 <div class="paragraph">
 <p>CTP exposes a RESTful interface to access individual alert records
 generated by triggers. A <strong>GET</strong> request to <code>{CtpBase}/logs/{id}</code>
-returns an individual log entry (identified by <code>{id}</code>), which notably
-contains the following information:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A <a href="#self-property">self-reference</a> to this resource.</p>
-</li>
-<li>
-<p>A reference to the trigger that resulted in the creation of this log
-entry.</p>
-</li>
-<li>
-<p>The date and time the log entry was created.</p>
-</li>
-<li>
-<p>The copy of the measurement result that resulted in the trigger
-condition being true.</p>
-</li>
-<li>
-<p>The tag that was associated with the trigger.</p>
-</li>
-</ul>
+returns an individual log entry (identified by <code>{id}</code>).</p>
 </div>
 <div class="paragraph">
 <p>CTP servers SHALL only provide access to a log entry if it is part of
@@ -5727,6 +6088,43 @@ a service-view that the CTP client is authorized to access.</p>
 <div class="paragraph">
 <p>Returns a JSON encoded <a href="#log-entries">log entry</a>.
 depending on the type of log entry.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="get-dependencies-id">5.2.20. GET {CtpBase}/dependencies/{id}</h4>
+<div class="sect4">
+<h5 id="_description_21">Description</h5>
+<div class="paragraph">
+<p>CTP exposes a RESTful interface to access individual dependencies listed in a
+service-view or in other dependencies. A <strong>GET</strong> request to
+<code>{CtpBase}/dependencies/{id}</code> returns a dependency descriptor identified by
+<code>{id}</code>.</p>
+</div>
+<div class="paragraph">
+<p>CTP servers SHALL only provide access to a dependency if it is linked directly
+or indirectly to a service-view that the CTP client is authorized to access.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_request_query_string_20">Request query string</h5>
+<div class="paragraph">
+<p>None.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_request_body_20">Request body</h5>
+<div class="paragraph">
+<p>None.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_body_20">Response body</h5>
+<div class="paragraph">
+<p>Returns a JSON encoded <a href="#dependencies">dependency</a>, which is encoded as a
+<a href="#service-views">service-view</a>. The only difference between a service-unit and
+a dependency is the interpretation of the <em>scope</em> property as described in
+<a href="#dependencies">Dependencies</a>.</p>
 </div>
 </div>
 </div>
@@ -5758,9 +6156,9 @@ CTP user.</p>
 <div class="sect3">
 <h4 id="evaluating-triggers">5.3.2. Evaluating triggers</h4>
 <div class="paragraph">
-<p>A trigger condition MUST be evaluated each time a new measurement result
-is available. The processing of triggers is governed by the rules
-defined in the <a href="#alert-rules">pseudo-code</a> below, and depends on the following parameters:</p>
+<p>A trigger condition MUST be evaluated each time a new measurement result is
+available. The processing of triggers is governed by the rules defined in the
+<a href="#alert-rules">pseudo-code</a> below, and depends on the following parameters:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -5820,25 +6218,24 @@ switch (trigger.status) {
 <div class="sect2">
 <h3 id="ctpscript">5.4. CTPScript: a condition description language</h3>
 <div class="paragraph">
-<p>Conditions used in both objectives and triggers are described with
-CTPScript: a language that is modeled after JavaScript expressions, with
-many simplifications that are designed to facilitate implementation. We
-highlight in particular that CTPScript is limited to statements
-representing expressions and does not include any other language
-construct (such as assignments, control structures, declarations,
-prototypes, etc.).</p>
+<p>Conditions used in both objectives and triggers are described with CTPScript: a
+language that is modeled after JavaScript expressions, with many simplifications
+that are designed to facilitate implementation. We highlight in particular that
+CTPScript is limited to statements representing expressions and does not include
+any other language construct (such as assignments, control structures,
+declarations, prototypes, etc.).</p>
 </div>
 <div class="paragraph">
-<p>CTPScript expressions mainly operate on a 4 variables, which represent
-the 4 fields of a <a href="#results">measurement result</a>. The most important variable
-is <code>value</code>, a table of objects that represent a measured value.</p>
+<p>CTPScript expressions mainly operate on a 4 variables, which represent the 4
+fields of a <a href="#results">measurement result</a>. The most important variable is
+<code>value</code>, a table of objects that represent a measured value.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 15. CTP expressions in triggers</div>
 <div class="content">
 <div class="paragraph">
-<p>The following are further examples of CTPScript Expression that could be provided in triggers or
-conditions.</p>
+<p>The following are further examples of CTPScript Expression that could be
+provided in triggers or conditions.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5860,11 +6257,11 @@ conditions.</p>
 <div class="sect3">
 <h4 id="basic-grammar">5.4.1. Basic Grammar</h4>
 <div class="paragraph">
-<p>The following rules describe the CTPScript grammar, with some further
-details provided in the following sub-sections. A CTPScript expression
-is defined by the <strong>Expr</strong> token in the grammar below. A CTPScript
-expression <strong>Expr</strong> is considered true if <code>toBoolean(Expr)</code> returns true,
-and false otherwise, taking the definition of <code>toBoolean</code> <a href="#toboolean">below</a>.</p>
+<p>The following rules describe the CTPScript grammar, with some further details
+provided in the following sub-sections. A CTPScript expression is defined by the
+<strong>Expr</strong> token in the grammar below. A CTPScript expression <strong>Expr</strong> is considered
+true if <code>toBoolean(Expr)</code> returns true, and false otherwise, taking the
+definition of <code>toBoolean</code> <a href="#toboolean">below</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6002,10 +6399,10 @@ number (a simplified Javascript array). CTPScript arrays have one property
 </ul>
 </div>
 <div class="paragraph">
-<p>We call <strong>integral number</strong> the subset of numbers that can be represented
-as an integer in the range -2<sup>31</sup> and 2<sup>31</sup>-1, inclusive. This type does
-not explicitly exist in CTPScript but is useful to define some elements
-in this specification.</p>
+<p>We call <strong>integral number</strong> the subset of numbers that can be represented as an
+integer in the range -2<sup>31</sup> and 2<sup>31</sup>-1, inclusive. This type does not
+explicitly exist in CTPScript but is useful to define some elements in this
+specification.</p>
 </div>
 <div class="paragraph">
 <p>Note that CTPScript does not provide the <strong>undefined</strong> type that exists in javascript.</p>
@@ -6015,24 +6412,24 @@ in this specification.</p>
 <h5 id="the-typeof-pseudo-function">The typeOf() pseudo-function</h5>
 <div class="paragraph">
 <p>For any value <strong>a</strong> represented in CTPScript, we define a pseudo-function
-<code>typeOf(a)</code> which returns a string representing the type of <strong>a</strong> (e.g.
-“string”, “number”, “boolean”, "null", "object", "array" or "function"). The implementation of the
-pseudo-function <code>typeOf()</code> is not required: it is only defined to
-facilitate the description of this specification.</p>
+<code>typeOf(a)</code> which returns a string representing the type of <strong>a</strong> (e.g. “string”,
+“number”, “boolean”, "null", "object", "array" or "function"). The
+implementation of the pseudo-function <code>typeOf()</code> is not required: it is only
+defined to facilitate the description of this specification.</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="the-getfield-pseudo-function.">The getField() pseudo-function.</h5>
 <div class="paragraph">
 <p>For the purpose of this specification, we define the pseudo-function
-<code>getField(a, prop)</code> which takes as first argument an array or object <strong>a</strong>,
-and as second argument a string or an integral number <strong>prop</strong>, and
-returns the value associated with the key <strong>prop</strong> in the array or object
-if it exists or <strong>null</strong> otherwise.</p>
+<code>getField(a, prop)</code> which takes as first argument an array or object <strong>a</strong>, and as
+second argument a string or an integral number <strong>prop</strong>, and returns the value
+associated with the key <strong>prop</strong> in the array or object if it exists or <strong>null</strong>
+otherwise.</p>
 </div>
 <div class="paragraph">
-<p>The implementation of the pseudo-function <code>getField()</code> is not required: it
-is only defined to facilitate the description of this specification.</p>
+<p>The implementation of the pseudo-function <code>getField()</code> is not required: it is
+only defined to facilitate the description of this specification.</p>
 </div>
 </div>
 </div>
@@ -6042,8 +6439,8 @@ is only defined to facilitate the description of this specification.</p>
 <p>CTPScript only defines 8 functions or methods, which are detailed hereafter.</p>
 </div>
 <div class="paragraph">
-<p>Note that all CTP Arrays also define the special property <code>length</code> as
-specified in <a href="#the-7-types-of-ctpscript">The 7 types of CTPScript</a></p>
+<p>Note that all CTP Arrays also define the special property <code>length</code> as specified
+in <a href="#the-7-types-of-ctpscript">The 7 types of CTPScript</a></p>
 </div>
 <div class="sect4">
 <h5 id="tostring">toString(a): string</h5>
@@ -6204,11 +6601,11 @@ return the value <strong>t[i]</strong> with the biggest index <strong>i</strong>
 <h5 id="matchRegex">matchRegexp(r, v): boolean</h5>
 <div class="paragraph">
 <p>The function <code>matchRegexp</code> verifies that the value <strong>v</strong> matches the regular
-expression <strong>r</strong>, which must be a string representing a POSIX Extended
-Regular
-Expression <span class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</span>
-(POSIX ERE). The value <strong>v</strong> can either be a string or an array of strings.
-The function works as follows:</p>
+expression <strong>r</strong>, which must be a string representing a POSIX Extended Regular
+Expression
+<span class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</span>
+(POSIX ERE). The value <strong>v</strong> can either be a string or an array of strings. The
+function works as follows:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -6238,10 +6635,9 @@ otherwise return <code>false</code>.</p>
 <div class="sect4">
 <h5 id="select">select(s, a): table</h5>
 <div class="paragraph">
-<p>The function <code>select</code> iterates through an array <strong>a</strong> of objects
-and returns an array that is created by selecting the key <strong>s</strong> in
-each one of the objects of <strong>a</strong>.
-The function operates as follows:</p>
+<p>The function <code>select</code> iterates through an array <strong>a</strong> of objects and returns an
+array that is created by selecting the key <strong>s</strong> in each one of the objects of
+<strong>a</strong>. The function operates as follows:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -6261,9 +6657,9 @@ number key in <strong>a</strong>, define <strong>t[i]</strong> as <code>getField
 <div class="sect4">
 <h5 id="timeUTC">timeUTC(s): number</h5>
 <div class="paragraph">
-<p>The function <code>timeUTC</code> takes a string s and converts it to a number
-representing the number of seconds since 00:00:00 UTC, January 1, 1970,
-which is referred as the "epoch".</p>
+<p>The function <code>timeUTC</code> takes a string s and converts it to a number representing
+the number of seconds since 00:00:00 UTC, January 1, 1970, which is referred as
+the "epoch".</p>
 </div>
 <div class="paragraph">
 <p>The string <strong>s</strong> must be either:</p>
@@ -6552,31 +6948,34 @@ a measurement result as defined in <a href="#measurements-encoding">Encoding</a>
 </div>
 <div class="paragraph">
 <p>The most important identifier is <code>value</code> which represents an “array of objects”
- or in other words a bi-dimensional table. This is an
-immutable bi-dimensional table so in effect it acts as a constant. As
-detailed in the section <a href="#relating-measurement-results-and-metrics">Relating measurement results and metrics</a>,
-the table elements <code>value[0], value[1], &#8230;, value[n]</code>
-represent a set of rows, while the fields of each individual <code>value[i]</code>
-represent the cells of this bi-dimensional table. The field names that
-are defined in each <code>value[i]</code> depend on the definition of the
-measurement, as specified in the <code>resultFormat</code> <a href="#measurements-encoding">property of a measurement</a>.</p>
+or in other words a bi-dimensional table. This is an immutable bi-dimensional
+table so in effect it acts as a constant. As detailed in the section
+<a href="#relating-measurement-results-and-metrics">Relating measurement results and metrics</a>, the table elements <code>value[0],
+value[1], &#8230;, value[n]</code> represent a set of rows, while the fields of each
+individual <code>value[i]</code> represent the cells of this bi-dimensional table. The
+field names that are defined in each <code>value[i]</code> depend on the definition of the
+measurement, as specified in the <code>resultFormat</code> <a href="#measurements-encoding">property
+of a measurement</a>.</p>
 </div>
 <div class="paragraph">
-<p>The value of <code>updateTime</code> can be used in CTPScript expression to evaluate the date of the last
-measurement of a security attribute, notably in combination with the CTPScript function <code>timeUTC</code>
-(see <a href="#timeUTC">timeUTC(s): number</a>).</p>
+<p>The value of <code>updateTime</code> can be used in CTPScript expression to evaluate the
+date of the last measurement of a security attribute, notably in combination
+with the CTPScript function <code>timeUTC</code> (see <a href="#timeUTC">timeUTC(s): number</a>).</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="evaluating-ctpscript-expressions">5.4.9. Evaluating CTPScript expressions</h4>
 <div class="paragraph">
-<p>CTPScript expression are evaluated according to the timing rules defined in <a href="#evaluating-triggers-and-objectives">Evaluating triggers and objectives</a>.</p>
+<p>CTPScript expression are evaluated according to the timing rules defined in
+<a href="#evaluating-triggers-and-objectives">Evaluating triggers and objectives</a>.</p>
 </div>
 <div class="paragraph">
-<p>The result of the evaluation of a CTPScript expression is always one of the three following values: <code>false</code>, <code>true</code> or <code>error</code>.</p>
+<p>The result of the evaluation of a CTPScript expression is always one of the
+three following values: <code>false</code>, <code>true</code> or <code>error</code>.</p>
 </div>
 <div class="paragraph">
-<p>The evaluation MUST generate the value <code>error</code> if any of the following condition occur:</p>
+<p>The evaluation MUST generate the value <code>error</code> if any of the following condition
+occur:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6592,10 +6991,12 @@ measurement of a security attribute, notably in combination with the CTPScript f
 </ul>
 </div>
 <div class="paragraph">
-<p>Implementation SHOULD provide descriptive error information as part of the data logged as a consequence of an error (see <a href="#error-log-entries-encoding">Encoding of error log entries</a>).</p>
+<p>Implementation SHOULD provide descriptive error information as part of the data
+logged as a consequence of an error (see <a href="#error-log-entries-encoding">Encoding of error log entries</a>).</p>
 </div>
 <div class="paragraph">
-<p>In all other cases, the function <a href="#toboolean">toBoolean()</a> is applied to the result providing a final value that is equal to either <code>true</code> or <code>false</code>.</p>
+<p>In all other cases, the function <a href="#toboolean">toBoolean()</a> is applied to the
+result providing a final value that is equal to either <code>true</code> or <code>false</code>.</p>
 </div>
 </div>
 </div>
@@ -6621,77 +7022,77 @@ service, excluding sensitive or customer-specific data.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>As described in the <a href="#the-ctp-data-model">CTP data model</a>, except for metrics, each
-CTP API resource can be tied directly or indirectly to a service-view through a
-hierarchy (e.g. an attribute is tied to an asset, which itself is tied
+<p>As described in the <a href="#the-ctp-data-model">CTP data model</a>, except for metrics,
+each CTP API resource can be tied directly or indirectly to a service-view
+through a hierarchy (e.g. an attribute is tied to an asset, which itself is tied
 to a service-view, which is then implicitly tied to a customer). CTP therefore
-uses the notion of a <a href="#service-views">service-view</a> to represent a limitation on the
-scope of information accessible to a cloud customer. Each customer
-should get a different service-view (or set of service-views) to access private data. Cloud providers MAY
-also define an additional shared “public” service-view to access public data, which will not require
-authentication.</p>
+uses the notion of a <a href="#service-views">service-view</a> to represent a limitation on
+the scope of information accessible to a cloud customer. Each customer should
+get a different service-view (or set of service-views) to access private data.
+Cloud providers MAY also define an additional shared “public” service-view to
+access public data, which will not require authentication.</p>
 </div>
 <div class="paragraph">
-<p>In the remaining of this section, we only discuss the access to private
-data and the security considerations that it entails.</p>
+<p>In the remaining of this section, we only discuss the access to private data and
+the security considerations that it entails.</p>
 </div>
 <div class="paragraph">
-<p>In order to protect private data, implementation MUST satisfy the
-following requirements:</p>
+<p>In order to protect private data, implementation MUST satisfy the following
+requirements:</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Requirement 1</dt>
 <dd>
-<p>Each API call to non-public data MUST carry authentication information
-in order to establish that the client is authorized to access the resource
-that is requested.</p>
+<p>Each API call to non-public data MUST carry authentication
+information in order to establish that the client is authorized to access the
+resource that is requested.</p>
 </dd>
 <dt class="hdlist1">Requirement 2</dt>
 <dd>
-<p>All communications between the CTP client and the
-CTP server MUST be secured by a transport mechanism that offers both
-confidentiality and integrity for the data exchanged, including the
-authentication data from requirement 1.</p>
+<p>All communications between the CTP client and the CTP server
+MUST be secured by a transport mechanism that offers both confidentiality and
+integrity for the data exchanged, including the authentication data from
+requirement 1.</p>
 </dd>
 <dt class="hdlist1">Requirement 3</dt>
 <dd>
-<p>All security mechanisms MUST be compatible with the
-stateless nature of the CTP RESTful API. Session information should not
-be maintained across consecutive CTP API calls.</p>
+<p>All security mechanisms MUST be compatible with the stateless
+nature of the CTP RESTful API. Session information should not be maintained
+across consecutive CTP API calls.</p>
 </dd>
 <dt class="hdlist1">Requirement 4</dt>
 <dd>
-<p>The security mechanisms MUST preserve the API
-defined in this specification, including URL formats, query strings and
-JSON data structures. The security mechanism MAY however result in the addition or
-modification of HTTP headers that are part of the RESTful API requests.</p>
+<p>The security mechanisms MUST preserve the API defined in this
+specification, including URL formats, query strings and JSON data structures.
+The security mechanism MAY however result in the addition or modification of
+HTTP headers that are part of the RESTful API requests.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>Implementers are free to choose any set of security mechanisms that
-verifies the 4 requirements above. However, for interoperability
-purposes, implementers are strongly encouraged to consider implementing
-the recommendations described in <a href="#recommended-security-mechanisms">Recommended security mechanisms</a>.</p>
+<p>Implementers are free to choose any set of security mechanisms that verifies the
+4 requirements above. However, for interoperability purposes, implementers are
+strongly encouraged to consider implementing the recommendations described in
+<a href="#recommended-security-mechanisms">Recommended security mechanisms</a>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="example-of-solutions">6.2. Example of solutions</h3>
 <div class="paragraph">
-<p>The following paragraphs give a brief overview of possible solutions
-that address the 4 security requirements of the CTP API, for
-informational purposes only.</p>
+<p>The following paragraphs give a brief overview of possible solutions that
+address the 4 security requirements of the CTP API, for informational purposes
+only.</p>
 </div>
 <div class="paragraph">
-<p>Currently, the most straightforward way to implement requirement 2 is
-the use of SSL/TLS, with a server-side certificate.</p>
+<p>Currently, the most straightforward way to implement requirement 2 is the use of
+SSL/TLS, with a server-side certificate.</p>
 </div>
 <div class="paragraph">
 <p>Requirement 1 implies that the client is identified and authenticated.
-Identification allows distinguishing one client from another (e.g. a
-user name), while authentication is used to ascertain the claimed
-identity (e.g. a password).</p>
+Identification allows distinguishing one client from another (e.g. a user name),
+while authentication is used to ascertain the claimed identity (e.g. a
+password).</p>
 </div>
 <div class="paragraph">
 <p>Clients can be identified through several means, for example:</p>
@@ -6699,33 +7100,31 @@ identity (e.g. a password).</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Each client can be assigned a different <code>{CTPBase}</code> <a href="#api-resources-urls">URL</a>.
-(e.g. cloud service customer “foo” accesses the CTP server through
-<a href="http://example.com/ctp/foo/)">http://example.com/ctp/foo/)</a>.</p>
+<p>Each client can be assigned a different <code>{CTPBase}</code>
+<a href="#api-resources-urls">URL</a>. (e.g. cloud service customer “foo” accesses the CTP
+server through <a href="http://example.com/ctp/foo/)">http://example.com/ctp/foo/)</a>.</p>
 </li>
 <li>
-<p>Each client can be identified as part of an underlying
-authentication mechanism through a “user name” (e.g. HTTP BASIC or
-DIGEST access).</p>
+<p>Each client can be identified as part of an underlying authentication
+mechanism through a “user name” (e.g. HTTP BASIC or DIGEST access).</p>
 </li>
 <li>
-<p>Each client can be implicitly identified and authenticated
-simultaneously through a security token provided in an HTTP header (e.g.
-such as in OAuth2 token placed in an <code>Authorization:</code> header).</p>
+<p>Each client can be implicitly identified and authenticated simultaneously
+through a security token provided in an HTTP header (e.g. such as in OAuth2
+token placed in an <code>Authorization:</code> header).</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Clients can be authenticated by several means. In simple scenarios,
-client authentication can be performed with traditional HTTP
-authentication (BASIC) over SSL/TLS. For more advanced
-scenarios, stronger security is provided with mechanisms such as OAuth
-and other security-token based approaches.</p>
+<p>Clients can be authenticated by several means. In simple scenarios, client
+authentication can be performed with traditional HTTP authentication (BASIC)
+over SSL/TLS. For more advanced scenarios, stronger security is provided with
+mechanisms such as OAuth and other security-token based approaches.</p>
 </div>
 <div class="paragraph">
 <p>All the above mechanisms also typically satisfy requirements 3 and 4. They do
-not require the CTP server to maintain any state between two consecutive
-API calls. They do not require modification of the API.</p>
+not require the CTP server to maintain any state between two consecutive API
+calls. They do not require modification of the API.</p>
 </div>
 </div>
 <div class="sect2">
@@ -6817,7 +7216,7 @@ identification/authentication of the client.</p>
 <p>As a starting point a cloud service customer using CTP will likely
 connect to the CTP entry point, where he can obtain information on the
 version of CTP that is running as well as a pointer to a collection of
-service units that are under the supervision of this CTP server.</p>
+service-views that are under the supervision of this CTP server.</p>
 </div>
 <div class="listingblock">
 <div class="title">Request</div>
@@ -6888,8 +7287,8 @@ can now query the corresponding service-view for further details.</p>
 </div>
 <div class="paragraph">
 <p>The response tells us about the
-provider responsible for the service unit, provides references to the
-dependencies of the service unit and its service resources. We note that
+provider responsible for the service-view, provides references to the
+dependencies of the service-view and its service resources. We note that
 no <a href="#classes">service class</a> is specified.</p>
 </div>
 <div class="listingblock">
@@ -6908,12 +7307,13 @@ no <a href="#classes">service class</a> is specified.</p>
 {
   "self": "https://ctp.cloudsecurityalliance.org/ctp/serviceViews/VIYQUT1WG628fhbQ",
   "scope": "https://ctp.cloudsecurityalliance.org/ctp/",
+  "changeId": "Hei9haes"
   "name": "main",
   "annotation": "The main service-view provided to the customer",
   "provider": "net.ikialab",
   "dependencies": "https://ctp.cloudsecurityalliance.org/ctp/serviceViews/VIYQUT1WG628fhbQ/dependencies",
   "assets": "https://ctp.cloudsecurityalliance.org/ctp/serviceViews/VIYQUT1WG628fhbQ/assets",
-  "serviceClass": "",
+  "serviceClass": null,
   "logs": "https://ctp.cloudsecurityalliance.org/ctp/serviceViews/VIYQUT1WG628fhbQ/logs",
   "triggers": "https://ctp.cloudsecurityalliance.org/ctp/serviceViews/VIYQUT1WG628fhbQ/triggers"
 }</pre>
@@ -6992,10 +7392,11 @@ which seems to identify a SSL/TLS server.</p>
 {
   "self": "https://ctp.cloudsecurityalliance.org/ctp/assets/VIYQUT1WG628fhbU",
   "scope": "https://ctp.cloudsecurityalliance.org/ctp/serviceViews/VIYQUT1WG628fhbQ",
+  "changeId": "coCh6vei"
   "name": "https://webserver.example.com",
   "annotation": "Webserver running on Linux Ubuntu (apache)",
   "attributes": "https://ctp.cloudsecurityalliance.org/ctp/assets/VIYQUT1WG628fhbU/attributes",
-  "assetClass": ""
+  "assetClass": null
 }</pre>
 </div>
 </div>
@@ -7004,7 +7405,7 @@ which seems to identify a SSL/TLS server.</p>
 <h3 id="step-6">7.6. Step 8: Discovering the list of security attributes of the asset</h3>
 <div class="paragraph">
 <p>We now obtain a collection of references to security attributes that
-apply to this asset, using the &#8220;collection&#8221; paradigm we have
+apply to this asset, using the “collection” paradigm we have
 already applied in some of the previous examples.</p>
 </div>
 <div class="listingblock">
@@ -7065,6 +7466,7 @@ the asset previously identified as <code><a href="https://webserver.example.com/
 {
   "self": "https://ctp.cloudsecurityalliance.org/ctp/attributes/VWcIa-sfTYZSm6Qu",
   "scope": "https://ctp.cloudsecurityalliance.org/ctp/assets/VIYQUT1WG628fhbU",
+  "changeId": "Chiih2ee",
   "name": "csa:confidentiatity:data-in-transit"
   "annotation": "confidentiality of data in transit with SSL/TLS",
   "name": "confidentiality-of-access",
@@ -7111,7 +7513,7 @@ be measured. We find out that there is only one proposed measurement.</p>
 <h3 id="step-9">7.9. Step 9: Discovering the details of the first measurement available for the selected security attribute</h3>
 <div class="paragraph">
 <p>We now request more details on the one and only measurement that is
-offered here for the attribute &#8220;confidentiality-of-access&#8221;. The response
+offered here for the attribute “confidentiality-of-access”. The response
 is richer than in previous examples. We notably learn that the measurement is
 based on a metric which further details by accessing the URL
 <code>https://ctp.cloudsecurityalliance.org/ctp/metrics/VWcIa-sfTYZSm6Qv</code> as we will show
@@ -7147,6 +7549,7 @@ measurement. This is indicated by the expression
 {
   "self": "https://ctp.cloudsecurityalliance.org/ctp/measurements/VWcIa-sfTYZSm6Qw",
   "scope": "https://ctp.cloudsecurityalliance.org/ctp/attributes/VWcIa-sfTYZSm6Qu",
+  "changeId": "feengo8P",
   "name": ""
   "annotation": "",
   "metric": "https://ctp.cloudsecurityalliance.org/ctp/metrics/VWcIa-sfTYZSm6Qv",
@@ -7157,14 +7560,14 @@ measurement. This is indicated by the expression
       }
     ],
     "updateTime": "2015-05-28T15:22:03.674+03:00",
-    "authorityId": "",
-    "signature": ""
+    "authorityId": null,
+    "signature": null
   },
   "objective": {
     "condition": "value[0].level&gt;=7",
     "status": "true"
   },
-  "createTrigger": "",
+  "createTrigger": "https://ctp.cloudsecurityalliance.org/ctp/triggers",
   "userActivated": false,
   "state": "activated"
 }</pre>
@@ -7181,7 +7584,7 @@ see that:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The metric is defined in a &#8220;human readable&#8221; standard available at the (fictitious) URL <code>https://cloudsecurityalliance.org/ctp/metrics#csa:cryptographic-strength</code>.</p>
+<p>The metric is defined in a “human readable” standard available at the (fictitious) URL <code>https://cloudsecurityalliance.org/ctp/metrics#csa:cryptographic-strength</code>.</p>
 </li>
 <li>
 <p>The metric has one parameters: a scale, which is here the ECRYPT II scale (see <a href="http://www.keylength.com/en/3/)">http://www.keylength.com/en/3/)</a>.</p>
@@ -7207,6 +7610,7 @@ see that:</p>
 {
   "self": "https://ctp.cloudsecurityalliance.org/ctp/metrics/VWcIa-sfTYZSm6Qv",
   "scope": "https://ctp.cloudsecurityalliance.org/ctp/",
+  "changeId": "Iugh5Ohk",
   "name": "cryptographic-strength",
   "annotation": "",
   "baseMetric": "https://cloudsecurityalliance.org/ctp/metrics#csa:cryptographic-strength",
@@ -7282,7 +7686,7 @@ graph representing the supply chain with the following information:</p>
 <ol class="loweralpha" type="a">
 <li>
 <p>Each service-view contains a pointer to a collection of dependencies, where each
-dependencies is itself a service-views that is added to the list of service-views to query.</p>
+dependencies is itself a service-view that is added to the list of service-views to query.</p>
 </li>
 <li>
 <p>Third party providers in dependencies are identified by the fact that the “provider”
@@ -7307,8 +7711,8 @@ back responses to the client. In most cases, these queries can be
 change infrequently.</p>
 </div>
 <div class="paragraph">
-<p>The information that is provided by the &#8220;secondary CSPs&#8221; in the supply chain
-does not have to include &#8220;assets&#8221;, &#8220;attributes&#8221; or &#8220;measurements&#8221;. While the
+<p>The information that is provided by the “secondary CSPs” in the supply chain
+does not have to include “assets”, “attributes” or “measurements”. While the
 primary CSP is expected to provide all possible elements, the secondary CSPs are
 only expected to provide a description of sevice-views and their dependencies, for
 the sole purpose of describing the supply chain.</p>
@@ -7513,8 +7917,8 @@ security attribute can therefore be considered as “UML attributes” of
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.13<br>
-Last updated 2015-10-13 17:27:40 EEST
+Version 2.14<br>
+Last updated 2015-11-11 21:15:24 EET
 </div>
 </div>
 </body>
