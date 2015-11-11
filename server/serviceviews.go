@@ -15,8 +15,8 @@
 package server
 
 import (
-	"net/http"
 	"github.com/cloudsecurityalliance/ctpd/server/ctp"
+	"net/http"
 )
 
 type ServiceView struct {
@@ -24,7 +24,7 @@ type ServiceView struct {
 	Provider          string   `json:"provider"         bson:"provider"`
 	Dependencies      ctp.Link `json:"dependencies"     bson:"-"`
 	Assets            ctp.Link `json:"assets"           bson:"-"`
-	ServiceClass      string   `json:"serviceClass"     bosn:"serviceClass"`
+	ServiceClass      *string  `json:"serviceClass"     bosn:"serviceClass"`
 	Logs              ctp.Link `json:"logs"`
 	Triggers          ctp.Link `json:"triggers"`
 }

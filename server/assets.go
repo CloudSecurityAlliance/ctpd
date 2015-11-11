@@ -15,14 +15,14 @@
 package server
 
 import (
-	"net/http"
 	"github.com/cloudsecurityalliance/ctpd/server/ctp"
+	"net/http"
 )
 
 type Asset struct {
 	ctp.NamedResource `bson:",inline"`
 	Attributes        ctp.Link `json:"attributes" bson:"-"`
-	AssetClass        string   `json:"assetClass" bson:"assetClass"`
+	AssetClass        *string  `json:"assetClass" bson:"assetClass"`
 }
 
 func (asset *Asset) BuildLinks(context *ctp.ApiContext) {

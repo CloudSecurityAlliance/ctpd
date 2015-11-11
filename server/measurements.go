@@ -15,10 +15,10 @@
 package server
 
 import (
-	"gopkg.in/mgo.v2/bson"
-	"net/http"
 	"github.com/cloudsecurityalliance/ctpd/server/ctp"
 	"github.com/cloudsecurityalliance/ctpd/server/jsmm"
+	"gopkg.in/mgo.v2/bson"
+	"net/http"
 	"reflect"
 )
 
@@ -27,8 +27,8 @@ type resultRow map[string]interface{}
 type Result struct {
 	Value       []resultRow   `json:"value" bson:"value"`
 	UpdateTime  ctp.Timestamp `json:"updateTime" bson:"updateTime"`
-	AuthorityId string        `json:"authorityId" bson:"authorityId"`
-	Signature   string        `json:"signature" bson:"signature"`
+	AuthorityId *string       `json:"authorityId" bson:"authorityId"`
+	Signature   *string       `json:"signature" bson:"signature"`
 }
 
 type Objective struct {
@@ -41,7 +41,7 @@ type Measurement struct {
 	Metric            ctp.Link             `json:"metric"          bson:"metric"`
 	Result            *Result              `json:"result"          bson:"result"`
 	Objective         *Objective           `json:"objective"       bson:"objective"`
-	CreateTrigger     ctp.Link             `json:"createTrigger"   bson:"createTrigger,omitempty"`
+	CreateTrigger     *ctp.Link            `json:"createTrigger"   bson:"createTrigger,omitempty"`
 	UserActivated     bool                 `json:"userActivated"   bson:"userActivated"`
 	State             ctp.MeasurementState `json:"state"           bson:"state"`
 }
@@ -271,14 +271,14 @@ func measurementObjectiveEvaluate(context *ctp.ApiContext, item *Measurement) *c
 		return ctp.NewBadRequestErrorf("Error in objective compilation - %s", err.Error())
 	}
 
-    if item.Result==nil {
+	if item.Result == nil {
 		item.Objective.Status = ctp.Ttrue
-        return nil
-    }
+		return nil
+	}
 
-    if context.DebugVM {
-        machine.DebugMode(true)
-    }
+	if context.DebugVM {
+		machine.DebugMode(true)
+	}
 
 	if err := importMeasurementResultInJSMM(machine, item.Result); err != nil {
 		return ctp.NewBadRequestErrorf("Error in objective evaluation while importing result - %s", err.Error)
