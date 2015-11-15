@@ -10,17 +10,40 @@ To compile ctpd you'll need to:
 
 * install go - see https://golang.org/doc/install
 
-* install mongodb (https://www.mongodb.org/), i.e. on Ubuntu:
+* install mongodb (https://www.mongodb.org/).
+
+
+On Ubuntu, momgodb can be installed simply as follows:
+
 
     sudo apt-get install mongodb
 
+
+From there, the simplest way to install ctpd is to run
+
+
+    go get github.com/cloudsecurityalliance/ctpd 
+
+
+This is all that is needed. With this solution "mgo" (see below) is installed automatically.
+
+As an alternative, if you want to proceed "manually", you'll need to:
+
 * install mgo, the "rich mongo driver for go" (see https://labix.org/mgo)
 
+
     go get gopkg.in/mgo.v2
+
+
+* create the path `$GOPATH/src/github.com/cloudsecurityalliance/`
+
+* run `git clone https://github.com/cloudsecurityalliance/ctpd.git` in the previously created directory.
 
 
 Compiling and running
 ---------------------
 
-To run ctpd directly, you can type "go run ctpd.go".
+To run ctpd directly, you can type `go run ctpd.go`.
+
+To get more options, type `go run ctpd.go --help`
 

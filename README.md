@@ -29,31 +29,39 @@ To compile and run **ctpd**, you will need to install:
 
 * go (http://golang.org),
 * mongodb (https://www.mongodb.org/) and
-* its go backend (https://labix.org/mgo).
 
-See the INSTALL file for more details on installing these dependencies.
+The ctpd source code is expected to reside in `$GOPATH/src/github.com/cloudsecurityalliance/ctpd`. 
+
+The easiest way to download the ctpd source code for a test drive is simply to type:
+
+
+    go get github.com/cloudsecurityalliance/ctpd  
+
+
+For alternative ways to install ctpd, see the INSTALL file.
 
 Next, run the mongodb script `build_db.js` in the `tools/` subdirectory of
 this source code repository:
 
-```bash
-mongo build_db.js
-```
+
+    mongo build_db.js
+
 
 Launch __ctpd__ for a test drive as follows:
 
-```bash
-go run ctpd.go
-```
+
+    go run ctpd.go
+
 
 By default, __ctpd__ runs on port 8080, and you can test that is working
 with a simple curl command:
 
-```bash
-curl -H "Authorization: Bearer 1234" http://localhost:8080/api/1.0/
-```
+
+    curl -H "Authorization: Bearer 1234" http://localhost:8080/api/1.0/
+
 
 The result should look something like this:
+
 ```json
 {
   "self": "http://localhost:8080/api/1.0/",
@@ -65,15 +73,16 @@ The result should look something like this:
   "metrics": "http://localhost:8080/api/1.0/metrics"
 }
 ```
+
 Note that the value "1234" above is not an example of a secure token and
 was created by `build_db.js` for demonstration purposes only.
 
 You can also test the embedded lightweight javscript client by launching
 ctpd as follows:
 
-```bash
-go run ctpd.go --color-logs --client=./client/
-```
+
+    go run ctpd.go --color-logs --client=./client/
+
 
 Then point your browser to http://ctpserver:8080/ where 'ctpserver' 
 should be replaced by the hostname of the machine that is running ctpd.
