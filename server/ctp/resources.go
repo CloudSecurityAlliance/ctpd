@@ -173,8 +173,8 @@ func (handler *POSTHandler) Handle(w http.ResponseWriter, r *http.Request, conte
 		}
 	}
 
-	if !ParseResource(r.Body, res) {
-		RenderErrorResponse(w, context, NewHttpError(http.StatusBadRequest, "Failed to parse resource"))
+    if err := ParseResource(r.Body, res); err!=nil {
+		RenderErrorResponse(w, context, NewHttpError(http.StatusBadRequest, "Failed to parse resource, " + err.Error()))
 		return
 	}
 	res.Super().Id = NewBase64Id()
@@ -238,8 +238,8 @@ func (handler *PUTHandler) Handle(w http.ResponseWriter, r *http.Request, contex
 		return
 	}
 
-	if !ParseResource(r.Body, update) {
-		RenderErrorResponse(w, context, NewHttpError(http.StatusBadRequest, "Failed to parse resource"))
+    if err := ParseResource(r.Body, update); err!=nil {
+		RenderErrorResponse(w, context, NewHttpError(http.StatusBadRequest, "Failed to parse resource, " +  err.Error()))
 		return
 	}
 
