@@ -56,7 +56,10 @@ func (t Timestamp) IsZero() bool {
 }
 
 func (t *Timestamp) UnmarshalJSON(data []byte) error {
-	tm, err := ParseTimestamp(string(data))
+    if len(data)<2 || data[0]!='"' {
+        return fmt.Errorf("Timestamp is not in JSON string format")
+    }
+    tm, err := ParseTimestamp(string(data[1:]))
 	*t = tm
 	return err
 }
