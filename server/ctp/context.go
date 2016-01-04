@@ -176,18 +176,18 @@ func LoadResource(c *ApiContext, category string, id Base64Id, resource interfac
 	return true
 }
 
-func ParseResource(body io.ReadCloser, resource interface{}) bool {
+func ParseResource(body io.ReadCloser, resource interface{}) error {
 	input := new(bytes.Buffer)
 
 	if _, err := input.ReadFrom(body); err != nil {
-		return false
+		return err
 	}
 
 	if err := json.Unmarshal(input.Bytes(), resource); err != nil {
-		return false
+		return err
 	}
 
-	return true
+	return nil
 }
 
 func CreateResource(c *ApiContext, category string, resource interface{}) bool {
