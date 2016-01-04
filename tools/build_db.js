@@ -190,7 +190,7 @@ metricId = MakeId();
 
 x = {
         "_id" : metricId,
-        "accessTags": [ access_id_tag ],
+        "accessTags": [ "role:user" ],
         "name": "encryption strength",
         "annotation" : "",
         "baseMetric" : "https://cloudsecurityalliance.org/ctp/metrics#csa:cryptographic-strength",
