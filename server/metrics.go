@@ -21,13 +21,13 @@ import (
 	"net/http"
 )
 
-type measurementParameter struct {
+type MeasurementParameter struct {
 	Name  string `json:"name"  bson:"name"`
 	Type  string `json:"type"  bson:"type"`
 	Value string `json:"value" bson:"value"`
 }
 
-type resultColumnFormat struct {
+type ResultColumnFormat struct {
 	Name string `json:"name" bson:"name"`
 	Type string `json:"type" bson:"type"`
 }
@@ -35,13 +35,13 @@ type resultColumnFormat struct {
 type Metric struct {
 	ctp.NamedResource     `bson:",inline"`
 	BaseMetric            string                 `json:"baseMetric"            bson:"baseMetric"`
-	MeasurementParameters []measurementParameter `json:"measurementParameters" bson:"measurementParameters"`
-	ResultFormat          []resultColumnFormat   `json:"resultFormat"          bson:"resultFormat"`
+	MeasurementParameters []MeasurementParameter `json:"measurementParameters" bson:"measurementParameters"`
+	ResultFormat          []ResultColumnFormat   `json:"resultFormat"          bson:"resultFormat"`
 }
 
 func (metric *Metric) BuildLinks(context *ctp.ApiContext) {
-	metric.Self = ctp.NewLink(context, "@/metrics/$", metric.Id)
-	metric.Scope = ctp.NewLink(context, "@/")
+	metric.Self = ctp.NewLink(context.CtpBase, "@/metrics/$", metric.Id)
+	metric.Scope = ctp.NewLink(context.CtpBase, "@/")
 }
 
 func (metric *Metric) Load(context *ctp.ApiContext) *ctp.HttpError {
@@ -62,7 +62,7 @@ func (metric *Metric) Create(context *ctp.ApiContext) *ctp.HttpError {
 }
 
 func (metric *Metric) Delete(context *ctp.ApiContext) *ctp.HttpError {
-	metricUrl := ctp.NewLink(context, "@/metrics/$", metric.Id) // just to create a clean URL
+	metricUrl := ctp.NewLink(context.CtpBase, "@/metrics/$", metric.Id) // just to create a clean URL
 
 	query := context.Session.DB("ctp").C("measurements").Find(bson.M{"metric": metricUrl})
 	count, err := query.Count()

@@ -28,9 +28,9 @@ type BaseURI struct {
 }
 
 func (base *BaseURI) BuildLinks(context *ctp.ApiContext) {
-	base.Self = ctp.NewLink(context, "@/")
-	base.ServiceViews = ctp.NewLink(context, "@/serviceViews")
-	base.Metrics = ctp.NewLink(context, "@/metrics")
+	base.Self = ctp.NewLink(context.CtpBase, "@/")
+	base.ServiceViews = ctp.NewLink(context.CtpBase, "@/serviceViews")
+	base.Metrics = ctp.NewLink(context.CtpBase, "@/metrics")
 }
 
 // HandleGETBaseURI handles a request to the baseURI.

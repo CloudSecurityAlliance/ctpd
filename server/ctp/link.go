@@ -22,7 +22,7 @@ import (
 
 type Link string
 
-func NewLink(c *ApiContext, format string, params ...interface{}) Link {
+func NewLink(baseURI Link, format string, params ...interface{}) Link {
 	for _, v := range params {
         switch s := v.(type) {
 		case string:
@@ -35,7 +35,7 @@ func NewLink(c *ApiContext, format string, params ...interface{}) Link {
 			panic("NewLink called with non-stringify-able argument")
 		}
 	}
-	return Link(strings.Replace(format, "@/", string(c.CtpBase), 1))
+	return Link(strings.Replace(format, "@/", string(baseURI), 1))
 }
 
 func IsShortLink(link Link) bool {
@@ -45,16 +45,16 @@ func IsShortLink(link Link) bool {
 	return link[0] == '@'
 }
 
-func ShortenLink(c *ApiContext, link Link) Link {
-	return Link(strings.Replace(string(link), string(c.CtpBase), "@/", 1))
+func ShortenLink(baseURI Link, link Link) Link {
+	return Link(strings.Replace(string(link), string(baseURI), "@/", 1))
 }
 
-func ExpandLink(c *ApiContext, link Link) Link {
-	return Link(strings.Replace(string(link), "@/", string(c.CtpBase), 1))
+func ExpandLink(baseURI Link, link Link) Link {
+	return Link(strings.Replace(string(link), "@/", string(baseURI), 1))
 }
 
-func ParseLink(c *ApiContext, format string, link Link) ([]string, bool) {
-	link = ShortenLink(c, link)
+func ParseLink(baseURI Link, format string, link Link) ([]string, bool) {
+	link = ShortenLink(baseURI, link)
 
 	var r []string
 

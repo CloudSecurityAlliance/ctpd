@@ -30,12 +30,12 @@ type ServiceView struct {
 }
 
 func (serviceview *ServiceView) BuildLinks(context *ctp.ApiContext) {
-	serviceview.Self = ctp.NewLink(context, "@/serviceViews/$", serviceview.Id)
-	serviceview.Scope = ctp.NewLink(context, "@/")
-	serviceview.Dependencies = ctp.NewLink(context, "@/serviceViews/$/dependencies", serviceview.Id)
-	serviceview.Assets = ctp.NewLink(context, "@/serviceViews/$/assets", serviceview.Id)
-	serviceview.Logs = ctp.NewLink(context, "@/serviceViews/$/logs", serviceview.Id)
-	serviceview.Triggers = ctp.NewLink(context, "@/serviceViews/$/triggers", serviceview.Id)
+	serviceview.Self = ctp.NewLink(context.CtpBase, "@/serviceViews/$", serviceview.Id)
+	serviceview.Scope = ctp.NewLink(context.CtpBase, "@/")
+	serviceview.Dependencies = ctp.NewLink(context.CtpBase, "@/serviceViews/$/dependencies", serviceview.Id)
+	serviceview.Assets = ctp.NewLink(context.CtpBase, "@/serviceViews/$/assets", serviceview.Id)
+	serviceview.Logs = ctp.NewLink(context.CtpBase, "@/serviceViews/$/logs", serviceview.Id)
+	serviceview.Triggers = ctp.NewLink(context.CtpBase, "@/serviceViews/$/triggers", serviceview.Id)
 }
 
 func (serviceview *ServiceView) Load(context *ctp.ApiContext) *ctp.HttpError {

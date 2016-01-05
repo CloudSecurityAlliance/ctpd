@@ -26,9 +26,9 @@ type Asset struct {
 }
 
 func (asset *Asset) BuildLinks(context *ctp.ApiContext) {
-	asset.Self = ctp.NewLink(context, "@/assets/$", asset.Id)
-	asset.Scope = ctp.NewLink(context, "@/serviceViews/$", asset.Parent[0])
-	asset.Attributes = ctp.NewLink(context, "@/assets/$/attributes", asset.Id)
+	asset.Self = ctp.NewLink(context.CtpBase, "@/assets/$", asset.Id)
+	asset.Scope = ctp.NewLink(context.CtpBase, "@/serviceViews/$", asset.Parent[0])
+	asset.Attributes = ctp.NewLink(context.CtpBase, "@/assets/$/attributes", asset.Id)
 }
 
 func (asset *Asset) Load(context *ctp.ApiContext) *ctp.HttpError {

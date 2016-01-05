@@ -47,7 +47,7 @@ func HandleGETCollection(w http.ResponseWriter, r *http.Request, context *ctp.Ap
 	selector := make(bson.M)
 
 	if name, ok := r.URL.Query()["name"]; ok {
-		selector["name"] = name
+		selector["name"] = name[0]
 	}
 
 	page_query := r.URL.Query().Get("page")
@@ -107,7 +107,7 @@ func HandleGETCollection(w http.ResponseWriter, r *http.Request, context *ctp.Ap
 		if !context.VerifyAccessTags(w, parent.AccessTags) {
 			return
 		}
-		collection.Scope = ctp.NewLink(context, "/$/$", context.Params[0], context.Params[1])
+		collection.Scope = ctp.NewLink(context.CtpBase, "/$/$", context.Params[0], context.Params[1])
 
 		collectionType = context.Params[2]
         if context.Params[2]=="indicators" {
@@ -143,7 +143,7 @@ func HandleGETCollection(w http.ResponseWriter, r *http.Request, context *ctp.Ap
 	iter := query.Iter()
 	for iter.Next(&item) {
 		collection.Items = append(collection.Items, CollectionItem{
-			Link: ctp.NewLink(context, "@/$/$", collectionType, item.Id),
+			Link: ctp.NewLink(context.CtpBase, "@/$/$", collectionType, item.Id),
 			Name: item.Name,
 		})
 	}

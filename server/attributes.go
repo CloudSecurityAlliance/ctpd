@@ -25,9 +25,9 @@ type Attribute struct {
 }
 
 func (attribute *Attribute) BuildLinks(context *ctp.ApiContext) {
-	attribute.Self = ctp.NewLink(context, "@/attributes/$", attribute.Id)
-	attribute.Scope = ctp.NewLink(context, "@/assets/$", attribute.Parent[0])
-	attribute.Measurements = ctp.NewLink(context, "@/attributes/$/measurements", attribute.Id)
+	attribute.Self = ctp.NewLink(context.CtpBase, "@/attributes/$", attribute.Id)
+	attribute.Scope = ctp.NewLink(context.CtpBase, "@/assets/$", attribute.Parent[0])
+	attribute.Measurements = ctp.NewLink(context.CtpBase, "@/attributes/$/measurements", attribute.Id)
 }
 
 func (attribute *Attribute) Load(context *ctp.ApiContext) *ctp.HttpError {

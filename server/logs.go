@@ -29,7 +29,7 @@ type LogEntry struct {
 }
 
 func (log *LogEntry) BuildLinks(context *ctp.ApiContext) {
-	log.Self = ctp.NewLink(context, "@/logs/$", log.Id)
+	log.Self = ctp.NewLink(context.CtpBase, "@/logs/$", log.Id)
 }
 
 func (log *LogEntry) Load(context *ctp.ApiContext) *ctp.HttpError {

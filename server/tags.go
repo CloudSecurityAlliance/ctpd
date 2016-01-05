@@ -26,7 +26,7 @@ func (res *TaggedResource)Super() *ctp.Resource {
 }
 
 func (res *TaggedResource) BuildLinks(context *ctp.ApiContext) {
-    res.Self = ctp.NewLink(context, "@/$/$?x=tags", context.Params[0], res.Id)
+    res.Self = ctp.NewLink(context.CtpBase, "@/$/$?x=tags", context.Params[0], res.Id)
 }
 
 func (res *TaggedResource) Load(context *ctp.ApiContext) *ctp.HttpError {

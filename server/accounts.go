@@ -24,7 +24,7 @@ import (
 type Account ctp.Account
 
 func (account *Account) BuildLinks(context *ctp.ApiContext) {
-	account.Self = ctp.NewLink(context, "@/accounts/$", account.Id)
+	account.Self = ctp.NewLink(context.CtpBase, "@/accounts/$", account.Id)
 }
 
 func (account *Account) Load(context *ctp.ApiContext) *ctp.HttpError {

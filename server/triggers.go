@@ -33,22 +33,22 @@ type Trigger struct {
 }
 
 func (trigger *Trigger) BuildLinks(context *ctp.ApiContext) {
-	trigger.Self = ctp.NewLink(context, "@/triggers/$", trigger.Id)
-	trigger.Scope = ctp.NewLink(context, "@/serviceView/$", trigger.Parent[0])
+	trigger.Self = ctp.NewLink(context.CtpBase, "@/triggers/$", trigger.Id)
+	trigger.Scope = ctp.NewLink(context.CtpBase, "@/serviceView/$", trigger.Parent[0])
 }
 
 func (trigger *Trigger) Load(context *ctp.ApiContext) *ctp.HttpError {
 	if !ctp.LoadResource(context, "triggers", ctp.Base64Id(context.Params[1]), trigger) {
 		return ctp.NewHttpError(http.StatusNotFound, "Not Found")
 	}
-	trigger.Measurement = ctp.ExpandLink(context, trigger.Measurement)
+	trigger.Measurement = ctp.ExpandLink(context.CtpBase, trigger.Measurement)
 	trigger.BuildLinks(context)
 	return nil
 }
 
 func (trigger *Trigger) Create(context *ctp.ApiContext) *ctp.HttpError {
 	trigger.BuildLinks(context)
-	trigger.Measurement = ctp.ShortenLink(context, trigger.Measurement)
+	trigger.Measurement = ctp.ShortenLink(context.CtpBase, trigger.Measurement)
 	if !ctp.IsShortLink(trigger.Measurement) {
 		return ctp.NewBadRequestError("Invalid measurement URL")
 	}
@@ -84,14 +84,14 @@ func triggerLogAndNotify(context *ctp.ApiContext, trigger *Trigger, err error) {
 func triggerCheckCondition(context *ctp.ApiContext, trigger *Trigger, measurement *Measurement) (bool, error) {
 
     if measurement==nil {
-        measurementParams, ok := ctp.ParseLink(context, "@/measurements/$", trigger.Measurement)
+        measurementParams, ok := ctp.ParseLink(context.CtpBase, "@/measurements/$", trigger.Measurement)
         if !ok {
             return false, fmt.Errorf("Measurement URL is incorrect")
         }
 
         measurement = new(Measurement)
         if !ctp.LoadResource(context, "measurements", ctp.Base64Id(measurementParams[0]), measurement) {
-            return false, fmt.Errorf("Measurement %s does not exist", ctp.ExpandLink(context, trigger.Measurement))
+            return false, fmt.Errorf("Measurement %s does not exist", ctp.ExpandLink(context.CtpBase, trigger.Measurement))
         }
     }
 

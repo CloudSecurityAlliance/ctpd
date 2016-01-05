@@ -22,10 +22,10 @@ import (
 	"reflect"
 )
 
-type resultRow map[string]interface{}
+type ResultRow map[string]interface{}
 
 type Result struct {
-	Value       []resultRow   `json:"value" bson:"value"`
+	Value       []ResultRow   `json:"value" bson:"value"`
 	UpdateTime  ctp.Timestamp `json:"updateTime" bson:"updateTime"`
 	AuthorityId *string       `json:"authorityId" bson:"authorityId"`
 	Signature   *string       `json:"signature" bson:"signature"`
@@ -47,22 +47,22 @@ type Measurement struct {
 }
 
 func (measurement *Measurement) BuildLinks(context *ctp.ApiContext) {
-	measurement.Self = ctp.NewLink(context, "@/measurements/$", measurement.Id)
-	measurement.Scope = ctp.NewLink(context, "@/attributes/$", measurement.Parent[0])
+	measurement.Self = ctp.NewLink(context.CtpBase, "@/measurements/$", measurement.Id)
+	measurement.Scope = ctp.NewLink(context.CtpBase, "@/attributes/$", measurement.Parent[0])
 }
 
 func (measurement *Measurement) Load(context *ctp.ApiContext) *ctp.HttpError {
 	if !ctp.LoadResource(context, "measurements", ctp.Base64Id(context.Params[1]), measurement) {
 		return ctp.NewHttpError(http.StatusNotFound, "Not Found")
 	}
-	measurement.Metric = ctp.ExpandLink(context, measurement.Metric)
+	measurement.Metric = ctp.ExpandLink(context.CtpBase, measurement.Metric)
 	measurement.BuildLinks(context)
 	return nil
 }
 
 func (measurement *Measurement) Create(context *ctp.ApiContext) *ctp.HttpError {
 	measurement.BuildLinks(context)
-	measurement.Metric = ctp.ShortenLink(context, measurement.Metric)
+	measurement.Metric = ctp.ShortenLink(context.CtpBase, measurement.Metric)
 	if !ctp.IsShortLink(measurement.Metric) {
 		return ctp.NewBadRequestError("Invalid metric URL")
 	}
@@ -174,13 +174,13 @@ func measurementCheckMetric(context *ctp.ApiContext, item *Measurement) *ctp.Htt
 		return ctp.NewBadRequestError("Missing metric attribute in measurement.")
 	}
 
-	metricParams, ok := ctp.ParseLink(context, "@/metrics/$", item.Metric)
+	metricParams, ok := ctp.ParseLink(context.CtpBase, "@/metrics/$", item.Metric)
 	if !ok {
 		return ctp.NewBadRequestError("Metric URL is incorrect in measurement")
 	}
 
 	if !ctp.LoadResource(context, "metrics", ctp.Base64Id(metricParams[0]), &metric) {
-		return ctp.NewBadRequestErrorf("Metric %s does not exist", ctp.ExpandLink(context, item.Metric))
+		return ctp.NewBadRequestErrorf("Metric %s does not exist", ctp.ExpandLink(context.CtpBase, item.Metric))
 	}
 	return nil
 }
@@ -196,13 +196,13 @@ func measurementCheckResult(context *ctp.ApiContext, item *Measurement) *ctp.Htt
 		return ctp.NewBadRequestError("Missing result attribute in measurement.")
 	}
 
-	metricParams, ok := ctp.ParseLink(context, "@/metrics/$", item.Metric)
+	metricParams, ok := ctp.ParseLink(context.CtpBase, "@/metrics/$", item.Metric)
 	if !ok {
 		return ctp.NewBadRequestError("Metric URL is incorrect in measurement")
 	}
 
 	if !ctp.LoadResource(context, "metrics", ctp.Base64Id(metricParams[0]), &metric) {
-		return ctp.NewBadRequestErrorf("Metric %s does not exist", ctp.ExpandLink(context, item.Metric))
+		return ctp.NewBadRequestErrorf("Metric %s does not exist", ctp.ExpandLink(context.CtpBase, item.Metric))
 	}
 
 	for _, row := range item.Result.Value {
@@ -298,7 +298,7 @@ func measurementTriggersEvaluate(context *ctp.ApiContext, measurement *Measureme
 	var trigger Trigger
 	now := ctp.Now()
 
-	mlink := ctp.ShortenLink(context, measurement.Self)
+	mlink := ctp.ShortenLink(context.CtpBase, measurement.Self)
 	query := context.Session.DB("ctp").C("triggers").Find(bson.M{"measurement": mlink})
 
 	n, err := query.Count()
